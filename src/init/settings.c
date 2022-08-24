@@ -30,7 +30,7 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 	unsigned char	code;
 
 	// Read value (integer)
-	if (j <= SET_KEY_EXIT) // if the information to load is an integer
+	if (j < SET_KEY_EXIT) // if the information to load is an integer
 	{
 		if ((code = load_integer(line, token, &n)) != ERR_NONE)
 			return (code);
@@ -55,6 +55,12 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 			break;
 		case SET_KEY_MOVE_CAM_BACKWARD:
 			env->settings.keys[KEY_MOVE_CAM_BACKWARD] = (uint8_t)n;
+			break;
+		case SET_KEY_MOVE_CAM_UP:
+			env->settings.keys[KEY_MOVE_CAM_FORWARD] = (uint8_t)n;
+			break;
+		case SET_KEY_MOVE_CAM_DOWN:
+			env->settings.keys[KEY_MOVE_CAM_FORWARD] = (uint8_t)n;
 			break;
 		case SET_KEY_MOVE_CAM_LEFT:
 			env->settings.keys[KEY_MOVE_CAM_LEFT] = (uint8_t)n;
@@ -101,6 +107,7 @@ static unsigned char	loader(t_env *env, char **lines)
 				}
 				found = true;
 				founds[j] = true;
+				break ;
 			}
 
 		if (found == false) // If identification failed.
@@ -112,7 +119,7 @@ static unsigned char	loader(t_env *env, char **lines)
 		ft_free_ctab(tokens);
 	}
 
-	for (unsigned int i = 0; i < SET_KEY_MOVE_CAM_FORWARD; i++)
+	for (unsigned int i = 0; i < SET_MAX; i++)
 		if (founds[i] == false) // If any settings are missing.
 		{
 			ft_putendl_fd(settings_keys[i], 2);

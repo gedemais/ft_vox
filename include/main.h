@@ -121,10 +121,10 @@ static const char		*settings_keys[SET_MAX] = {
 										"exit",
 										"move_cam_forward",
 										"move_cam_backward",
+										"move_cam_up",
+										"move_cam_down",
 										"move_cam_left",
 										"move_cam_right",
-										"move_cam_up",
-										"move_cam_down"
 										};
 
 #endif

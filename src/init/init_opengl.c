@@ -2,7 +2,7 @@
 
 enum	e_toggles
 {
-	TOGGLE_TOKEN,
+	TOGGLE_EXIT,
 	TOGGLE_MAX
 };
 
@@ -12,7 +12,7 @@ static bool	switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, bool p
 {
 	uint8_t	*keys = &env->settings.keys[0];
 	int		toggle_ids[TOGGLE_MAX] = {
-		-1
+					env->settings.keys[KEY_EXIT],
 					};
 
 	for (unsigned int i = 0; i < TOGGLE_MAX; i++)
