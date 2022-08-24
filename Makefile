@@ -49,7 +49,6 @@ INC_PATH=include/
 INC_NAME=main.h\
 		 error.h\
 		 keys.h\
-		 parser.h\
 		 scene.h\
 		 shaders.h
 

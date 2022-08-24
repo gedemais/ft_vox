@@ -19,17 +19,16 @@
 glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 ************************************************************/
 
-static void	update_mvp(t_env *env, t_cam *cam)
+static void	update_mvp(t_env *env)
 {
 	(void)env;
-	(void)cam;
 }
 
-static void	set_uniforms(t_env *env, t_cam *cam)
+static void	set_uniforms(t_env *env)
 {
 	// This function will set uniforms, which are variables usable into our shaders program.
 
-	(void)cam;
+	(void)env;
 	// Launch shaders-composed program
 	glUseProgram(env->shader_program);
 
@@ -43,8 +42,8 @@ static unsigned char	render_scene(t_env *env)
 {
 	static float	angle = 0.0f;
 
-	update_mvp(env, &env->scene.cam);
-	set_uniforms(env, &env->scene.cam);
+	update_mvp(env);
+	set_uniforms(env);
 
 	// Draw triangles with provided data stride and binded texture
 //	glDrawArrays(GL_TRIANGLES, 0, env->scene.vertexs.nb_cells);

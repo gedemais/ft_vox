@@ -25,7 +25,6 @@
 // Local headers
 # include "shaders.h"
 # include "error.h"
-# include "parser.h"
 # include "scene.h"
 # include "keys.h"
 
@@ -78,8 +77,9 @@ typedef struct	s_settings
 typedef struct	s_env
 {
 	t_settings	settings;
-	t_scene		scene;
+	t_cam		camera;
 	GLFWwindow	*window;
+	t_dynarray	stride;
 	uint32_t	vertex_shader_id;
 	uint32_t	fragment_shader_id;
 	uint32_t	shader_program;
@@ -102,6 +102,7 @@ void			processInput(GLFWwindow *window);
 // Parsing
 unsigned char	load_settings(t_env *env);
 unsigned char	readlines(char *path, char ***lines);
+char			*read_file(int fd, size_t *file_size);
 
 // Ending
 void			error_handler(t_env *env, unsigned char code);

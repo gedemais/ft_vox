@@ -165,8 +165,8 @@ unsigned char   init_display(t_env *env)
 
     env->window = window;
 
-	size = (GLsizeiptr)sizeof(t_stride) * env->scene.vertexs.nb_cells;
-	glBufferData(GL_ARRAY_BUFFER, size, env->scene.vertexs.c, GL_STATIC_DRAW);
+	size = (GLsizeiptr)sizeof(t_stride) * env->stride.nb_cells;
+	glBufferData(GL_ARRAY_BUFFER, size, env->stride.c, GL_STATIC_DRAW);
 
     return (ERR_NONE);
 }

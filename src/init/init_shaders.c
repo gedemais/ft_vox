@@ -117,9 +117,9 @@ static unsigned char	init_buffers(t_env *env)
 	glBindVertexArray(env->vao); // Bind vao array
 
 	// Configurate vertexs buffer
-	size = (GLsizeiptr)sizeof(t_stride) * env->scene.vertexs.nb_cells;
+	size = (GLsizeiptr)sizeof(t_stride) * env->stride.nb_cells;
 	// Copies vertexs data into buffer
-	glBufferData(GL_ARRAY_BUFFER, size, env->scene.vertexs.c, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, env->stride.c, GL_STATIC_DRAW);
 
 	// Specifies the disposition of components in vertexs
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)0);
@@ -128,13 +128,13 @@ static unsigned char	init_buffers(t_env *env)
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)sizeof(t_vec3d));
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)(sizeof(t_vec3d) + sizeof(t_color)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)(sizeof(t_vec3d) * 2));
 	glEnableVertexAttribArray(2);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo); // Bind ebo buffer
+	glVertexAttribPointer(3, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride), (void*)((sizeof(t_vec3d) * 2 + sizeof(t_vt))));
+	glEnableVertexAttribArray(3);
 
-	// Copies faces indices data in ebo
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)env->scene.faces.nb_cells * (GLsizeiptr)sizeof(uint32_t) * 3, env->scene.faces.c, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo); // Bind ebo buffer
 
 //	glGenTextures(1, &env->txt);
 //	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
@@ -143,12 +143,8 @@ static unsigned char	init_buffers(t_env *env)
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	t_texture *txt = &((t_mtl*)(dyacc(&env->scene.mtls, 0)))->texture;
-	if (txt)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, txt->w, txt->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, txt->img_data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
+//		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, txt->w, txt->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, txt->img_data);
+//		glGenerateMipmap(GL_TEXTURE_2D);
 
 	return (ERR_NONE);
 }
