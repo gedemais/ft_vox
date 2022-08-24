@@ -1,0 +1,9 @@
+# Blender MTL File: 'None'
+# Material Count: 6
+
+newmtl cube
+Ns 323.999994
+Kd 0.800000 0.800000 0.800000
+d 1.000000
+illum 2
+map_Kd texture1.bmp
