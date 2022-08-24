@@ -30,7 +30,7 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 	unsigned char	code;
 
 	// Read value (integer)
-	if (j <= SET_TRANSITION_SPEED) // if the information to load is an integer
+	if (j <= SET_KEY_EXIT) // if the information to load is an integer
 	{
 		if ((code = load_integer(line, token, &n)) != ERR_NONE)
 			return (code);
@@ -39,52 +39,28 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 		return (code);
 
 	switch (j) {
-	// Basics
+	// Numerical values
 		case SET_WIN_HEIGHT:
 			env->settings.w_hgt = (uint16_t)n;
 			break;
 		case SET_WIN_WIDTH:
 			env->settings.w_wdt = (uint16_t)n;
 			break;
-		case SET_ROTATION_SPEED:
-			env->settings.rotation_speed = (int16_t)n;
-			break;
-		case SET_TRANSITION_SPEED:
-			env->settings.transition_speed = (int16_t)n;
-			break;
-	// Key Bindings
 		case SET_KEY_EXIT:
 			env->settings.keys[KEY_EXIT] = (uint8_t)n;
 			break;
-		case SET_KEY_TOGGLE_ROTATION:
-			env->settings.keys[KEY_TOGGLE_ROTATION] = (uint8_t)n;
+	// Key Bindings
+		case SET_KEY_MOVE_CAM_FORWARD:
+			env->settings.keys[KEY_MOVE_CAM_FORWARD] = (uint8_t)n;
 			break;
-		case SET_KEY_TOGGLE_TEXTURE:
-			env->settings.keys[KEY_TOGGLE_TEXTURE] = (uint8_t)n;
+		case SET_KEY_MOVE_CAM_BACKWARD:
+			env->settings.keys[KEY_MOVE_CAM_BACKWARD] = (uint8_t)n;
 			break;
-		case SET_KEY_INCREASE_ROTATION_SPEED:
-			env->settings.keys[KEY_INCREASE_ROTATION_SPEED] = (uint8_t)n;
+		case SET_KEY_MOVE_CAM_LEFT:
+			env->settings.keys[KEY_MOVE_CAM_LEFT] = (uint8_t)n;
 			break;
-		case SET_KEY_DECREASE_ROTATION_SPEED:
-			env->settings.keys[KEY_DECREASE_ROTATION_SPEED] = (uint8_t)n;
-			break;
-		case SET_KEY_MOVE_OBJECT_FORWARD:
-			env->settings.keys[KEY_MOVE_OBJECT_FORWARD] = (uint8_t)n;
-			break;
-		case SET_KEY_MOVE_OBJECT_BACKWARD:
-			env->settings.keys[KEY_MOVE_OBJECT_BACKWARD] = (uint8_t)n;
-			break;
-		case SET_KEY_MOVE_OBJECT_UP:
-			env->settings.keys[KEY_MOVE_OBJECT_UP] = (uint8_t)n;
-			break;
-		case SET_KEY_MOVE_OBJECT_DOWN:
-			env->settings.keys[KEY_MOVE_OBJECT_DOWN] = (uint8_t)n;
-			break;
-		case SET_KEY_MOVE_OBJECT_LEFT:
-			env->settings.keys[KEY_MOVE_OBJECT_LEFT] = (uint8_t)n;
-			break;
-		case SET_KEY_MOVE_OBJECT_RIGHT:
-			env->settings.keys[KEY_MOVE_OBJECT_RIGHT] = (uint8_t)n;
+		case SET_KEY_MOVE_CAM_RIGHT:
+			env->settings.keys[KEY_MOVE_CAM_RIGHT] = (uint8_t)n;
 			break;
 	};
 
@@ -93,12 +69,12 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 
 static unsigned char	loader(t_env *env, char **lines)
 {
-	bool			founds[SET_KEY_MOVE_CAM_FORWARD]; // Array used to check for missing Settings.
+	bool			founds[SET_MAX]; // Array used to check for missing Settings.
 	char			**tokens;
 	unsigned char	code;
 	bool			found; // Used to check if the current settings key exists.
 
-	memset(founds, 0, sizeof(bool) * SET_KEY_MOVE_CAM_FORWARD); // No settings found yet, flat to 0.
+	memset(founds, 0, sizeof(bool) * SET_MAX); // No settings found yet, flat to 0.
 	for (unsigned int i = 0; lines[i]; i++) // Iterate through lines.
 	{
 		// Split in words
@@ -115,7 +91,7 @@ static unsigned char	loader(t_env *env, char **lines)
 
 		found = false;
 		// Indentification of which setting the user is trying to set on this line.
-		for (unsigned int j = 0; j < SET_KEY_MOVE_CAM_FORWARD; j++)
+		for (unsigned int j = 0; j < SET_MAX; j++)
 			if (strcmp(tokens[0], settings_keys[j]) == 0)
 			{
 				if ((code = assign_value(env, j, lines[i], tokens[2])) != ERR_NONE)

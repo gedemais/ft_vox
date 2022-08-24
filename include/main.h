@@ -40,21 +40,11 @@ enum					e_settings
 {
 	SET_WIN_HEIGHT,
 	SET_WIN_WIDTH,
-	SET_ROTATION_SPEED,
-	SET_TRANSITION_SPEED,
-	SET_KEY_EXIT,
-	SET_KEY_TOGGLE_ROTATION,
-	SET_KEY_TOGGLE_TEXTURE,
-	SET_KEY_INCREASE_ROTATION_SPEED,
-	SET_KEY_DECREASE_ROTATION_SPEED,
-	SET_KEY_MOVE_OBJECT_FORWARD,
-	SET_KEY_MOVE_OBJECT_BACKWARD,
-	SET_KEY_MOVE_OBJECT_UP,
-	SET_KEY_MOVE_OBJECT_DOWN,
-	SET_KEY_MOVE_OBJECT_LEFT,
-	SET_KEY_MOVE_OBJECT_RIGHT,
+	SET_KEY_EXIT, // Must remain after numeric values and before key assignments
 	SET_KEY_MOVE_CAM_FORWARD,
 	SET_KEY_MOVE_CAM_BACKWARD,
+	SET_KEY_MOVE_CAM_UP,
+	SET_KEY_MOVE_CAM_DOWN,
 	SET_KEY_MOVE_CAM_LEFT,
 	SET_KEY_MOVE_CAM_RIGHT,
 	SET_MAX
@@ -64,18 +54,10 @@ enum					e_settings
 enum					e_keys
 {
 	KEY_EXIT,
-	KEY_TOGGLE_ROTATION,
-	KEY_TOGGLE_TEXTURE,
-	KEY_INCREASE_ROTATION_SPEED,
-	KEY_DECREASE_ROTATION_SPEED,
-	KEY_MOVE_OBJECT_FORWARD,
-	KEY_MOVE_OBJECT_BACKWARD,
-	KEY_MOVE_OBJECT_UP,
-	KEY_MOVE_OBJECT_DOWN,
-	KEY_MOVE_OBJECT_LEFT,
-	KEY_MOVE_OBJECT_RIGHT,
 	KEY_MOVE_CAM_FORWARD,
 	KEY_MOVE_CAM_BACKWARD,
+	KEY_MOVE_CAM_UP,
+	KEY_MOVE_CAM_DOWN,
 	KEY_MOVE_CAM_LEFT,
 	KEY_MOVE_CAM_RIGHT,
 	KEY_MAX
@@ -86,12 +68,10 @@ typedef struct	s_settings
 {
 	uint16_t	w_wdt;
 	uint16_t	w_hgt;
-	int16_t		rotation_speed;
-	int16_t		transition_speed;
 	uint8_t		keys[KEY_MAX];
 	bool		rotation;
 	bool		textured;
-	char		pad[7];
+	char		pad[3];
 }				t_settings;
 
 // Main environment structure
@@ -132,26 +112,19 @@ void	exit_vox(t_env *env, int key);
 void	toggle_rotation(t_env *env, int key);
 void	toggle_texture(t_env *env, int key);
 void	change_rotation_speed(t_env *env, int key);
-void	move_object(t_env *env, int key);
-void	move_camera(t_env *env, int key);
+void	move_cam(t_env *env, int key);
 
 // Settings.toml keys
 static const char		*settings_keys[SET_MAX] = {
 										"window_height",
 										"window_width",
-										"rotation_speed",
-										"transition_speed",
 										"exit",
-										"toggle_rotation",
-										"toggle_texture",
-										"increase_rotation_speed",
-										"decrease_rotation_speed",
-										"move_object_forward",
-										"move_object_backward",
-										"move_object_up",
-										"move_object_down",
-										"move_object_left",
-										"move_object_right"
+										"move_cam_forward",
+										"move_cam_backward",
+										"move_cam_left",
+										"move_cam_right",
+										"move_cam_up",
+										"move_cam_down"
 										};
 
 #endif

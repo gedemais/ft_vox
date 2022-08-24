@@ -1,16 +1,10 @@
 window_height = 720
 window_width = 1280
-rotation_speed = 10
-transition_speed = 20
 
 exit = escape
-toggle_rotation = r
-toggle_texture = t
-decrease_rotation_speed = y
-increase_rotation_speed = u
-move_object_up = up
-move_object_down = down
-move_object_left = left
-move_object_right = right
-move_object_forward = f
-move_object_backward = b
+move_cam_up = q
+move_cam_down = e
+move_cam_left = a
+move_cam_right = d
+move_cam_forward = w
+move_cam_backward = s
