@@ -6,6 +6,12 @@
 # include "./main.h"
 
 
+typedef	struct	s_face
+{
+	uint32_t	a, b, c;
+	uint32_t	va, vb, vc;
+}				t_face;
+
 typedef	struct	s_vertex_texture
 {
 	float	u;

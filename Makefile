@@ -40,6 +40,7 @@ SRC_NAME=main.c\
 	init/camera.c\
 	init/settings.c\
 	init/init.c\
+	init/model.c\
 	init/init_opengl.c\
 	init/init_shaders.c\
 	init/init_utils.c\

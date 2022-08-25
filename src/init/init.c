@@ -39,6 +39,7 @@ unsigned char	init(t_env *env, int argc, char **argv)
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
 
 	camera(env);
+	model(env);
 
 	return (ERR_NONE);
 }

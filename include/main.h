@@ -125,6 +125,7 @@ typedef struct		s_env
 // Initializes scop
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
+unsigned char		model(t_env *env);
 
 // OpenGL
 unsigned char   	init_display(t_env *env);
