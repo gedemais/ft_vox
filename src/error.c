@@ -1,11 +1,12 @@
-#include "main.h"
+#include "../include/main.h"
+
 
 /*
  * This function is designed to display error messages depending
  * on the value return by the error chain, if anyone.
  */
 
-void	error_handler(t_env *env, unsigned char code)
+void			error_handler(t_env *env, unsigned char code)
 {
 	const char	*usage = "./ft_vox\n"; // Usage message
 	const char	*msg;

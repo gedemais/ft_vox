@@ -1,4 +1,5 @@
-#include "main.h"
+#include "../../include/main.h"
+
 
 static void		bind_actions_to_keys(t_env *env)
 {
@@ -22,6 +23,9 @@ unsigned char	init(t_env *env, int argc, char **argv)
 {
 	unsigned char code;
 
+	// init env ?
+	env->gl.window.fullscreen = false;
+
 	(void)argv;
 	(void)argc;
 	//if (argc != 2) // Arguments number check
@@ -33,6 +37,8 @@ unsigned char	init(t_env *env, int argc, char **argv)
 		return (code);
 
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
+
+	camera(env);
 
 	return (ERR_NONE);
 }

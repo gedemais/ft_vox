@@ -22,12 +22,12 @@ FLAGS += -Wno-double-promotion
 # Flags variables
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
-    FLAGS += -g3 -fsanitize=address
+	FLAGS += -g3 -fsanitize=address
 endif
 
 OPTI ?= 0
 ifeq ($(OPTI), 1)
-    FLAGS += -Ofast -march=native
+	FLAGS += -Ofast -march=native
 endif
 
 SRC_PATH=src/
@@ -37,12 +37,14 @@ SRC_NAME=main.c\
 	render.c\
 	actions/toggles.c\
 	actions/live.c\
+	init/camera.c\
 	init/settings.c\
 	init/init.c\
 	init/init_opengl.c\
 	init/init_shaders.c\
 	init/init_utils.c\
-	utils/bmp.c
+	utils/bmp.c\
+	utils/fps.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
 
@@ -50,7 +52,7 @@ INC_PATH=include/
 INC_NAME=main.h\
 	error.h\
 	keys.h\
-	scene.h\
+	model.h\
 	shaders.h
 
 INC=$(addprefix $(INC_PATH), $(INC_NAME))
@@ -80,7 +82,7 @@ $(NAME): $(LIB) $(LIB_MAT_VEC) $(LIB_GLAD) $(OBJS)
 $(SRC_PATH)%.o: $(SRC_PATH)%.c $(INC)
 	@tput civis
 	@printf " Compiling $<"
-	@printf "                                       \\r"
+	@printf "									   \\r"
 	@tput cnorm
 	@$(CC) $(FLAGS) -I$(INC_PATH) -I$(LIB_PATH) -I$(LIB_MAT_VEC_PATH) -I$(GLAD_PATH) -o $@ -c $<
 

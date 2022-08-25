@@ -1,14 +1,15 @@
-#include "main.h"
+#include "../../include/main.h"
 
-enum	e_toggles
+
+enum					e_toggles
 {
 	TOGGLE_EXIT,
 	TOGGLE_MAX
 };
 
-static t_env	*g_env = NULL;
+static t_env			*g_env = NULL;
 
-static bool	switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, bool press)
+static bool				switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, bool press)
 {
 	uint8_t	*keys = &env->settings.keys[0];
 	int		toggle_ids[TOGGLE_MAX] = {
@@ -18,20 +19,16 @@ static bool	switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, bool p
 	for (unsigned int i = 0; i < TOGGLE_MAX; i++)
 		if (key == toggle_ids[i])
 		{
-			if (toggles[i] && press)
+			if (toggles[i] && press) {
 				return (false);
+			}
 			toggles[i] = press;
 			return (true);
 		}
 	return (true);
 }
 
-/****************************************************************
- * process all input: query GLFW whether relevant keys are
- pressed/released this frame and react accordingly
-****************************************************************/
-
-void	processInput(GLFWwindow *window)
+void					processInput(GLFWwindow *window)
 {
 	static bool	toggles[TOGGLE_MAX] = {false};
 
@@ -41,64 +38,77 @@ void	processInput(GLFWwindow *window)
 			&& switch_toggles(g_env, toggles, gl_keys_values[i], true) // If the key is a toggle, is it released ?
 			&& g_env->keybinds_fts[i]) // Is a function associated with the key ?
 			g_env->keybinds_fts[i](g_env, gl_keys_values[i]); // Then let's launch it
-
 		if (glfwGetKey(window, gl_keys_values[i]) == GLFW_RELEASE // Is the key released ?
 			&& g_env->keybinds_fts[i]) // Is a function associated with the key ?
 			switch_toggles(g_env, toggles, gl_keys_values[i], false); // Makes toggles available again.
 	}
 }
 
-/****************************************************************
- * The framebuffer size function takes a GLFWwindow as its first
- argument and two integers indicating the new window dimensions.
- * Whenever the window changes in size, GLFW calls this function
- and fills in the proper arguments for you to process.
-****************************************************************/
-
-static void    framebuffer_size_callback(GLFWwindow *window, int width, int height)
+static void				cb_framebuffer_size(GLFWwindow *window, int width, int height)
 {
-    (void)window;
-    /****************************************************************
-     * The first two parameters of glViewport set the location of the
-     lower left corner of the window. The third and fourth parameter
-     set the width and height of the rendering window in pixels,
-     which we set equal to GLFW's window size.
-     * We could actually set the viewport dimensions at values
-     smaller than GLFW's dimensions; then all the OpenGL rendering
-     would be displayed in a smaller window and we could for
-     example display other elements outside the OpenGL viewport.
-    ****************************************************************/
+	(void)window;
 
-    glViewport(0, 0, width, height);
+	glViewport(0, 0, width, height);
 
 	g_env->settings.w_wdt = (uint16_t)width;
 	g_env->settings.w_hgt = (uint16_t)height;
 }
 
-unsigned char   init_display(t_env *env)
+static GLFWwindow*		create_window(const char *title, int width, int height, bool fullscreen)
 {
-    GLFWwindow 	*window;
-	int			err;
-	GLsizeiptr	size;
+	GLFWmonitor		 	*monitor;
+	const GLFWvidmode   *mode;
+
+	if (fullscreen)
+	{
+		monitor = glfwGetPrimaryMonitor();
+		mode = glfwGetVideoMode(monitor);
+		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+		return (glfwCreateWindow(mode->width, mode->height, title, monitor, NULL));
+	}
+	return (glfwCreateWindow(width, height, title, NULL, NULL));
+}
+
+static unsigned char	glfw_create_window(GLFWwindow* *window, const char *title, int width, int height, bool fullscreen)
+{
+	// Setting a Minimum OpenGL Version to Use
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+	// Anti-Aliasing built-in "smoothing"
+	// The more "samples" or passes it does, the more smoothed it will look, but it gets more expensive. Set it to "16" before taking screen shots!
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	*window = create_window(title, width, height, fullscreen);
+	return(*window ? ERR_NONE : ERR_FAILED_WIN);
+}
+
+static void 			glfw_init_callbacks(GLFWwindow* window)
+{
+	// glfwSetKeyCallback(window, cb_key);
+	// glfwSetCursorPosCallback(window, cb_cursor_position);
+	// glfwSetWindowFocusCallback(window, cb_window_focus);
+	// glfwSetScrollCallback(window, cb_scroll);
+	glfwSetFramebufferSizeCallback(window, cb_framebuffer_size);
+}
+
+unsigned char			init_display(t_env *env)
+{
+	unsigned char	code;
+	int				width, height;
 
 	g_env = env;
-    /****************************************************************
-     * We first initialize GLFW with glfwInit, after which we can
-     configure GLFW using glfwWindowHint.
-     * The first argument of glfwWindowHint tells us what option we
-     want to configure, where we can select the option from a large
-     enum of possible options prefixed with GLFW_.
-     * The second argument is an integer that sets the value of our
-     option. A list of all the possible options and its corresponding values can be found at GLFW's window handling documentation.
-    ****************************************************************/
 
-	err = glfwInit();
-
-    if (err != GLFW_TRUE)
+	// glfwSetErrorCallback(cb_error);
+	if (!glfwInit() || !GL_VERSION_2_1)
 		return (ERR_GLFW_INIT);
-
-	if (!GL_VERSION_2_1)
-		return (ERR_UNCOMPATIBLE_OPENGL_VERSION);
 
 #ifdef __APPLE__
 	// Calling glfwInit changes current working directory of our process to './resources'
@@ -109,64 +119,16 @@ unsigned char   init_display(t_env *env)
 	}
 #endif
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	width = env->settings.w_wdt;
+	height = env->settings.w_hgt;
 
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-    /****************************************************************
-     * The glfwCreateWindow function requires the window width and
-     height as its first two arguments respectively. The third
-     argument allows us to create a name for the window. We can
-     ignore the last 2 parameters.
-     * The function returns a GLFWwindow object that we'll later need
-     for other GLFW operations.
-     * After that we tell GLFW to make the context of our window the
-     main context on the current thread.
-    ****************************************************************/
-
-    window = glfwCreateWindow(env->settings.w_wdt, env->settings.w_hgt, "Scop", NULL, NULL);
-
-    if (window == NULL)
-    {
-        glfwTerminate();
-        return (ERR_FAILED_WIN);
-    }
-    glfwMakeContextCurrent(window);
-
-    /****************************************************************
-     * We do have to tell GLFW we want to call this function on every window resize by registering it:
-    ****************************************************************/
-
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    /****************************************************************
-     * We have to place the cursor at the center of the window, and make
-	 * it invisible in order to use mouse position propery for camera rotations :
-    ****************************************************************/
-	
-	//glfwSetCursorPos(window, env->settings.w_wdt / 2, env->settings.w_hgt / 2);
-//	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
-    /****************************************************************
-     * We pass GLAD the function to load the address of the OpenGL
-     function pointers which is OS-specific.
-     * GLFW gives us glfwGetProcAddress that defines the correct
-     function based on which OS we're compiling for.
-    ****************************************************************/
-    
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        return (ERR_FAILED_GLAD);
-
-	glEnable(GL_CULL_FACE);
-
-    env->window = window;
-
-	size = (GLsizeiptr)sizeof(t_stride) * env->stride.nb_cells;
-	glBufferData(GL_ARRAY_BUFFER, size, env->stride.arr, GL_STATIC_DRAW);
-
-    return (ERR_NONE);
+	if ((code = glfw_create_window(&env->gl.window.ptr, "ft_vox", width, height, env->gl.window.fullscreen) != ERR_NONE))
+		return (code);
+	glfwMakeContextCurrent(env->gl.window.ptr);
+	if (!gladLoadGL())
+		return (ERR_FAILED_GLAD);
+	glfwSwapInterval(1);
+	glfw_init_callbacks(env->gl.window.ptr);
+	env->fps.time = glfwGetTime();
+	return (ERR_NONE);
 }

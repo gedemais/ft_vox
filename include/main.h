@@ -26,7 +26,7 @@
 // Local headers
 # include "./shaders.h"
 # include "./error.h"
-# include "./scene.h"
+# include "./model.h"
 # include "./keys.h"
 
 # define DEFAULT_COLOR		(t_color){ 1.0f, 1.0f, 1.0f, 1.0f }
@@ -74,25 +74,57 @@ typedef struct		s_settings
 	char		pad[3];
 }					t_settings;
 
+typedef struct		s_window
+{
+	bool			fullscreen;
+	unsigned int	w, h;
+	GLFWwindow		*ptr;
+}					t_window;
+
+typedef struct	s_uniform
+{
+	GLint	texture;
+	GLint	model, view, projection;
+}				t_uniform;
+
+typedef struct	s_gltools
+{
+	GLuint			shader_program;
+	GLuint			shader_vertex, shader_fragment;
+	GLuint			ebo, vao, vbo;
+	const GLchar	*shader_vertex_text, *shader_fragment_text;
+	t_window		window;
+	t_uniform		uniform;
+}				t_gltools;
+
+typedef struct		s_fps
+{
+	unsigned int	frames, value;
+	double			time, current_seconds, elapsed_seconds;
+}					t_fps;
+
+typedef struct		s_mouse
+{
+	vec3	pos;
+	float	sensitivity;
+
+}					t_mouse;
+
 // Main environment structure
 typedef struct		s_env
 {
 	t_settings	settings;
-	t_cam		camera;
-	GLFWwindow	*window;
-	t_dynarray	stride;
-	uint32_t	vertex_shader_id;
-	uint32_t	fragment_shader_id;
-	uint32_t	shader_program;
-	uint32_t	ebo;
-	uint32_t	vbo;
-	uint32_t	vao;
+	t_gltools	gl;
+	t_camera	camera;
+	t_fps		fps;
+	t_mouse		mouse;
+	t_model		model;
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key); // Function pointers array linking actions functions with key binds
 }					t_env;
 
 // Initializes scop
 unsigned char		init(t_env *env, int argc, char **argv);
-void				init_camera(t_env *env);
+void				camera(t_env *env);
 
 // OpenGL
 unsigned char   	init_display(t_env *env);
@@ -111,9 +143,6 @@ void				free_env(t_env *env);
 
 // Actions functions
 void				exit_vox(t_env *env, int key);
-void				toggle_rotation(t_env *env, int key);
-void				toggle_texture(t_env *env, int key);
-void				change_rotation_speed(t_env *env, int key);
 void				move_cam(t_env *env, int key);
 
 // Settings.toml keys
@@ -132,6 +161,8 @@ static const char	*settings_keys[SET_MAX] = {
 // UTILS
 // bmp
 unsigned char		*load_bmp(char const *pathname, unsigned int *width, unsigned int *height);
+// fps
+void				fps(t_fps *fps, bool print);
 
 
 #endif

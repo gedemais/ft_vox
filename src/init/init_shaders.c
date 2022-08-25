@@ -1,4 +1,5 @@
-#include "main.h"
+#include "../../include/main.h"
+
 
 static unsigned char	load_shader_source(const char *path, const GLchar **ptr, size_t *file_size)
 {
@@ -32,9 +33,9 @@ static unsigned char	compile_shader(t_env *env, GLenum type, const GLchar *sourc
 
 	// Stores shader identifier
 	if (type == GL_VERTEX_SHADER)
-		env->vertex_shader_id = shader_id;
+		env->gl.shader_vertex = shader_id;
 	else if (type == GL_FRAGMENT_SHADER)
-		env->fragment_shader_id = shader_id;
+		env->gl.shader_fragment = shader_id;
 
 	// Give shader source code to OpenGL
 	glShaderSource(shader_id, 1, &source, NULL);
@@ -85,18 +86,18 @@ static unsigned char	link_shader_program(t_env *env)
 	char	info_log[4096]; // Error log message buffer
 	int		success;
 
-	env->shader_program = glCreateProgram(); // Create new program object
-	glAttachShader(env->shader_program, env->vertex_shader_id); // Attach vertex shader to the program
-	glAttachShader(env->shader_program, env->fragment_shader_id); // Attach fragment shader to the program
-	glLinkProgram(env->shader_program); // Link the final program
+	env->gl.shader_program = glCreateProgram(); // Create new program object
+	glAttachShader(env->gl.shader_program, env->gl.shader_vertex); // Attach vertex shader to the program
+	glAttachShader(env->gl.shader_program, env->gl.shader_fragment); // Attach fragment shader to the program
+	glLinkProgram(env->gl.shader_program); // Link the final program
 
 	// Checks for more informations about compilation.
-	glGetProgramiv(env->shader_program, GL_LINK_STATUS, &success);
+	glGetProgramiv(env->gl.shader_program, GL_LINK_STATUS, &success);
 
 	// If compilation failed
 	if (!success)
 	{ // Then display the error log message before to exit
-		glGetProgramInfoLog(env->shader_program, 4096, NULL, info_log);
+		glGetProgramInfoLog(env->gl.shader_program, 4096, NULL, info_log);
 		ft_putendl_fd(info_log, 2);
 		return (ERR_FAILED_TO_LINK_SHADER_PROGRAM);
 	}
@@ -104,23 +105,8 @@ static unsigned char	link_shader_program(t_env *env)
 	return (ERR_NONE);
 }
 
-static unsigned char	init_buffers(t_env *env)
+static void				set_layouts()
 {
-	GLsizeiptr		size;
-
-	// Generate OpenGL buffers
-	glGenBuffers(1, &env->vbo); // Vertex Buffer Object
-	glGenVertexArrays(1, &env->vao); // Vertex Attribute Object
-	glGenBuffers(1, &env->ebo); // Element Buffer Object
-
-	glBindBuffer(GL_ARRAY_BUFFER, env->vbo); // Bind vbo buffer
-	glBindVertexArray(env->vao); // Bind vao array
-
-	// Configurate vertexs buffer
-	size = (GLsizeiptr)sizeof(t_stride) * env->stride.nb_cells;
-	// Copies vertexs data into buffer
-	glBufferData(GL_ARRAY_BUFFER, size, env->stride.arr, GL_STATIC_DRAW);
-
 	// Specifies the disposition of components in vertexs
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -131,26 +117,77 @@ static unsigned char	init_buffers(t_env *env)
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)(sizeof(vec3) * 2));
 	glEnableVertexAttribArray(2);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo); // Bind ebo buffer
+}
 
-	// glGenTextures(1, &env->txt);
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// 	set texture filtering parameters
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+static unsigned char	init_buffers(t_mesh *mesh)
+{
+	// VAO -- Create Vertex Array Object
+	glGenVertexArrays(1, &mesh->vao);
+	glBindVertexArray(mesh->vao);
+	// VBO -- Create a Vertex Buffer Object and copy the vertex data to it
+	glGenBuffers(1, &mesh->vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
 
-	// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, txt->w, txt->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, txt->img_data);
-	// glGenerateMipmap(GL_TEXTURE_2D);
+	GLsizeiptr	size;
+
+	size = (GLsizeiptr)sizeof(t_stride) * mesh->vertices.nb_cells;
+	glBufferData(GL_ARRAY_BUFFER, size, mesh->vertices.arr, GL_STATIC_DRAW);
+
+	// EBO -- Create an Elements Buffer Object
+	glGenBuffers(1, &mesh->ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+
+	size = (GLsizeiptr)mesh->faces.nb_cells * (GLsizeiptr)sizeof(uint32_t) * 3;
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, mesh->faces.arr, GL_STATIC_DRAW);
+
+	set_layouts();
+	glBindVertexArray(0);
 
 	return (ERR_NONE);
+}
+
+static void				textures(t_env *env)
+{
+	(void)env;
+	// t_image	image;
+	// int		i = -1;
+
+	// glGenTextures(1, &env->gl.texture);
+	// while (++i < 1) {
+	// 	glActiveTexture(GL_TEXTURE0 + i);
+	// 	glBindTexture(GL_TEXTURE_2D, env->gl.texture);
+
+	// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	// 	image = env->model.texture;
+	// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.w, image.h, 0, GL_BGR, GL_UNSIGNED_BYTE, image.ptr);
+	// 	glGenerateMipmap(GL_TEXTURE_2D);
+	// }
+}
+
+static void				set_uniforms(t_env *env)
+{
+	// get uniforms
+	env->gl.uniform.texture = glGetUniformLocation(env->gl.shader_program, "TexId");
+
+	env->gl.uniform.model = glGetUniformLocation(env->gl.shader_program, "model");
+	env->gl.uniform.view = glGetUniformLocation(env->gl.shader_program, "view");
+	env->gl.uniform.projection = glGetUniformLocation(env->gl.shader_program, "projection");
+
+	// consume uniforms
+	glUniform1i(env->gl.uniform.texture, 0);
 }
 
 unsigned char			init_shaders(t_env *env)
 {
 	// Paths array to shaders source files
-	const char		*shaders_path[SHADER_MAX] = {"src/shaders/vertex.glsl",
-												 "src/shaders/fragment.glsl"};
+	const char		*shaders_path[SHADER_MAX] = {
+		"src/shaders/vertex.glsl",
+		"src/shaders/fragment.glsl"
+	};
 	unsigned char	code;
 
 	// Iterate through shaders ids to build them
@@ -159,10 +196,33 @@ unsigned char			init_shaders(t_env *env)
 			return (code);
 
 	// Links shaders into an usable program
-	if ((code = link_shader_program(env)) != ERR_NONE
-	// Initializes buffers and data structures for rendering
-		|| (code = init_buffers(env)) != ERR_NONE)
+	if ((code = link_shader_program(env)) != ERR_NONE)
 		return (code);
+
+	set_uniforms(env);
+
+	t_mesh	*mesh;
+	int		i = -1;
+
+	// Initializes buffers and data structures for rendering
+	while (++i < env->model.meshs.nb_cells) {
+		mesh = dyacc(&env->model.meshs, i);
+
+		if ((code = init_buffers(mesh)) != ERR_NONE)
+			return (code);
+	}
+
+	textures(env);
+
+	//  DEPTH BUFFER
+	glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS);
+
+	// CULLING : we only draw front face in clock-wise order
+	// glEnable(GL_CULL_FACE);
+	// glCullFace(GL_FRONT);
+	// glFrontFace(GL_CCW);
 
 	return (ERR_NONE);
 }

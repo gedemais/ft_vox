@@ -1,4 +1,5 @@
-#include "main.h"
+#include "../../include/main.h"
+
 
 static unsigned char	load_integer(char *line, char *token, long long int *n)
 {

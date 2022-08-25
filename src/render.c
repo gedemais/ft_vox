@@ -1,85 +1,89 @@
-#include "main.h"
+#include "../include/main.h"
 
-/****************************************************************
- * The glfwWindowShouldClose function checks at the start of each
- loop iteration if GLFW has been instructed to close. If so,
- the function returns true and the render loop stops running, after
- which we can close the application.
- * The glfwPollEvents function checks if any events are triggered
- (like keyboard input or mouse movement events), updates the
- window state, and calls the corresponding functions (which we
- can register via callback methods).
- * The glfwSwapBuffers will swap the color buffer (a large 2D
- buffer that contains color values for each pixel in GLFW's
- window) that is used to render to during this render iteration
- and show it as output to the screen.
-****************************************************************/
 
-/************************************************************
-glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-************************************************************/
+// static void	textures(GLuint *textures, int id)
+// {
+// 	int	i;
 
-static void	update_mvp(t_env *env)
+// 	i = -1;
+// 	// il faut iterer sur toutes les textures load sur GL et bind celle qu'on veut activer
+// 	while (++i < TEXTURE_MAX) {
+// 		glActiveTexture(GL_TEXTURE0 + i);
+// 		glBindTexture(GL_TEXTURE_2D, textures[id]);
+// 	}
+// }
+
+static void				draw_mesh(t_env *env)
 {
-	(void)env;
+	t_mesh		*mesh;
+	GLsizeiptr	size;
+	int			i;
+
+	i = -1;
+	while (++i < env->model.meshs.nb_cells) {
+		mesh = dyacc(&env->model.meshs, i);
+		if (mesh == NULL)
+			continue ;
+		glBindVertexArray(mesh->vao);
+		glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
+		glBindVertexArray(0);
+	}
 }
 
-static void	set_uniforms(t_env *env)
+static void				set_uniforms(t_env *env)
 {
-	// This function will set uniforms, which are variables usable into our shaders program.
+	// update matrices in shaders
+	glUniformMatrix4fv(env->gl.uniform.model, 1, GL_FALSE, env->model.model);
+	glUniformMatrix4fv(env->gl.uniform.view, 1, GL_FALSE, env->camera.view);
+	glUniformMatrix4fv(env->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
+}
 
-	(void)env;
-	// Launch shaders-composed program
-	glUseProgram(env->shader_program);
+static void				mat4_view(t_camera *camera)
+{
+	if (camera->ground_fixed == true)
+		camera->pos.y = 0;
+	mat4_lookat(camera->view, camera->pos, vec_add(camera->pos, camera->zaxis), camera->yaxis);
+	mat4_inverse(camera->view);
+}
 
-	// Matrices
-//	glUniformMatrix4fv(glGetUniformLocation(env->shader_program, "model"), 1, GL_FALSE, cam->mats.model);
-//	glUniformMatrix4fv(glGetUniformLocation(env->shader_program, "view"), 1, GL_FALSE, cam->mats.view);
-//	glUniformMatrix4fv(glGetUniformLocation(env->shader_program, "projection"), 1, GL_FALSE, cam->mats.projection);
+static void				mat4_model(t_model *model)
+{
+	mat4_identity(model->model);
+	mat4_translate(model->model, model->trans.x, model->trans.y, model->trans.z);
+	mat4_rotate(model->model, model->rot.x, model->rot.y, model->rot.z);
+	mat4_scale(model->model, model->scale);
+}
+
+static void				mat4_mvp(t_env *env)
+{
+	mat4_model(&env->model);
+	mat4_view(&env->camera);
+	mat4_projection(env->camera.projection, env->camera.fov, env->camera.near, env->camera.far, env->camera.ratio);
 }
 
 static unsigned char	render_scene(t_env *env)
 {
-	static float	angle = 0.0f;
-
-	update_mvp(env);
+	fps(&env->fps, true);
+	mat4_mvp(env);
 	set_uniforms(env);
-
-	// Draw triangles with provided data stride and binded texture
-//	glDrawArrays(GL_TRIANGLES, 0, env->scene.vertexs.nb_cells);
-
+	draw_mesh(env);
 	return (ERR_NONE);
 }
 
-unsigned char   display_loop(t_env *env)
+unsigned char			display_loop(t_env *env)
 {
 	unsigned char	code;
 
-	// set clearcolor to black
-    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-
-	// Main rendering loop
-    while (!glfwWindowShouldClose(env->window))
-    {
-        // Events handler
-        processInput(env->window);
-
-		// Clear the screen and the depth buffer
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	while (!glfwWindowShouldClose(env->gl.window.ptr))
+	{
+		processInput(env->gl.window.ptr);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// Enable depth test
-		glEnable(GL_DEPTH_TEST);
-		// Accept fragment if it closer to the camera than the former one
-		glDepthFunc(GL_LESS);
-
-		// Rendering
 		if ((code = render_scene(env)) != ERR_NONE)
 			return (code);
-
-		// Update window's content
-        glfwSwapBuffers(env->window);
-        glfwPollEvents();
-    }
-
-    glfwTerminate();
-    return (ERR_NONE);
+		glfwSwapBuffers(env->gl.window.ptr);
+		glfwPollEvents();
+	}
+	glfwTerminate();
+	return (ERR_NONE);
 }

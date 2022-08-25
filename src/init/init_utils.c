@@ -1,4 +1,5 @@
-#include "main.h"
+#include "../../include/main.h"
+
 
 char		*read_file(int fd, size_t *file_size)
 {

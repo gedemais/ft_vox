@@ -1,4 +1,5 @@
-#include "main.h"
+#include "../include/main.h"
+
 
 /*__attribute__((noreturn))*/ void		free_env(t_env *env) 
 {
