@@ -80,7 +80,7 @@ static unsigned char	loader(t_env *env, char **lines)
 	unsigned char	code;
 	bool			found; // Used to check if the current settings key exists.
 
-	memset(founds, 0, sizeof(bool) * SET_MAX); // No settings found yet, flat to 0.
+	ft_memset(founds, 0, sizeof(bool) * SET_MAX); // No settings found yet, flat to 0.
 	for (unsigned int i = 0; lines[i]; i++) // Iterate through lines.
 	{
 		// Split in words
@@ -88,21 +88,21 @@ static unsigned char	loader(t_env *env, char **lines)
 			return (ERR_MALLOC_FAILED);
 
 		// First syntax check
-		if (ft_tablen(tokens) != 3 || tokens[1][0] != '=' || tokens[1][1] != 0)
+		if (ft_arrlen(tokens) != 3 || tokens[1][0] != '=' || tokens[1][1] != 0)
 		{
 			ft_putendl_fd(lines[i], 2);
-			ft_free_ctab(tokens);
+			ft_arrfree(tokens);
 			return (ERR_INVALID_SETTINGS_SYNTAX);
 		}
 
 		found = false;
 		// Indentification of which setting the user is trying to set on this line.
 		for (unsigned int j = 0; j < SET_MAX; j++)
-			if (strcmp(tokens[0], settings_keys[j]) == 0)
+			if (ft_strcmp(tokens[0], settings_keys[j]) == 0)
 			{
 				if ((code = assign_value(env, j, lines[i], tokens[2])) != ERR_NONE)
 				{
-					ft_free_ctab(tokens);
+					ft_arrfree(tokens);
 					return (code);
 				}
 				found = true;
@@ -113,10 +113,10 @@ static unsigned char	loader(t_env *env, char **lines)
 		if (found == false) // If identification failed.
 		{
 			ft_putendl_fd(lines[i], 2);
-			ft_free_ctab(tokens);
+			ft_arrfree(tokens);
 			return (ERR_INVALID_SETTING_KEY);
 		}
-		ft_free_ctab(tokens);
+		ft_arrfree(tokens);
 	}
 
 	for (unsigned int i = 0; i < SET_MAX; i++)
@@ -140,12 +140,12 @@ unsigned char			load_settings(t_env *env)
 
 	if ((code = loader(env, lines)) != ERR_NONE)
 	{
-		ft_free_ctab(lines);
+		ft_arrfree(lines);
 		return (code);
 	}
 
 	// Free lines array
-	ft_free_ctab(lines);
+	ft_arrfree(lines);
 
 	return (ERR_NONE);
 }

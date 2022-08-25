@@ -12,8 +12,8 @@ static bool	switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, bool p
 {
 	uint8_t	*keys = &env->settings.keys[0];
 	int		toggle_ids[TOGGLE_MAX] = {
-					env->settings.keys[KEY_EXIT],
-					};
+		env->settings.keys[KEY_EXIT],
+	};
 
 	for (unsigned int i = 0; i < TOGGLE_MAX; i++)
 		if (key == toggle_ids[i])
@@ -166,7 +166,7 @@ unsigned char   init_display(t_env *env)
     env->window = window;
 
 	size = (GLsizeiptr)sizeof(t_stride) * env->stride.nb_cells;
-	glBufferData(GL_ARRAY_BUFFER, size, env->stride.c, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, env->stride.arr, GL_STATIC_DRAW);
 
     return (ERR_NONE);
 }

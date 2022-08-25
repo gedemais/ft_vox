@@ -32,25 +32,26 @@ endif
 
 SRC_PATH=src/
 SRC_NAME=main.c\
-		 error.c\
-		 free.c\
-		 render.c\
-		 actions/toggles.c\
-		 actions/live.c\
-		 init/settings.c\
-		 init/init.c\
-		 init/init_opengl.c\
-		 init/init_shaders.c\
-		 init/init_utils.c
+	error.c\
+	free.c\
+	render.c\
+	actions/toggles.c\
+	actions/live.c\
+	init/settings.c\
+	init/init.c\
+	init/init_opengl.c\
+	init/init_shaders.c\
+	init/init_utils.c\
+	utils/bmp.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
 
 INC_PATH=include/
 INC_NAME=main.h\
-		 error.h\
-		 keys.h\
-		 scene.h\
-		 shaders.h
+	error.h\
+	keys.h\
+	scene.h\
+	shaders.h
 
 INC=$(addprefix $(INC_PATH), $(INC_NAME))
 
@@ -62,48 +63,40 @@ LIBS_PATH=libs
 LIB_PATH=$(LIBS_PATH)/libft
 LIB=$(LIB_PATH)/libft.a
 
-LIB_VEC_PATH=$(LIBS_PATH)/lib_vec
-LIB_VEC=$(LIB_VEC_PATH)/lib_vec.a
-
-LIBBMP_PATH=$(LIBS_PATH)/libbmp
-LIBBMP=$(LIBBMP_PATH)/libbmp.a
+LIB_MAT_VEC_PATH=$(LIBS_PATH)/lib_mat_vec
+LIB_MAT_VEC=$(LIB_MAT_VEC_PATH)/lib_mat_vec.a
 
 LIB_GLAD_PATH = $(LIBS_PATH)/glad
 GLAD_PATH = $(LIB_GLAD_PATH)/include/glad/
-KHR_PATH = $(LIBS_PATH)/include/KHR/
 LIB_GLAD = $(LIB_GLAD_PATH)/libglad.a
 
 ##########################################################
 
 all: $(NAME)
 
-$(NAME): $(LIB) $(LIB_VEC) $(LIBBMP) $(LIB_GLAD) $(OBJS)
-	$(CC) $(FLAGS) -o $(NAME) $(OBJS) $(LIB) $(LIB_VEC) $(LIBBMP) $(LIB_GLAD) -lpthread -lglfw $(FLAGS_OS)
+$(NAME): $(LIB) $(LIB_MAT_VEC) $(LIB_GLAD) $(OBJS)
+	$(CC) $(FLAGS) -o $(NAME) $(OBJS) $(LIB) $(LIB_MAT_VEC) $(LIB_GLAD) -lpthread -lglfw $(FLAGS_OS)
 
 $(SRC_PATH)%.o: $(SRC_PATH)%.c $(INC)
 	@tput civis
 	@printf " Compiling $<"
 	@printf "                                       \\r"
 	@tput cnorm
-	@$(CC) $(FLAGS) -I$(INC_PATH) -I$(LIB_PATH) -I$(LIB_VEC_PATH) -I$(LIBBMP_PATH) -I$(GLAD_PATH) -o $@ -c $<
+	@$(CC) $(FLAGS) -I$(INC_PATH) -I$(LIB_PATH) -I$(LIB_MAT_VEC_PATH) -I$(GLAD_PATH) -o $@ -c $<
 
 ########################## Library rules ##########################
 
 $(LIB): $(LIB_PATH)
 	@echo "Making Libft..."
-	@make -C $(LIB_PATH)
+	@make -C $(LIB_PATH) -j4
 
-$(LIB_VEC): $(LIB_VEC_PATH)
-	@echo "Making lib_vec..."
-	@make -C $(LIB_VEC_PATH)
-
-$(LIBBMP): $(LIBBMP_PATH)
-	@echo "Making libbmp..."
-	@make -C $(LIBBMP_PATH)
+$(LIB_MAT_VEC): $(LIB_MAT_MAT_VEC_PATH)
+	@echo "Making lib_mat_vec..."
+	@make -C $(LIB_MAT_VEC_PATH) -j4
 
 $(LIB_GLAD): $(LIB_GLAD_PATH)
 	@echo "Making libglad..."
-	@make -C $(LIB_GLAD_PATH)
+	@make -C $(LIB_GLAD_PATH) -j4
 
 
 ###################################################################
@@ -111,15 +104,13 @@ $(LIB_GLAD): $(LIB_GLAD_PATH)
 clean:
 	@rm -rf $(OBJS)
 	@make -C $(LIB_PATH) clean
-	@make -C $(LIB_VEC_PATH) clean
-	@make -C $(LIBBMP_PATH) clean
+	@make -C $(LIB_MAT_VEC_PATH) clean
 	@make -C $(LIB_GLAD_PATH) clean
 
 fclean: clean
 	@rm -rf $(NAME)
 	@make -C $(LIB_PATH) fclean
-	@make -C $(LIB_VEC_PATH) fclean
-	@make -C $(LIBBMP_PATH) fclean
+	@make -C $(LIB_MAT_VEC_PATH) fclean
 	@make -C $(LIB_GLAD_PATH) fclean
 
 re: fclean all

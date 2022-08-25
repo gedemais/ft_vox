@@ -4,13 +4,13 @@ static void		bind_actions_to_keys(t_env *env)
 {
 	// Function pointers array used to synthetize actions function
 	static void	(*keys_fts[NB_KEYS])(t_env *env, int key) = {
-													[KEY_EXIT] = exit_vox,
-													[KEY_MOVE_CAM_FORWARD] = move_cam,
-													[KEY_MOVE_CAM_BACKWARD] = move_cam,
-													[KEY_MOVE_CAM_UP] = move_cam,
-													[KEY_MOVE_CAM_DOWN] = move_cam,
-													[KEY_MOVE_CAM_LEFT] = move_cam,
-													[KEY_MOVE_CAM_RIGHT] = move_cam
+		[KEY_EXIT] = exit_vox,
+		[KEY_MOVE_CAM_FORWARD] = move_cam,
+		[KEY_MOVE_CAM_BACKWARD] = move_cam,
+		[KEY_MOVE_CAM_UP] = move_cam,
+		[KEY_MOVE_CAM_DOWN] = move_cam,
+		[KEY_MOVE_CAM_LEFT] = move_cam,
+		[KEY_MOVE_CAM_RIGHT] = move_cam
 	};
 
 	// Assignation of actions functions in respect with handled key indices.

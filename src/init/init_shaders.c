@@ -46,13 +46,13 @@ static unsigned char	compile_shader(t_env *env, GLenum type, const GLchar *sourc
 
 	if (success == GL_FALSE) // If shader's compilation failed
 	{ // Then display error log message before to exit
-		bzero(info_log, sizeof(info_log));
+		ft_memset(info_log, 0, sizeof(info_log));
 		glGetShaderInfoLog(shader_id, sizeof(info_log), NULL, info_log);
 		ft_putstr_fd(info_log, 2);
-		munmap((const void*)source, size);
+		munmap((void*)source, size);
 		return (ERR_FAILED_TO_COMPILE_SHADER);
 	}
-	munmap((const void*)source, size); // Free memory mapping used for shader source file
+	munmap((void*)source, size); // Free memory mapping used for shader source file
 
 	return (ERR_NONE);
 }
@@ -119,32 +119,29 @@ static unsigned char	init_buffers(t_env *env)
 	// Configurate vertexs buffer
 	size = (GLsizeiptr)sizeof(t_stride) * env->stride.nb_cells;
 	// Copies vertexs data into buffer
-	glBufferData(GL_ARRAY_BUFFER, size, env->stride.c, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, env->stride.arr, GL_STATIC_DRAW);
 
 	// Specifies the disposition of components in vertexs
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)sizeof(t_vec3d));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)sizeof(vec3));
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)(sizeof(t_vec3d) * 2));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)(sizeof(vec3) * 2));
 	glEnableVertexAttribArray(2);
-
-	glVertexAttribPointer(3, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride), (void*)((sizeof(t_vec3d) * 2 + sizeof(t_vt))));
-	glEnableVertexAttribArray(3);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo); // Bind ebo buffer
 
-//	glGenTextures(1, &env->txt);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-  //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// glGenTextures(1, &env->txt);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// 	set texture filtering parameters
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-//		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, txt->w, txt->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, txt->img_data);
-//		glGenerateMipmap(GL_TEXTURE_2D);
+	// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, txt->w, txt->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, txt->img_data);
+	// glGenerateMipmap(GL_TEXTURE_2D);
 
 	return (ERR_NONE);
 }

@@ -10,4 +10,5 @@ enum e_shaders_ids
 	SHADER_MAX
 };
 
+
 #endif

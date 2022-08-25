@@ -3,7 +3,6 @@
 
 # define OBJ_SPEED 0.01f
 
-typedef float mat4[16];
 
 typedef	struct		s_vertex_texture
 {
@@ -13,8 +12,8 @@ typedef	struct		s_vertex_texture
 
 typedef struct		s_stride
 {
-	t_vec3d		v;
-	t_vec3d		n;
+	vec3		v;
+	vec3		n;
 	t_vt		t;
 	uint32_t	txt;
 }					t_stride;
@@ -39,11 +38,11 @@ typedef struct	s_camera_matrices
 typedef	struct	s_camera
 {
 	t_cam_mat	mats;
-	t_vec3d		pos;
-	t_vec3d		target;
-	t_vec3d		dir;
-	t_vec3d		up;
-	t_vec3d		right;
+	vec3		pos;
+	vec3		target;
+	vec3		dir;
+	vec3		up;
+	vec3		right;
 	float		roll;
 	float		pitch;
 	float		yaw;
@@ -55,5 +54,6 @@ typedef	struct	s_camera
 	float		fovr;
 	uint8_t		pad[4];
 }				t_cam;
+
 
 #endif
