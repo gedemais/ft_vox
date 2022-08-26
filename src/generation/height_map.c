@@ -14,7 +14,7 @@ static	uint8_t	**allocate_height_map(unsigned int size)
 	return (new);
 }
 
-uint8_t	**generate_height_map(unsigned int x_start, unsigned int y_start, unsigned int size)
+uint8_t	**generate_height_map(int x_start, int y_start, unsigned int size)
 {
 	uint8_t	**hmap;
 	unsigned int	xbound, ybound;

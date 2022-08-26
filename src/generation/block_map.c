@@ -53,7 +53,7 @@ static void		gen_blocks(t_chunk *chunk, unsigned int size)
 		}
 }
 
-unsigned char	gen_block_map(t_chunk *chunk, unsigned int x_start, unsigned int y_start, unsigned int size)
+unsigned char	gen_block_map(t_chunk *chunk, int x_start, int y_start, unsigned int size)
 {
 	if (!(chunk->block_map = allocate_block_map(size)))
 		return (ERR_MALLOC_FAILED);

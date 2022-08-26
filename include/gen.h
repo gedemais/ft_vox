@@ -31,7 +31,7 @@ typedef struct	s_block
 
 typedef struct	s_chunk
 {
-	t_dynarray		*stride;
+	t_dynarray		stride;
 	t_block			***block_map;
 	uint8_t			**surface_hmap;
 	uint8_t			**sub_hmap;
