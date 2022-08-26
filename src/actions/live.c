@@ -1,4 +1,5 @@
-#include "main.h"
+#include "../../include/main.h"
+
 
 void		move_cam(t_env *env, int key)
 {

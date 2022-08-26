@@ -30,16 +30,6 @@ typedef struct	s_texture
 	char			pad[4];
 }				t_texture;
 
-typedef struct	s_camera
-{
-	mat4		view, projection;
-	float		pitch, yaw;
-	float		fov, near, far, ratio;
-	vec3		pos, yaxis, zaxis;
-	float		speed, tspeed;
-	bool		ground_fixed;
-}				t_camera;
-
 typedef struct	s_mesh
 {
 	t_dynarray		vertices;

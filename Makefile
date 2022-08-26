@@ -52,8 +52,10 @@ SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
 
 INC_PATH=include/
 INC_NAME=main.h\
+	camera.h\
 	error.h\
 	keys.h\
+	light.h\
 	model.h\
 	shaders.h
 

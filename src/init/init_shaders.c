@@ -168,7 +168,7 @@ static void				set_uniforms(t_env *env)
 	// env->gl.uniform.campos = glGetUniformLocation(env->gl.shader_program, "campos");
 	env->gl.uniform.texture = glGetUniformLocation(env->gl.shader_program, "texture_color");
 
-	// env->gl.uniform.light[LIGHT_ACTIVE] = glGetUniformLocation(env->gl.shader_program, "light.is_active");
+	env->gl.uniform.light[LIGHT_ACTIVE] = glGetUniformLocation(env->gl.shader_program, "light.is_active");
 	// env->gl.uniform.light[LIGHT_POSITION] = glGetUniformLocation(env->gl.shader_program, "light.pos");
 	// env->gl.uniform.light[LIGHT_DIRECTION] = glGetUniformLocation(env->gl.shader_program, "light.dir");
 	// env->gl.uniform.light[LIGHT_COLOR] = glGetUniformLocation(env->gl.shader_program, "light.color");
@@ -180,7 +180,7 @@ static void				set_uniforms(t_env *env)
 	// glUniform4fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 	glUniform1i(env->gl.uniform.texture, 0);
 
-	// glUniform4fv(env->gl.uniform.light[LIGHT_ACTIVE], 1, (GLfloat *)&env->light.active);
+	glUniform1i(env->gl.uniform.light[LIGHT_ACTIVE], env->light.is_active);
 	// glUniform4fv(env->gl.uniform.light[LIGHT_POSITION], 1, (GLfloat *)&env->light.pos);
 	// glUniform4fv(env->gl.uniform.light[LIGHT_DIRECTION], 1, (GLfloat *)&env->light.dir);
 	// glUniform4fv(env->gl.uniform.light[LIGHT_COLOR], 1, (GLfloat *)&env->light.color);

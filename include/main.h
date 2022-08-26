@@ -24,10 +24,12 @@
 # include "../libs/lib_mat_vec/lib_mat_vec.h"
 
 // Local headers
-# include "./shaders.h"
+# include "./camera.h"
 # include "./error.h"
-# include "./model.h"
+# include "./light.h"
 # include "./keys.h"
+# include "./model.h"
+# include "./shaders.h"
 
 # define DEFAULT_COLOR		(t_color){ 1.0f, 1.0f, 1.0f, 1.0f }
 
@@ -82,6 +84,7 @@ typedef struct	s_uniform
 {
 	GLint	texture;
 	GLint	model, view, projection;
+	GLint	light[LIGHT_MAX];
 }				t_uniform;
 
 typedef struct	s_gltools
@@ -115,6 +118,7 @@ typedef struct		s_env
 	t_fps		fps;
 	t_mouse		mouse;
 	t_model		model;
+	t_light		light;
 	// Function pointers array linking actions functions with key binds
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;

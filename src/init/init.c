@@ -32,6 +32,17 @@ static unsigned char	images(t_env *env)
 	return (ERR_NONE);
 }
 
+static void				light(t_light *light)
+{
+	light->is_active = false;
+	light->pos = (vec3){ -10, 10, -10, 1 };
+	light->dir = (vec3){ -0.2f, -1.0f, -0.3f, 1 };
+	light->color = (vec3){ 1, 1, 1, 1 };
+	light->ambient = (vec3){ 0.4f, 0.4f, 0.4f, 1 };
+	light->diffuse = (vec3){ 0.75f, 0.75f, 0.75f, 1 };
+	light->specular = (vec3){ 1, 1, 1, 1 };
+}
+
 unsigned char			init(t_env *env, int argc, char **argv)
 {
 	unsigned char code;
@@ -43,6 +54,7 @@ unsigned char			init(t_env *env, int argc, char **argv)
 		return (code);
 
 	model(env);
+	light(&env->light);
 
 	(void)argv;
 	(void)argc;
