@@ -1,7 +1,6 @@
 #ifndef SCENE_H
 # define SCENE_H
 
-# define OBJ_SPEED 0.01f
 
 # include "./main.h"
 
@@ -14,8 +13,7 @@ typedef	struct	s_face
 
 typedef	struct	s_vertex_texture
 {
-	float	u;
-	float	v;
+	float	u, v;
 }				t_vt;
 
 typedef struct	s_stride
@@ -27,10 +25,8 @@ typedef struct	s_stride
 
 typedef struct	s_texture
 {
-	unsigned char	*img_data;
-	unsigned int	gl_id;
-	int				w;
-	int				h;
+	unsigned char	*ptr;
+	unsigned int	id, w, h;
 	char			pad[4];
 }				t_texture;
 
@@ -47,10 +43,8 @@ typedef struct	s_camera
 typedef struct	s_mesh
 {
 	t_dynarray		vertices;
-	t_dynarray		faces;
 	vec3			center;
-	unsigned int	texture;
-	GLuint			ebo, vao, vbo;
+	GLuint			vao, vbo;
 }				t_mesh;
 
 typedef struct	s_model
@@ -58,8 +52,8 @@ typedef struct	s_model
 	t_dynarray	meshs;
 	mat4		model;
 	vec3		center;
-	vec3		trans, rot;
-	float		scale, strans, srot;
+	float		scale;
+	t_texture	texture;
 }				t_model;
 
 

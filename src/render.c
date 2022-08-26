@@ -49,8 +49,6 @@ static void				mat4_view(t_camera *camera)
 static void				mat4_model(t_model *model)
 {
 	mat4_identity(model->model);
-	mat4_translate(model->model, model->trans.x, model->trans.y, model->trans.z);
-	mat4_rotate(model->model, model->rot.x, model->rot.y, model->rot.z);
 	mat4_scale(model->model, model->scale);
 }
 

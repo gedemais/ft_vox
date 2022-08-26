@@ -4,6 +4,8 @@
 enum					e_toggles
 {
 	TOGGLE_EXIT,
+	TOGGLE_LIGHT,
+	TOGGLE_TEXTURE,
 	TOGGLE_MAX
 };
 
@@ -16,6 +18,8 @@ static bool				switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, boo
 	uint8_t	*keys = &env->settings.keys[0];
 	int		toggle_ids[TOGGLE_MAX] = {
 		env->settings.keys[KEY_EXIT],
+		env->settings.keys[KEY_LIGHT],
+		env->settings.keys[KEY_TEXTURE],
 	};
 
 	for (unsigned int i = 0; i < TOGGLE_MAX; i++)
@@ -32,7 +36,7 @@ static bool				switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, boo
 
 void					processInput(GLFWwindow *window)
 {
-	static bool	toggles[TOGGLE_MAX] = {false};
+	static bool	toggles[TOGGLE_MAX] = { false, false, false };
 
 	for (int i = 0; i < NB_KEYS; i++) // Iterate through every keys
 	{

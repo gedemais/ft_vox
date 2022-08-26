@@ -30,10 +30,6 @@
 # include "./keys.h"
 
 # define DEFAULT_COLOR		(t_color){ 1.0f, 1.0f, 1.0f, 1.0f }
-# define ROT_SPEED_DELTA	2
-# define MOVE_SPEED			0.01f
-# define CAM_SPEED			0.05f
-# define SENSI				0.1f
 
 // Settings instances
 enum				e_settings
@@ -47,6 +43,8 @@ enum				e_settings
 	SET_KEY_MOVE_CAM_DOWN,
 	SET_KEY_MOVE_CAM_LEFT,
 	SET_KEY_MOVE_CAM_RIGHT,
+	SET_KEY_LIGHT,
+	SET_KEY_TEXTURE,
 	SET_MAX
 };
 
@@ -60,6 +58,8 @@ enum				e_keys
 	KEY_MOVE_CAM_DOWN,
 	KEY_MOVE_CAM_LEFT,
 	KEY_MOVE_CAM_RIGHT,
+	KEY_LIGHT,
+	KEY_TEXTURE,
 	KEY_MAX
 };
 
@@ -69,9 +69,6 @@ typedef struct		s_settings
 	uint16_t	w_wdt;
 	uint16_t	w_hgt;
 	uint8_t		keys[KEY_MAX];
-	bool		rotation;
-	bool		textured;
-	char		pad[3];
 }					t_settings;
 
 typedef struct		s_window
@@ -91,7 +88,6 @@ typedef struct	s_gltools
 {
 	GLuint			shader_program;
 	GLuint			shader_vertex, shader_fragment;
-	GLuint			ebo, vao, vbo;
 	const GLchar	*shader_vertex_text, *shader_fragment_text;
 	t_window		window;
 	t_uniform		uniform;
@@ -148,6 +144,9 @@ void				exit_vox(t_env *env, int key);
 void				move_cam(t_env *env, int key);
 void				events_mouse(t_env *env, float xpos, float ypos);
 
+void				event_light(t_env *env, int key);
+void				event_texture(t_env *env, int key);
+
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {
 	"window_height",
@@ -159,6 +158,8 @@ static const char	*settings_keys[SET_MAX] = {
 	"move_cam_down",
 	"move_cam_left",
 	"move_cam_right",
+	"toggle_light",
+	"toggle_texture"
 };
 
 // UTILS

@@ -108,6 +108,7 @@ static unsigned char	link_shader_program(t_env *env)
 static void				set_layouts()
 {
 	// Specifies the disposition of components in vertexs
+	// id ptr, size, GL_type, GL_FALSE, totalsize, start pos
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride),
 		(void *)0);
 	glEnableVertexAttribArray(0);
@@ -129,45 +130,31 @@ static unsigned char	init_buffers(t_mesh *mesh)
 	// VBO -- Create a Vertex Buffer Object and copy the vertex data to it
 	glGenBuffers(1, &mesh->vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
-
-	GLsizeiptr	size;
-
-	size = (GLsizeiptr)sizeof(t_stride) * mesh->vertices.nb_cells;
-	glBufferData(GL_ARRAY_BUFFER, size, mesh->vertices.arr, GL_STATIC_DRAW);
-
-	// EBO -- Create an Elements Buffer Object
-	glGenBuffers(1, &mesh->ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-
-	size = (GLsizeiptr)mesh->faces.nb_cells * (GLsizeiptr)sizeof(uint32_t) * 3;
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, mesh->faces.arr, GL_STATIC_DRAW);
-
+	glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)sizeof(t_stride) * mesh->vertices.nb_cells,
+		mesh->vertices.arr, GL_STATIC_DRAW);
 	set_layouts();
 	glBindVertexArray(0);
-
 	return (ERR_NONE);
 }
 
 static void				textures(t_env *env)
 {
-	(void)env;
-	// t_image	image;
-	// int		i = -1;
+	t_texture	texture;
+	int		i = -1;
 
-	// glGenTextures(1, &env->gl.texture);
-	// while (++i < 1) {
-	// 	glActiveTexture(GL_TEXTURE0 + i);
-	// 	glBindTexture(GL_TEXTURE_2D, env->gl.texture);
-
-	// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	// 	image = env->model.texture;
-	// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.w, image.h, 0, GL_BGR, GL_UNSIGNED_BYTE, image.ptr);
-	// 	glGenerateMipmap(GL_TEXTURE_2D);
-	// }
+	texture = env->model.texture;
+	glGenTextures(1, &texture.id);
+	while (++i < 1) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, texture.id);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.w, texture.h,
+			0, GL_BGR, GL_UNSIGNED_BYTE, texture.ptr);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
 }
 
 static void				set_uniforms(t_env *env)
@@ -177,8 +164,29 @@ static void				set_uniforms(t_env *env)
 	env->gl.uniform.view = glGetUniformLocation(env->gl.shader_program, "view");
 	env->gl.uniform.projection = glGetUniformLocation(env->gl.shader_program, "projection");
 
+	// env->gl.uniform.progress = glGetUniformLocation(env->gl.shader_program, "progress");
+	// env->gl.uniform.campos = glGetUniformLocation(env->gl.shader_program, "campos");
+	env->gl.uniform.texture = glGetUniformLocation(env->gl.shader_program, "texture_color");
+
+	// env->gl.uniform.light[LIGHT_ACTIVE] = glGetUniformLocation(env->gl.shader_program, "light.is_active");
+	// env->gl.uniform.light[LIGHT_POSITION] = glGetUniformLocation(env->gl.shader_program, "light.pos");
+	// env->gl.uniform.light[LIGHT_DIRECTION] = glGetUniformLocation(env->gl.shader_program, "light.dir");
+	// env->gl.uniform.light[LIGHT_COLOR] = glGetUniformLocation(env->gl.shader_program, "light.color");
+	// env->gl.uniform.light[LIGHT_AMBIENT] = glGetUniformLocation(env->gl.shader_program, "light.ambient");
+	// env->gl.uniform.light[LIGHT_DIFFUSE] = glGetUniformLocation(env->gl.shader_program, "light.diffuse");
+	// env->gl.uniform.light[LIGHT_SPECULAR] = glGetUniformLocation(env->gl.shader_program, "light.specular");
+
 	// consume uniforms
-	// glUniform1i(env->gl.uniform.texture, 0);
+	// glUniform4fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
+	glUniform1i(env->gl.uniform.texture, 0);
+
+	// glUniform4fv(env->gl.uniform.light[LIGHT_ACTIVE], 1, (GLfloat *)&env->light.active);
+	// glUniform4fv(env->gl.uniform.light[LIGHT_POSITION], 1, (GLfloat *)&env->light.pos);
+	// glUniform4fv(env->gl.uniform.light[LIGHT_DIRECTION], 1, (GLfloat *)&env->light.dir);
+	// glUniform4fv(env->gl.uniform.light[LIGHT_COLOR], 1, (GLfloat *)&env->light.color);
+	// glUniform4fv(env->gl.uniform.light[LIGHT_AMBIENT], 1, (GLfloat *)&env->light.ambient);
+	// glUniform4fv(env->gl.uniform.light[LIGHT_DIFFUSE], 1, (GLfloat *)&env->light.diffuse);
+	// glUniform4fv(env->gl.uniform.light[LIGHT_SPECULAR], 1, (GLfloat *)&env->light.specular);
 }
 
 unsigned char			init_shaders(t_env *env)

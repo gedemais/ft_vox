@@ -58,16 +58,22 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 			env->settings.keys[KEY_MOVE_CAM_BACKWARD] = (uint8_t)n;
 			break;
 		case SET_KEY_MOVE_CAM_UP:
-			env->settings.keys[KEY_MOVE_CAM_FORWARD] = (uint8_t)n;
+			env->settings.keys[KEY_MOVE_CAM_UP] = (uint8_t)n;
 			break;
 		case SET_KEY_MOVE_CAM_DOWN:
-			env->settings.keys[KEY_MOVE_CAM_FORWARD] = (uint8_t)n;
+			env->settings.keys[KEY_MOVE_CAM_DOWN] = (uint8_t)n;
 			break;
 		case SET_KEY_MOVE_CAM_LEFT:
 			env->settings.keys[KEY_MOVE_CAM_LEFT] = (uint8_t)n;
 			break;
 		case SET_KEY_MOVE_CAM_RIGHT:
 			env->settings.keys[KEY_MOVE_CAM_RIGHT] = (uint8_t)n;
+			break;
+		case SET_KEY_LIGHT:
+			env->settings.keys[KEY_LIGHT] = (uint8_t)n;
+			break;
+		case SET_KEY_TEXTURE:
+			env->settings.keys[KEY_TEXTURE] = (uint8_t)n;
 			break;
 	};
 

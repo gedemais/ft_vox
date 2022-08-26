@@ -7,3 +7,5 @@ move_cam_left = a
 move_cam_right = d
 move_cam_forward = w
 move_cam_backward = s
+toggle_light = q
+toggle_texture = e

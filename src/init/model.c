@@ -55,30 +55,6 @@ static unsigned char	cube(t_dynarray *vertices)
 	return (ERR_NONE);
 }
 
-static unsigned char	faces(t_dynarray *faces)
-{
-	int		i;
-	t_face	list_faces[12] = {
-		(t_face){ 0, 1, 2, 0, 1, 2 },
-		(t_face){ 2, 1, 3, 2, 1, 3 },
-		(t_face){ 2, 3, 4, 0, 1, 2 },
-		(t_face){ 4, 3, 5, 2, 1, 3 },
-		(t_face){ 4, 3, 6, 3, 2, 1 },
-		(t_face){ 6, 5, 7, 1, 2, 0 },
-		(t_face){ 6, 5, 0, 0, 1, 2 },
-		(t_face){ 0, 7, 1, 2, 1, 3 },
-		(t_face){ 1, 7, 3, 0, 1, 2 },
-		(t_face){ 3, 7, 5, 2, 1, 3 },
-		(t_face){ 6, 0, 4, 0, 1, 2 },
-		(t_face){ 4, 0, 2, 2, 1, 3 },
-	};
-
-	for (i = 0; i < 12; i++)
-		if (dynarray_push(faces, &list_faces[i], false) < 0)
-			return (ERR_MALLOC_FAILED);
-	return (ERR_NONE);
-}
-
 static void				set_mesh_center(t_mesh *mesh)
 {
 	int			i;
@@ -119,20 +95,16 @@ unsigned char			model(t_env *env)
 		if (mesh == NULL)
 			continue ;
 
-		if (dynarray_init(&mesh->vertices, sizeof(t_stride), 36) < 0
-			|| dynarray_init(&mesh->faces, sizeof(t_face), 12) < 0)
+		if (dynarray_init(&mesh->vertices, sizeof(t_stride), 36) < 0)
 			return (ERR_MALLOC_FAILED);
 
 		if ((code = cube(&mesh->vertices)) != ERR_NONE)
-			return (code);
-		if ((code = faces(&mesh->faces)) != ERR_NONE)
 			return (code);
 
 		set_mesh_center(mesh);
 		env->model.center = vec_add(env->model.center, mesh->center);
 
 		// print_fv(&mesh->vertices);
-		// print_faces(&mesh->faces);
 
 		if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 			return (ERR_MALLOC_FAILED);
