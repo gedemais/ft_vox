@@ -63,6 +63,7 @@ static void				mat4_mvp(t_env *env)
 
 static unsigned char	render_scene(t_env *env)
 {
+	glUseProgram(env->gl.shader_program);
 	fps(&env->fps, true);
 	mat4_mvp(env);
 	set_uniforms(env);
@@ -74,7 +75,7 @@ unsigned char			display_loop(t_env *env)
 {
 	unsigned char	code;
 
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	glClearColor(255, 255, 255, 1);
 	while (!glfwWindowShouldClose(env->gl.window.ptr))
 	{
 		processInput(env->gl.window.ptr);

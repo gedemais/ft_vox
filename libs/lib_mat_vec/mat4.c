@@ -16,7 +16,7 @@ void		mat4_projection(mat4 m, float fov, float near, float far, float ratio)
 	float	e;
 
 	mat4_identity(m);
-	e = 1 / tanf(fov * 0.5f * M_PI / 180);
+	e = 1 / tanf(fov * 0.5f * MV_PI / 180);
 
 	m[0] = e / ratio;
 	m[5] = e;

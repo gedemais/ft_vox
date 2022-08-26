@@ -8,6 +8,8 @@
 # include <stdio.h>
 # include <string.h>
 
+# define MV_PI	3.14159
+
 typedef float	mat4[16];
 
 typedef struct	s_vec3

@@ -23,7 +23,6 @@ typedef struct	s_stride
 	vec3		v;
 	vec3		n;
 	t_vt		t;
-	uint32_t	txt;
 }				t_stride;
 
 typedef struct	s_texture

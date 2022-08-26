@@ -119,7 +119,8 @@ typedef struct		s_env
 	t_fps		fps;
 	t_mouse		mouse;
 	t_model		model;
-	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key); // Function pointers array linking actions functions with key binds
+	// Function pointers array linking actions functions with key binds
+	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;
 
 // Initializes scop
@@ -162,6 +163,9 @@ static const char	*settings_keys[SET_MAX] = {
 // UTILS
 // bmp
 unsigned char		*load_bmp(char const *pathname, unsigned int *width, unsigned int *height);
+// functions
+void				print_fv(t_dynarray *vertices);
+void				print_faces(t_dynarray *faces);
 // fps
 void				fps(t_fps *fps, bool print);
 

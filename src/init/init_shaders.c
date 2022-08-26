@@ -108,15 +108,17 @@ static unsigned char	link_shader_program(t_env *env)
 static void				set_layouts()
 {
 	// Specifies the disposition of components in vertexs
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+		(void *)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)sizeof(vec3));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+		(void *)sizeof(vec3));
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void*)(sizeof(vec3) * 2));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+		(void *)(sizeof(vec3) * 2));
 	glEnableVertexAttribArray(2);
-
 }
 
 static unsigned char	init_buffers(t_mesh *mesh)
@@ -171,14 +173,12 @@ static void				textures(t_env *env)
 static void				set_uniforms(t_env *env)
 {
 	// get uniforms
-	env->gl.uniform.texture = glGetUniformLocation(env->gl.shader_program, "TexId");
-
 	env->gl.uniform.model = glGetUniformLocation(env->gl.shader_program, "model");
 	env->gl.uniform.view = glGetUniformLocation(env->gl.shader_program, "view");
 	env->gl.uniform.projection = glGetUniformLocation(env->gl.shader_program, "projection");
 
 	// consume uniforms
-	glUniform1i(env->gl.uniform.texture, 0);
+	// glUniform1i(env->gl.uniform.texture, 0);
 }
 
 unsigned char			init_shaders(t_env *env)
