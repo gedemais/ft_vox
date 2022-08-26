@@ -1,4 +1,4 @@
-#include "../../include/main.h"
+#include "main.h"
 
 
 static unsigned char	*read_bmp(FILE *file, unsigned char *header, unsigned int *width, unsigned int *height)

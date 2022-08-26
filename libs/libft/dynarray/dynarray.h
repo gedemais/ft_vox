@@ -6,7 +6,7 @@
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 19:13:14 by maboye            #+#    #+#             */
-/*   Updated: 2020/08/10 20:10:51 by maboye           ###   ########.fr       */
+/*   Updated: 2022/08/26 00:24:14 by gedemais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef struct	s_dynarray
 	int			cell_size;
 	int			nb_cells;
 	int			byte_size;
+	char		pad[4];
 }				t_dynarray;
 
 void			*dyacc(t_dynarray *arr, int index);

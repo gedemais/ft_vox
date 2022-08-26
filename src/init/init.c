@@ -1,4 +1,4 @@
-#include "../../include/main.h"
+#include "main.h"
 
 
 static void		bind_actions_to_keys(t_env *env)
@@ -39,6 +39,9 @@ unsigned char	init(t_env *env, int argc, char **argv)
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
 
 	camera(env);
+
+	exit(0);
+	gen_chunk(env, 0, 0, 128);
 
 	return (ERR_NONE);
 }

@@ -1,4 +1,4 @@
-#include "../../include/main.h"
+#include "main.h"
 
 
 static void	init_camera(t_env *env)

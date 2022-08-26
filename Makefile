@@ -9,7 +9,7 @@ else
 endif
 
 CC=gcc
-FLAGS = -Wall -Werror -Wextra $(EVE)
+FLAGS = -Wall -Werror -Wextra
 FLAGS += -Wno-documentation
 FLAGS += -Wno-documentation-unknown-command
 FLAGS += -Wno-reserved-id-macro
@@ -37,6 +37,9 @@ SRC_NAME=main.c\
 	render.c\
 	actions/toggles.c\
 	actions/live.c\
+	generation/noise.c\
+	generation/generation.c\
+	generation/height_map.c\
 	init/camera.c\
 	init/settings.c\
 	init/init.c\

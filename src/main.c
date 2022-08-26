@@ -1,4 +1,4 @@
-#include "../include/main.h"
+#include "main.h"
 
 
 static unsigned char	ft_vox(t_env *env, int argc, char **argv)

@@ -20,14 +20,15 @@
 # include <string.h>
 
 // Homemade libs
-# include "../libs/libft/libft.h"
-# include "../libs/lib_mat_vec/lib_mat_vec.h"
+# include "libft.h"
+# include "lib_mat_vec.h"
 
 // Local headers
-# include "./shaders.h"
-# include "./error.h"
-# include "./model.h"
-# include "./keys.h"
+# include "shaders.h"
+# include "error.h"
+# include "model.h"
+# include "keys.h"
+# include "gen.h"
 
 # define DEFAULT_COLOR		(t_color){ 1.0f, 1.0f, 1.0f, 1.0f }
 # define ROT_SPEED_DELTA	2
@@ -144,6 +145,12 @@ void				free_env(t_env *env);
 // Actions functions
 void				exit_vox(t_env *env, int key);
 void				move_cam(t_env *env, int key);
+
+// Generation functions
+unsigned char		gen_chunk(t_env *env, int x_start, int y_start, unsigned int size);
+uint8_t				**generate_height_map(unsigned int x_start, unsigned int y_start, unsigned int size);
+
+float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {
