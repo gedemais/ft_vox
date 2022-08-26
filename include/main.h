@@ -108,7 +108,6 @@ typedef struct		s_mouse
 {
 	vec3	pos;
 	float	sensitivity;
-
 }					t_mouse;
 
 // Main environment structure
@@ -149,6 +148,7 @@ void				move_cam(t_env *env, int key);
 // Generation functions
 unsigned char		gen_chunk(t_env *env, int x_start, int y_start, unsigned int size);
 uint8_t				**generate_height_map(unsigned int x_start, unsigned int y_start, unsigned int size);
+unsigned char		gen_block_map(t_chunk *chunk, unsigned int x_start, unsigned int y_start, unsigned int size);
 
 float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 

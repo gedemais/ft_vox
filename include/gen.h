@@ -14,6 +14,16 @@ enum	e_bloc_types
 	BT_MAX
 };
 
+enum e_topography_type
+{
+	E_PLAINS,
+	E_MOUNTAINS,
+	E_DESERT,
+	E_SEA,
+	E_CAVE,
+	E_MAX
+};
+
 typedef struct	s_block
 {
 	uint8_t		type : 3;
@@ -21,8 +31,10 @@ typedef struct	s_block
 
 typedef struct	s_chunk
 {
+	t_dynarray		*stride;
 	t_block			***block_map;
-	uint8_t			**height_map;
+	uint8_t			**surface_hmap;
+	uint8_t			**sub_hmap;
 	int				x_pos, y_pos; // Chunk position (in chunks matrix)
 }				t_chunk;
 

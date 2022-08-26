@@ -40,6 +40,7 @@ SRC_NAME=main.c\
 	generation/noise.c\
 	generation/generation.c\
 	generation/height_map.c\
+	generation/block_map.c\
 	init/camera.c\
 	init/settings.c\
 	init/init.c\

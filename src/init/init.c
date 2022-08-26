@@ -40,7 +40,6 @@ unsigned char	init(t_env *env, int argc, char **argv)
 
 	camera(env);
 
-	exit(0);
 	gen_chunk(env, 0, 0, 128);
 
 	return (ERR_NONE);
