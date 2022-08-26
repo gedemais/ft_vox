@@ -9,6 +9,8 @@ enum					e_toggles
 
 static t_env			*g_env = NULL;
 
+// ====================================================================
+
 static bool				switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, bool press)
 {
 	uint8_t	*keys = &env->settings.keys[0];
@@ -44,6 +46,14 @@ void					processInput(GLFWwindow *window)
 	}
 }
 
+// ====================================================================
+
+static void				cb_cursor_position(GLFWwindow *window, double xpos, double ypos)
+{
+	glfwGetCursorPos(window, &xpos, &ypos);
+	events_mouse(g_env, (float)xpos, (float)ypos);
+}
+
 static void				cb_framebuffer_size(GLFWwindow *window, int width, int height)
 {
 	(void)window;
@@ -52,7 +62,22 @@ static void				cb_framebuffer_size(GLFWwindow *window, int width, int height)
 
 	g_env->settings.w_wdt = (uint16_t)width;
 	g_env->settings.w_hgt = (uint16_t)height;
+
+	g_env->gl.window.w = width;
+	g_env->gl.window.h = height;
+	g_env->camera.ratio = (float)width / (float)height;
 }
+
+static void				cb_scroll(GLFWwindow *window, double xoffset, double yoffset)
+{
+	(void)window;
+	(void)xoffset;
+	g_env->camera.fov -= (float)yoffset;
+	g_env->camera.fov = g_env->camera.fov > 90 ? 90 : g_env->camera.fov;
+	g_env->camera.fov = g_env->camera.fov < 1 ? 1 : g_env->camera.fov;
+}
+
+// ====================================================================
 
 static GLFWwindow*		create_window(const char *title, int width, int height, bool fullscreen)
 {
@@ -93,16 +118,15 @@ static unsigned char	glfw_create_window(GLFWwindow* *window, const char *title, 
 static void 			glfw_init_callbacks(GLFWwindow* window)
 {
 	// glfwSetKeyCallback(window, cb_key);
-	// glfwSetCursorPosCallback(window, cb_cursor_position);
-	// glfwSetWindowFocusCallback(window, cb_window_focus);
-	// glfwSetScrollCallback(window, cb_scroll);
+	glfwSetCursorPosCallback(window, cb_cursor_position);
 	glfwSetFramebufferSizeCallback(window, cb_framebuffer_size);
+	// glfwSetWindowFocusCallback(window, cb_window_focus);
+	glfwSetScrollCallback(window, cb_scroll);
 }
 
 unsigned char			init_display(t_env *env)
 {
 	unsigned char	code;
-	int				width, height;
 
 	g_env = env;
 
@@ -119,10 +143,11 @@ unsigned char			init_display(t_env *env)
 	}
 #endif
 
-	width = env->settings.w_wdt;
-	height = env->settings.w_hgt;
+	env->gl.window.w = env->settings.w_wdt;
+	env->gl.window.h = env->settings.w_hgt;
 
-	if ((code = glfw_create_window(&env->gl.window.ptr, "ft_vox", width, height, env->gl.window.fullscreen) != ERR_NONE))
+	if ((code = glfw_create_window(&env->gl.window.ptr, "ft_vox",
+		env->gl.window.w, env->gl.window.h, env->gl.window.fullscreen) != ERR_NONE))
 		return (code);
 	glfwMakeContextCurrent(env->gl.window.ptr);
 	if (!gladLoadGL())

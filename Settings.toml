@@ -1,8 +1,8 @@
 window_height = 720
 window_width = 1280
 exit = escape
-move_cam_up = q
-move_cam_down = e
+move_cam_up = r
+move_cam_down = f
 move_cam_left = a
 move_cam_right = d
 move_cam_forward = w

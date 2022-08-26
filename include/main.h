@@ -146,6 +146,7 @@ void				free_env(t_env *env);
 // Actions functions
 void				exit_vox(t_env *env, int key);
 void				move_cam(t_env *env, int key);
+void				events_mouse(t_env *env, float xpos, float ypos);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {
