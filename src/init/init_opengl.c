@@ -17,9 +17,9 @@ static bool				switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, boo
 {
 	uint8_t	*keys = &env->settings.keys[0];
 	int		toggle_ids[TOGGLE_MAX] = {
-		env->settings.keys[KEY_EXIT],
-		env->settings.keys[KEY_LIGHT],
-		env->settings.keys[KEY_TEXTURE],
+		gl_keys_values[env->settings.keys[KEY_EXIT]],
+		gl_keys_values[env->settings.keys[KEY_LIGHT]],
+		gl_keys_values[env->settings.keys[KEY_TEXTURE]],
 	};
 
 	for (unsigned int i = 0; i < TOGGLE_MAX; i++)
