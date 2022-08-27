@@ -4,9 +4,9 @@ static unsigned char	generate_triangles(t_chunk *chunk, int x, int y, int z, int
 {
 	const float	size = 1.0f;
 
-	t_vec3d		a, b, c, d;
-	t_vec3d		normal;
-	t_vec3d		plane[6];
+	vec3		a, b, c, d;
+	vec3		normal;
+	vec3		plane[6];
 	t_stride	stride[6];
 
 	float	xx = (x_start + x) * size;
@@ -14,10 +14,10 @@ static unsigned char	generate_triangles(t_chunk *chunk, int x, int y, int z, int
 	float	zz = z * size;
 
 	// Cube's top plane ABCD points
-	a = (t_vec3d){xx, yy, (z + 1) * size};
-	b = (t_vec3d){(x_start + x + 1) * size, yy, (z + 1) * size};
-	c = (t_vec3d){xx, yy, zz};
-	d = (t_vec3d){(x_start + x + 1) * size, yy, zz};
+	a = (vec3){xx, yy, (z + 1) * size, 1};
+	b = (vec3){(x_start + x + 1) * size, yy, (z + 1) * size, 1};
+	c = (vec3){xx, yy, zz, 1};
+	d = (vec3){(x_start + x + 1) * size, yy, zz, 1};
 
 	// Triangles construction (clockwise)
 	plane[0] = c;
@@ -28,13 +28,14 @@ static unsigned char	generate_triangles(t_chunk *chunk, int x, int y, int z, int
 	plane[4] = b;
 	plane[5] = d;
 
+	(void)chunk;
 	// Constuction of data stride
-	stride[] = (t_stride){plane[], normal, (t_vt){}};
+	//stride[] = (t_stride){plane[], normal, (t_vt){}};
 
 	// Addition of 6 vertexs plane to the mesh's data stride
-	for (unsigned int i = 0; i < 6; i++)
-		if (dynarray_push(&chunk->stride, &stride[i], false))
-			return (ERR_MALLOC_FAILED);
+	//for (unsigned int i = 0; i < 6; i++)
+	//	if (dynarray_push(&chunk->stride, &stride[i], false))
+	//		return (ERR_MALLOC_FAILED);
 
 	return (ERR_NONE);
 }
@@ -57,6 +58,7 @@ static unsigned char	generate_data_stride(t_chunk *chunk, int x_start, int y_sta
 				if ((code = generate_triangles(chunk, x, y, z, x_start, y_start)))
 					return (code);
 			}
+
 	return (ERR_NONE);
 }
 
