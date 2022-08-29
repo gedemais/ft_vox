@@ -23,11 +23,22 @@ static void				bind_actions_to_keys(t_env *env)
 
 static unsigned char	images(t_env *env)
 {
-	const char	path[256] = "./resources/nyan.bmp";
+	const char	*path[TEXTURE_MAX] = {
+		"./resources/default.bmp",
+		"./resources/darksouls.bmp",
+		"./resources/nyan.bmp"
+	};
 	t_texture	*texture;
+	int			i;
 
+	i = -1;
+	while (++i < TEXTURE_MAX) {
+		texture = &env->model.textures[i];
+		if ((texture->ptr = load_bmp(path[i], &texture->w, &texture->h)) == NULL) // Load image from path
+			return (ERR_MALLOC_FAILED);	
+	}
 	texture = &env->model.texture;
-	if ((texture->ptr = load_bmp(path, &texture->w, &texture->h)) == NULL) // Load image from path
+	if ((texture->ptr = load_bmp(path[2], &texture->w, &texture->h)) == NULL) // Load image from path
 		return (ERR_MALLOC_FAILED);
 	return (ERR_NONE);
 }

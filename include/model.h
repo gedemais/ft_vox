@@ -4,6 +4,14 @@
 
 # include "./main.h"
 
+enum			e_texture
+{
+	TEXTURE_DEFAULT,
+	TEXTURE_DARKSOULS,
+	TEXTURE_NYAN,
+	TEXTURE_MAX
+};
+
 
 typedef	struct	s_face
 {
@@ -44,6 +52,8 @@ typedef struct	s_model
 	vec3		center;
 	float		scale;
 	t_texture	texture;
+	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
+	t_texture	textures[TEXTURE_MAX];		// textures' ptr
 }				t_model;
 
 

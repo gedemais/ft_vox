@@ -1,17 +1,16 @@
 #include "../include/main.h"
 
 
-// static void	textures(GLuint *textures, int id)
-// {
-// 	int	i;
+static void				bind_textures(GLuint *textures, int id)
+{
+	int	i;
 
-// 	i = -1;
-// 	// il faut iterer sur toutes les textures load sur GL et bind celle qu'on veut activer
-// 	while (++i < TEXTURE_MAX) {
-// 		glActiveTexture(GL_TEXTURE0 + i);
-// 		glBindTexture(GL_TEXTURE_2D, textures[id]);
-// 	}
-// }
+	i = -1;
+	while (++i < TEXTURE_MAX) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, textures[id]);
+	}
+}
 
 static void				draw_mesh(t_env *env)
 {
@@ -25,6 +24,7 @@ static void				draw_mesh(t_env *env)
 		if (mesh == NULL)
 			continue ;
 		glBindVertexArray(mesh->vao);
+		bind_textures(env->model.gl_textures, TEXTURE_DEFAULT);
 		glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
 		glBindVertexArray(0);
 	}

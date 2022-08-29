@@ -122,7 +122,7 @@ static void				set_layouts()
 	glEnableVertexAttribArray(2);
 }
 
-static unsigned char	init_buffers(t_mesh *mesh)
+static unsigned char	gl_buffers(t_mesh *mesh)
 {
 	// VAO -- Create Vertex Array Object
 	glGenVertexArrays(1, &mesh->vao);
@@ -137,27 +137,30 @@ static unsigned char	init_buffers(t_mesh *mesh)
 	return (ERR_NONE);
 }
 
-static void				textures(t_env *env)
+static void				gl_textures(t_env *env)
 {
-	t_texture	texture;
-	int		i = -1;
+	t_texture	*texture;
+	int			i;
 
-	texture = env->model.texture;
-	glGenTextures(1, &texture.id);
-	while (++i < 1) {
+	glGenTextures(TEXTURE_MAX, env->model.gl_textures);
+	i = -1;
+	while (++i < TEXTURE_MAX) {
 		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, texture.id);
+		glBindTexture(GL_TEXTURE_2D, env->model.gl_textures[i]);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.w, texture.h,
-			0, GL_BGR, GL_UNSIGNED_BYTE, texture.ptr);
+
+		texture = &env->model.textures[i];
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->w, texture->h,
+			0, GL_BGR, GL_UNSIGNED_BYTE, texture->ptr);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 }
 
-static void				set_uniforms(t_env *env)
+static void				gl_uniforms(t_env *env)
 {
 	// get uniforms
 	env->gl.uniform.model = glGetUniformLocation(env->gl.shader_program, "model");
@@ -207,7 +210,8 @@ unsigned char			init_shaders(t_env *env)
 	if ((code = link_shader_program(env)) != ERR_NONE)
 		return (code);
 
-	set_uniforms(env);
+	gl_uniforms(env);
+	gl_textures(env);
 
 	t_mesh	*mesh;
 	int		i = -1;
@@ -216,11 +220,9 @@ unsigned char			init_shaders(t_env *env)
 	while (++i < env->model.meshs.nb_cells) {
 		mesh = dyacc(&env->model.meshs, i);
 
-		if ((code = init_buffers(mesh)) != ERR_NONE)
+		if ((code = gl_buffers(mesh)) != ERR_NONE)
 			return (code);
 	}
-
-	textures(env);
 
 	//  DEPTH BUFFER
 	glEnable(GL_DEPTH_TEST);
