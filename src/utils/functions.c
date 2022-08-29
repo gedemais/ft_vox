@@ -7,22 +7,22 @@ static vec3	get_normals(unsigned int n)
 
 	switch (n) {
 		case (0): // front
-			normal = (vec3){ 0, 0, -1, 1 };
+			normal = (vec3){ 0, 0, 1, 1 };
 			break;
 		case (1): // back
-			normal = (vec3){ 0, 0 , 1, 1 };
+			normal = (vec3){ 0, 0 , -1, 1 };
 			break;
 		case (2): // top
-			normal = (vec3){ 0, -1, 0, 1};
+			normal = (vec3){ 0, 1, 0, 1};
 			break;
 		case (3): // bottom
-			normal = (vec3){ 0, 1, 0, 1 };
+			normal = (vec3){ 0, -1, 0, 1 };
 			break;
 		case (4): // right
-			normal = (vec3){ -1, 0, 0, 1 };
+			normal = (vec3){ 1, 0, 0, 1 };
 			break;
 		case (5): // left
-			normal = (vec3){ 1, 0, 0, 1 };
+			normal = (vec3){ -1, 0, 0, 1 };
 			break;
 	}
 	return (normal);
@@ -31,7 +31,7 @@ static vec3	get_normals(unsigned int n)
 void		print_fv(t_dynarray *vertices)
 {
 	t_stride	*elt;
-	int			i, j;
+	int			i;
 
 	vec3			v, n;
 	t_vt			t;
@@ -52,7 +52,5 @@ void		print_fv(t_dynarray *vertices)
 			t.u, t.v,
 			tid
 		);
-		++j > 2 ? printf("\n") : 0;
-		j = j > 2 ? 0 : j;
 	}
 }

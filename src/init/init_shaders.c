@@ -108,13 +108,13 @@ static void				set_layouts()
 		(void *)sizeof(vec3));
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(2, 1, GL_INT, GL_FALSE, sizeof(t_stride),
+	glVertexAttribPointer(2, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
 		(void *)(sizeof(vec3) + sizeof(t_vt)));
 	glEnableVertexAttribArray(2);
 
-	glVertexAttribPointer(3, 1, GL_INT, GL_FALSE, sizeof(t_stride),
-		(void *)(sizeof(vec3) + sizeof(t_vt) + sizeof(int)));
-	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
+		(void *)(sizeof(vec3) + sizeof(t_vt) + sizeof(unsigned int)));
+	glEnableVertexAttribArray(2);
 }
 
 static unsigned char	gl_buffers(t_mesh *mesh)
