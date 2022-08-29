@@ -23,7 +23,9 @@ static void				draw_faces(t_mesh *mesh, GLuint *textures)
 		if (stride == NULL)
 			continue ;
 		bind_textures(textures, stride->tid);
-		glDrawArrays(GL_TRIANGLES, j, 6);
+
+		/* GL_TRIANGLE - GL_SQUADS - GL_TRIANGLE_STRIP - GL_SQUADS_STRIP */
+		glDrawArrays(GL_TRIANGLE_STRIP, j, 6);
 		// j is face's index (3 vertices = 1 triangle, 2 triangles = 1 face)
 		j += 6;
 	}

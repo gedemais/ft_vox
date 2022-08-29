@@ -92,12 +92,12 @@ static unsigned char	many_cubes(t_mesh *mesh)
 
 	if ((code = cube(&mesh->vertices, (vec3){}, TEXTURE_NYAN)) != ERR_NONE)
 		return (code);
-	if ((code = cube(&mesh->vertices, (vec3){ .x = 1 }, TEXTURE_DEFAULT)) != ERR_NONE)
-		return (code);
-	if ((code = cube(&mesh->vertices, (vec3){ .z = 1 }, TEXTURE_DARKSOULS)) != ERR_NONE)
-		return (code);
-	if ((code = cube(&mesh->vertices, (vec3){ .x = 1, .z = 1 }, TEXTURE_NYAN)) != ERR_NONE)
-		return (code);
+	// if ((code = cube(&mesh->vertices, (vec3){ .x = 1 }, TEXTURE_DEFAULT)) != ERR_NONE)
+	// 	return (code);
+	// if ((code = cube(&mesh->vertices, (vec3){ .z = 1 }, TEXTURE_DARKSOULS)) != ERR_NONE)
+	// 	return (code);
+	// if ((code = cube(&mesh->vertices, (vec3){ .x = 1, .z = 1 }, TEXTURE_NYAN)) != ERR_NONE)
+	// 	return (code);
 	return (ERR_NONE);
 }
 
@@ -126,7 +126,7 @@ unsigned char			model(t_env *env)
 		set_mesh_center(mesh);
 		env->model.center = vec_add(env->model.center, mesh->center);
 
-		// print_fv(&mesh->vertices);
+		print_fv(&mesh->vertices);
 
 		if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 			return (ERR_MALLOC_FAILED);

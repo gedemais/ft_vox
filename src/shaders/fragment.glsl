@@ -10,6 +10,8 @@ in vec4	vNormal;
 in vec4	vPosition;
 in vec2	vTexture;
 
+in vec4	vColor;
+
 uniform vec4		campos;
 uniform Light		light;
 uniform sampler2D	texture_color;
@@ -37,7 +39,9 @@ void main()
 		vec4	specular	= color * light.specular * spec;
 
 		FragColor = (ambient + diffuse + specular);
+		FragColor = vColor;
 	} else {
 		FragColor = texture(texture_color, vTexture);
+		FragColor = vColor;
 	}
 }
