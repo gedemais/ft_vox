@@ -35,11 +35,8 @@ static unsigned char	images(t_env *env)
 	while (++i < TEXTURE_MAX) {
 		texture = &env->model.textures[i];
 		if ((texture->ptr = load_bmp(path[i], &texture->w, &texture->h)) == NULL) // Load image from path
-			return (ERR_MALLOC_FAILED);	
+			return (ERR_MALLOC_FAILED);
 	}
-	texture = &env->model.texture;
-	if ((texture->ptr = load_bmp(path[2], &texture->w, &texture->h)) == NULL) // Load image from path
-		return (ERR_MALLOC_FAILED);
 	return (ERR_NONE);
 }
 

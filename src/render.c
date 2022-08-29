@@ -12,6 +12,23 @@ static void				bind_textures(GLuint *textures, int id)
 	}
 }
 
+static void				draw_faces(t_mesh *mesh, GLuint *textures)
+{
+	t_stride	*stride;
+	int			j;
+
+	j = 0;
+	while (j < mesh->vertices.nb_cells) {
+		stride = dyacc(&mesh->vertices, j);
+		if (stride == NULL)
+			continue ;
+		bind_textures(textures, stride->tid);
+		glDrawArrays(GL_TRIANGLES, j, 6);
+		// j is face's index (3 vertices = 1 triangle, 2 triangles = 1 face)
+		j += 6;
+	}
+}
+
 static void				draw_mesh(t_env *env)
 {
 	t_mesh		*mesh;
@@ -24,8 +41,7 @@ static void				draw_mesh(t_env *env)
 		if (mesh == NULL)
 			continue ;
 		glBindVertexArray(mesh->vao);
-		bind_textures(env->model.gl_textures, TEXTURE_DEFAULT);
-		glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
+		draw_faces(mesh, env->model.gl_textures);
 		glBindVertexArray(0);
 	}
 }
@@ -62,6 +78,7 @@ static void				mat4_mvp(t_env *env)
 static unsigned char	render_scene(t_env *env)
 {
 	glUseProgram(env->gl.shader_program);
+	glUniform4fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 	fps(&env->fps, true);
 	mat4_mvp(env);
 	set_uniforms(env);

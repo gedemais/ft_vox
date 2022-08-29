@@ -82,7 +82,7 @@ typedef struct		s_window
 
 typedef struct	s_uniform
 {
-	GLint	texture;
+	GLint	texture, campos;
 	GLint	model, view, projection;
 	GLint	light[LIGHT_MAX];
 }				t_uniform;

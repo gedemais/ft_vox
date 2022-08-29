@@ -14,11 +14,9 @@ static unsigned char	load_shader_source(const char *path, const GLchar **ptr, si
 		ft_putendl_fd(strerror(errno), 2);
 		return (ERR_OPENING_SHADER_FILE);
 	}
-
 	// Read shader source file content
 	if (!(*ptr = read_file(fd, file_size)))
 		return (ERR_READING_FILE);
-
 	return (ERR_NONE);
 }
 
@@ -41,11 +39,10 @@ static unsigned char	compile_shader(t_env *env, GLenum type, const GLchar *sourc
 	glShaderSource(shader_id, 1, &source, NULL);
 	// Compile the loaded shader source
 	glCompileShader(shader_id);
-
 	// Check for more informations about compilation
 	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
-
-	if (success == GL_FALSE) // If shader's compilation failed
+	// If shader's compilation failed
+	if (success == GL_FALSE)
 	{ // Then display error log message before to exit
 		ft_memset(info_log, 0, sizeof(info_log));
 		glGetShaderInfoLog(shader_id, sizeof(info_log), NULL, info_log);
@@ -54,7 +51,6 @@ static unsigned char	compile_shader(t_env *env, GLenum type, const GLchar *sourc
 		return (ERR_FAILED_TO_COMPILE_SHADER);
 	}
 	munmap((void*)source, size); // Free memory mapping used for shader source file
-
 	return (ERR_NONE);
 }
 
@@ -68,7 +64,6 @@ static unsigned char	build_shader(t_env *env, unsigned int id, const char *path)
 	// Map shader source file content in memory
 	if ((code = load_shader_source(path, &shader_source, &shader_size)))
 		return (code);
-
 	// Get new shader's type
 	if (id == SHADER_VERTEX)
 		shader_type = GL_VERTEX_SHADER;
@@ -76,7 +71,6 @@ static unsigned char	build_shader(t_env *env, unsigned int id, const char *path)
 		shader_type = GL_FRAGMENT_SHADER;
 	else
 		shader_type = 0;
-
 	// Compile shader with its source code
 	return (compile_shader(env, shader_type, shader_source, shader_size));
 }
@@ -90,10 +84,8 @@ static unsigned char	link_shader_program(t_env *env)
 	glAttachShader(env->gl.shader_program, env->gl.shader_vertex); // Attach vertex shader to the program
 	glAttachShader(env->gl.shader_program, env->gl.shader_fragment); // Attach fragment shader to the program
 	glLinkProgram(env->gl.shader_program); // Link the final program
-
 	// Checks for more informations about compilation.
 	glGetProgramiv(env->gl.shader_program, GL_LINK_STATUS, &success);
-
 	// If compilation failed
 	if (!success)
 	{ // Then display the error log message before to exit
@@ -101,7 +93,6 @@ static unsigned char	link_shader_program(t_env *env)
 		ft_putendl_fd(info_log, 2);
 		return (ERR_FAILED_TO_LINK_SHADER_PROGRAM);
 	}
-
 	return (ERR_NONE);
 }
 
@@ -113,12 +104,16 @@ static void				set_layouts()
 		(void *)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride),
 		(void *)sizeof(vec3));
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride),
-		(void *)(sizeof(vec3) * 2));
+	glVertexAttribPointer(2, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
+		(void *)(sizeof(vec3) + sizeof(t_vt)));
+	glEnableVertexAttribArray(2);
+
+	glVertexAttribPointer(3, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
+		(void *)(sizeof(vec3) + sizeof(t_vt) + sizeof(unsigned int)));
 	glEnableVertexAttribArray(2);
 }
 
@@ -168,28 +163,41 @@ static void				gl_uniforms(t_env *env)
 	env->gl.uniform.projection = glGetUniformLocation(env->gl.shader_program, "projection");
 
 	// env->gl.uniform.progress = glGetUniformLocation(env->gl.shader_program, "progress");
-	// env->gl.uniform.campos = glGetUniformLocation(env->gl.shader_program, "campos");
+	env->gl.uniform.campos = glGetUniformLocation(env->gl.shader_program, "campos");
 	env->gl.uniform.texture = glGetUniformLocation(env->gl.shader_program, "texture_color");
 
 	env->gl.uniform.light[LIGHT_ACTIVE] = glGetUniformLocation(env->gl.shader_program, "light.is_active");
-	// env->gl.uniform.light[LIGHT_POSITION] = glGetUniformLocation(env->gl.shader_program, "light.pos");
-	// env->gl.uniform.light[LIGHT_DIRECTION] = glGetUniformLocation(env->gl.shader_program, "light.dir");
-	// env->gl.uniform.light[LIGHT_COLOR] = glGetUniformLocation(env->gl.shader_program, "light.color");
-	// env->gl.uniform.light[LIGHT_AMBIENT] = glGetUniformLocation(env->gl.shader_program, "light.ambient");
-	// env->gl.uniform.light[LIGHT_DIFFUSE] = glGetUniformLocation(env->gl.shader_program, "light.diffuse");
-	// env->gl.uniform.light[LIGHT_SPECULAR] = glGetUniformLocation(env->gl.shader_program, "light.specular");
+	env->gl.uniform.light[LIGHT_POSITION] = glGetUniformLocation(env->gl.shader_program, "light.pos");
+	env->gl.uniform.light[LIGHT_DIRECTION] = glGetUniformLocation(env->gl.shader_program, "light.dir");
+	env->gl.uniform.light[LIGHT_COLOR] = glGetUniformLocation(env->gl.shader_program, "light.color");
+	env->gl.uniform.light[LIGHT_AMBIENT] = glGetUniformLocation(env->gl.shader_program, "light.ambient");
+	env->gl.uniform.light[LIGHT_DIFFUSE] = glGetUniformLocation(env->gl.shader_program, "light.diffuse");
+	env->gl.uniform.light[LIGHT_SPECULAR] = glGetUniformLocation(env->gl.shader_program, "light.specular");
 
 	// consume uniforms
 	// glUniform4fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 	glUniform1i(env->gl.uniform.texture, 0);
 
 	glUniform1i(env->gl.uniform.light[LIGHT_ACTIVE], env->light.is_active);
-	// glUniform4fv(env->gl.uniform.light[LIGHT_POSITION], 1, (GLfloat *)&env->light.pos);
-	// glUniform4fv(env->gl.uniform.light[LIGHT_DIRECTION], 1, (GLfloat *)&env->light.dir);
-	// glUniform4fv(env->gl.uniform.light[LIGHT_COLOR], 1, (GLfloat *)&env->light.color);
-	// glUniform4fv(env->gl.uniform.light[LIGHT_AMBIENT], 1, (GLfloat *)&env->light.ambient);
-	// glUniform4fv(env->gl.uniform.light[LIGHT_DIFFUSE], 1, (GLfloat *)&env->light.diffuse);
-	// glUniform4fv(env->gl.uniform.light[LIGHT_SPECULAR], 1, (GLfloat *)&env->light.specular);
+	glUniform4fv(env->gl.uniform.light[LIGHT_POSITION], 1, (GLfloat *)&env->light.pos);
+	glUniform4fv(env->gl.uniform.light[LIGHT_DIRECTION], 1, (GLfloat *)&env->light.dir);
+	glUniform4fv(env->gl.uniform.light[LIGHT_COLOR], 1, (GLfloat *)&env->light.color);
+	glUniform4fv(env->gl.uniform.light[LIGHT_AMBIENT], 1, (GLfloat *)&env->light.ambient);
+	glUniform4fv(env->gl.uniform.light[LIGHT_DIFFUSE], 1, (GLfloat *)&env->light.diffuse);
+	glUniform4fv(env->gl.uniform.light[LIGHT_SPECULAR], 1, (GLfloat *)&env->light.specular);
+}
+
+static void				gl_options(void)
+{
+	//  DEPTH BUFFER
+	glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS);
+
+	// CULLING : we only draw front face in clock-wise order
+	// glEnable(GL_CULL_FACE);
+	// glCullFace(GL_FRONT);
+	// glFrontFace(GL_CCW);
 }
 
 unsigned char			init_shaders(t_env *env)
@@ -200,39 +208,28 @@ unsigned char			init_shaders(t_env *env)
 		"src/shaders/fragment.glsl"
 	};
 	unsigned char	code;
+	t_mesh			*mesh;
+	int				i;
 
 	// Iterate through shaders ids to build them
-	for (unsigned int i = 0; i < SHADER_MAX; i++)
+	i = -1;
+	while (++i < SHADER_MAX) {
 		if ((code = build_shader(env, i, shaders_path[i])))
 			return (code);
-
+	}
 	// Links shaders into an usable program
 	if ((code = link_shader_program(env)) != ERR_NONE)
 		return (code);
-
-	gl_uniforms(env);
-	gl_textures(env);
-
-	t_mesh	*mesh;
-	int		i = -1;
-
 	// Initializes buffers and data structures for rendering
+	i = -1;
 	while (++i < env->model.meshs.nb_cells) {
 		mesh = dyacc(&env->model.meshs, i);
 
 		if ((code = gl_buffers(mesh)) != ERR_NONE)
 			return (code);
 	}
-
-	//  DEPTH BUFFER
-	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS);
-
-	// CULLING : we only draw front face in clock-wise order
-	// glEnable(GL_CULL_FACE);
-	// glCullFace(GL_FRONT);
-	// glFrontFace(GL_CCW);
-
+	gl_uniforms(env);
+	gl_textures(env);
+	gl_options();
 	return (ERR_NONE);
 }

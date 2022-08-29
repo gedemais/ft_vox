@@ -12,7 +12,6 @@ enum			e_texture
 	TEXTURE_MAX
 };
 
-
 typedef	struct	s_face
 {
 	uint32_t	a, b, c;
@@ -26,9 +25,9 @@ typedef	struct	s_vertex_texture
 
 typedef struct	s_stride
 {
-	vec3		v;
-	vec3		n;
-	t_vt		t;
+	vec3			v;
+	t_vt			t;
+	unsigned int	n, tid;
 }				t_stride;
 
 typedef struct	s_texture
@@ -51,10 +50,8 @@ typedef struct	s_model
 	mat4		model;
 	vec3		center;
 	float		scale;
-	t_texture	texture;
 	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
 	t_texture	textures[TEXTURE_MAX];		// textures' ptr
 }				t_model;
-
 
 #endif
