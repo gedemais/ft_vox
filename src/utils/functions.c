@@ -30,11 +30,10 @@
 
 void		print_fv(t_dynarray *vertices)
 {
-	t_stride	*elt;
-	int			i;
-
-	vec3			v, n;
+	t_stride		*elt;
+	vec3			v;
 	t_vt			t;
+	int				i;
 	unsigned int	tid;
 
 	for (i = 0; i < vertices->nb_cells; i++) {
@@ -42,15 +41,10 @@ void		print_fv(t_dynarray *vertices)
 
 		v	= elt->v;
 		t	= elt->t;
-		tid	= elt->tid;
 
-		n	= elt->n;
-		// n	= get_normals(elt->n);
-
-		printf("v: [%.1f, %.1f, %.1f] t: [%.1f, %.1f] tid: [%d] n: [%.1f, %.1f, %.1f]\n",
+		printf("v: [%.1f, %.1f, %.1f]	t: [%.1f, %.1f]\n",
 			v.x, v.y, v.z,
-			t.u, t.v, tid,
-			n.x, n.y, n.z
+			t.u, t.v
 		);
 	}
 }

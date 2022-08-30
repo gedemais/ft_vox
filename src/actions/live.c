@@ -6,7 +6,7 @@ void		move_cam(t_env *env, int key)
 	t_camera	*camera;
 
 	camera = &env->camera;
-	camera->tspeed = camera->speed * env->fps.value * 0.01f;
+	camera->tspeed = camera->speed * 0.5f;
 	if (key == GLFW_KEY_D)
 		camera->pos = vec_add(camera->pos, vec_fmult(vec_cross(camera->zaxis, camera->yaxis), camera->tspeed));
 	if (key == GLFW_KEY_A)

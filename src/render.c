@@ -1,33 +1,6 @@
 #include "../include/main.h"
 
 
-static void				bind_textures(GLuint *textures, int id)
-{
-	int	i;
-
-	i = -1;
-	while (++i < TEXTURE_MAX) {
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, textures[id]);
-	}
-}
-
-static void				draw_faces(t_mesh *mesh, GLuint *textures)
-{
-	t_stride	*stride;
-	int			csize;
-
-	csize = 0;
-	while (csize < mesh->vertices.nb_cells) {
-		stride = dyacc(&mesh->vertices, csize);
-		if (stride == NULL)
-			continue ;
-		bind_textures(textures, stride->tid);
-		glDrawArrays(GL_TRIANGLE_STRIP, csize, CUBE_SIZE);
-		csize += CUBE_SIZE;
-	}
-}
-
 static void				draw_mesh(t_env *env)
 {
 	t_mesh		*mesh;
@@ -40,7 +13,7 @@ static void				draw_mesh(t_env *env)
 		if (mesh == NULL)
 			continue ;
 		glBindVertexArray(mesh->vao);
-		draw_faces(mesh, env->model.gl_textures);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh->vertices.nb_cells);
 		glBindVertexArray(0);
 	}
 }

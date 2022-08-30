@@ -101,17 +101,16 @@ static void				set_layouts()
 {
 	// Specifies the disposition of components in vertexs
 	// id ptr, size, GL_type, GL_FALSE, totalsize, start pos
+
+	// vec3
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_stride),
 		(void *)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+	// t_vt
+	glVertexAttribPointer(1, 2, GL_HALF_FLOAT, GL_FALSE, sizeof(t_stride),
 		(void *)sizeof(vec3));
 	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
-		(void *)(sizeof(vec3) + sizeof(t_vt)));
-	glEnableVertexAttribArray(2);
 }
 
 static unsigned char	gl_buffers(t_mesh *mesh)
@@ -132,24 +131,21 @@ static unsigned char	gl_buffers(t_mesh *mesh)
 static void				gl_textures(t_env *env)
 {
 	t_texture	*texture;
-	int			i;
 
-	glGenTextures(TEXTURE_MAX, env->model.gl_textures);
-	i = -1;
-	while (++i < TEXTURE_MAX) {
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, env->model.gl_textures[i]);
+	glGenTextures(1, &env->model.gl_texture);
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, env->model.gl_texture);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		texture = &env->model.textures[i];
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->w, texture->h,
-			0, GL_BGR, GL_UNSIGNED_BYTE, texture->ptr);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
+	texture = &env->model.texture;
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->w, texture->h,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
+	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 static void				gl_uniforms(t_env *env)
@@ -172,10 +168,10 @@ static void				gl_options(void)
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
 
-	// CULLING : we only draw front face in clock-wise order
-	// glEnable(GL_CULL_FACE);
-	// glCullFace(GL_FRONT);
-	// glFrontFace(GL_CCW);
+	// CULLING : we only draw front face in counter-clock-wise order
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CCW);
 }
 
 unsigned char			init_shaders(t_env *env)

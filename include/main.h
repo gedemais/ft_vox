@@ -22,6 +22,7 @@
 // Homemade libs
 # include "../libs/libft/libft.h"
 # include "../libs/lib_mat_vec/lib_mat_vec.h"
+# include "../libs/libbmp/bmp.h"
 
 // Local headers
 # include "./camera.h"
