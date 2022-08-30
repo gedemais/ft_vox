@@ -15,11 +15,6 @@ float	ft_rsqrt(float number)
 	return (1 / conv.f);
 }
 
-vec3	zero_vector(void)
-{
-	return ((vec3){0.0f, 0.0f, 0.0f, 0.0f});
-}
-
 float	vec_norm(vec3 vec)
 {
 	return (ft_rsqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z));
@@ -30,7 +25,7 @@ vec3	vec_normalize(vec3 vec)
 	float	l;
 
 	l = vec_norm(vec);
-	return ((vec3){vec.x /= l, vec.y /= l, vec.z /= l, vec.w /= l});
+	return ((vec3){vec.x /= l, vec.y /= l, vec.z /= l});
 }
 
 float	vec_dot(vec3 a, vec3 b)
@@ -69,5 +64,5 @@ void	vec3d_swap(vec3 *a, vec3 *b)
 
 vec3	abs_vector(vec3 vec)
 {
-	return ((vec3){fabs(vec.x), fabs(vec.y), fabs(vec.z), fabs(vec.w)});
+	return ((vec3){fabs(vec.x), fabs(vec.y), fabs(vec.z)});
 }

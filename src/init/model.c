@@ -1,62 +1,28 @@
 #include "../../include/main.h"
 
 
-/*
-	normals :
-	front / back : 0 / 1
-	top / bottom : 2 / 3
-	right/ left : 4 / 5
-*/
-
-static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid)
+unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid)
 {
 	int			i;
-	t_stride	list_strides[36] = {
-		// FRONT ---------------------------------------------------------------------
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 1.0f }, 0, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 0, tid },
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 0, tid },
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 0, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 0, tid },
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 0.0f }, 0, tid },
-		// BACK --------------------------------------------------------------------
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 0.0f }, 1, tid },
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 1, tid },
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 1, tid },
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 1, tid },
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 1, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 1.0f }, 1, tid },
-		// TOP --------------------------------------------------------------------
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 0.0f }, 2, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 2, tid },
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 2, tid },
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 2, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 2, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 1.0f }, 2, tid },
-		// BOTTOM --------------------------------------------------------------------
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 0.0f }, 3, tid },
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 3, tid },
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 3, tid },
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 3, tid },
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 3, tid },
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 1.0f }, 3, tid },
-		// RIGHT --------------------------------------------------------------------
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 0.0f }, 4, tid },
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 4, tid },
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 4, tid },
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 4, tid },
-		(t_stride){ (vec3){ -0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 4, tid },
-		(t_stride){ (vec3){ -0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 1.0f }, 4, tid },
-		// LEFT --------------------------------------------------------------------
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 0.0f }, 5, tid },
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 5, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 5, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y,  0.5f + o.z, 1.0f }, (t_vt){ 0.0f, 1.0f }, 5, tid },
-		(t_stride){ (vec3){  0.5f + o.x, -0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 0.0f }, 5, tid },
-		(t_stride){ (vec3){  0.5f + o.x,  0.5f + o.y, -0.5f + o.z, 1.0f }, (t_vt){ 1.0f, 1.0f }, 5, tid }
+	t_stride	list_strides[CUBE_SIZE] = {
+		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 0, 0 }, tid, (vec3){ 1, 0, 0} },
+		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 1, 0 }, tid, (vec3){ 1, 0, 0} },
+		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 0, 1 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 1, 1 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 1, 0 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 0, 1 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 0, 0 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 1, 1 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 1, 0 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 0, 1 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 0, 0 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 1, 0 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 0, 1 }, tid, (vec3){ 0, 0, 0} },
+		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 1, 1 }, tid, (vec3){ 0, 0, 0} }
 	};
 
-	for (i = 0; i < 36; i++)
+	i = -1;
+	while (++i < CUBE_SIZE)
 		if (dynarray_push(vertices, &list_strides[i], false) < 0)
 			return (ERR_MALLOC_FAILED);
 	return (ERR_NONE);
@@ -82,7 +48,6 @@ static void				set_mesh_center(t_mesh *mesh)
 		if (vertices == NULL)
 			continue ;
 		vertices->v = vec_add(vertices->v, vec_fmult(mesh->center, -1));
-		vertices->v.w = 1;
 	}
 }
 
@@ -110,7 +75,7 @@ unsigned char			model(t_env *env)
 	mesh_max = 1;
 	env->model.center = (vec3){};
 	if (dynarray_init(&env->model.meshs, sizeof(t_mesh), mesh_max) < 0)
-		return (-1);
+		return (ERR_MALLOC_FAILED);
 	i = -1;
 	while (++i < mesh_max) {
 		mesh = dyacc(&env->model.meshs, i);
@@ -131,7 +96,7 @@ unsigned char			model(t_env *env)
 		if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 			return (ERR_MALLOC_FAILED);
 	}
-	env->model.center = (vec3){ env->model.center.x / i, env->model.center.y / i, env->model.center.z / i, 1 };
+	env->model.center = (vec3){ env->model.center.x / i, env->model.center.y / i, env->model.center.z / i };
 	env->model.scale = 1;
 	return (ERR_NONE);
 }

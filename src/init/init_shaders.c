@@ -84,6 +84,7 @@ static unsigned char	link_shader_program(t_env *env)
 	glAttachShader(env->gl.shader_program, env->gl.shader_vertex); // Attach vertex shader to the program
 	glAttachShader(env->gl.shader_program, env->gl.shader_fragment); // Attach fragment shader to the program
 	glLinkProgram(env->gl.shader_program); // Link the final program
+	glUseProgram(env->gl.shader_program);
 	// Checks for more informations about compilation.
 	glGetProgramiv(env->gl.shader_program, GL_LINK_STATUS, &success);
 	// If compilation failed
@@ -100,7 +101,7 @@ static void				set_layouts()
 {
 	// Specifies the disposition of components in vertexs
 	// id ptr, size, GL_type, GL_FALSE, totalsize, start pos
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_stride),
 		(void *)0);
 	glEnableVertexAttribArray(0);
 
@@ -110,10 +111,6 @@ static void				set_layouts()
 
 	glVertexAttribPointer(2, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
 		(void *)(sizeof(vec3) + sizeof(t_vt)));
-	glEnableVertexAttribArray(2);
-
-	glVertexAttribPointer(3, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
-		(void *)(sizeof(vec3) + sizeof(t_vt) + sizeof(unsigned int)));
 	glEnableVertexAttribArray(2);
 }
 
@@ -162,29 +159,10 @@ static void				gl_uniforms(t_env *env)
 	env->gl.uniform.view = glGetUniformLocation(env->gl.shader_program, "view");
 	env->gl.uniform.projection = glGetUniformLocation(env->gl.shader_program, "projection");
 
-	// env->gl.uniform.progress = glGetUniformLocation(env->gl.shader_program, "progress");
-	env->gl.uniform.campos = glGetUniformLocation(env->gl.shader_program, "campos");
 	env->gl.uniform.texture = glGetUniformLocation(env->gl.shader_program, "texture_color");
 
-	env->gl.uniform.light[LIGHT_ACTIVE] = glGetUniformLocation(env->gl.shader_program, "light.is_active");
-	env->gl.uniform.light[LIGHT_POSITION] = glGetUniformLocation(env->gl.shader_program, "light.pos");
-	env->gl.uniform.light[LIGHT_DIRECTION] = glGetUniformLocation(env->gl.shader_program, "light.dir");
-	env->gl.uniform.light[LIGHT_COLOR] = glGetUniformLocation(env->gl.shader_program, "light.color");
-	env->gl.uniform.light[LIGHT_AMBIENT] = glGetUniformLocation(env->gl.shader_program, "light.ambient");
-	env->gl.uniform.light[LIGHT_DIFFUSE] = glGetUniformLocation(env->gl.shader_program, "light.diffuse");
-	env->gl.uniform.light[LIGHT_SPECULAR] = glGetUniformLocation(env->gl.shader_program, "light.specular");
-
 	// consume uniforms
-	// glUniform4fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 	glUniform1i(env->gl.uniform.texture, 0);
-
-	glUniform1i(env->gl.uniform.light[LIGHT_ACTIVE], env->light.is_active);
-	glUniform4fv(env->gl.uniform.light[LIGHT_POSITION], 1, (GLfloat *)&env->light.pos);
-	glUniform4fv(env->gl.uniform.light[LIGHT_DIRECTION], 1, (GLfloat *)&env->light.dir);
-	glUniform4fv(env->gl.uniform.light[LIGHT_COLOR], 1, (GLfloat *)&env->light.color);
-	glUniform4fv(env->gl.uniform.light[LIGHT_AMBIENT], 1, (GLfloat *)&env->light.ambient);
-	glUniform4fv(env->gl.uniform.light[LIGHT_DIFFUSE], 1, (GLfloat *)&env->light.diffuse);
-	glUniform4fv(env->gl.uniform.light[LIGHT_SPECULAR], 1, (GLfloat *)&env->light.specular);
 }
 
 static void				gl_options(void)

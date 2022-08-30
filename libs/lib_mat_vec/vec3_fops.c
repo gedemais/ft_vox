@@ -8,7 +8,6 @@ vec3		vec_fdiv(vec3 a, float n)
 	ret.x = a.x / n;
 	ret.y = a.y / n;
 	ret.z = a.z / n;
-	ret.w = a.w / n;
 	return (ret);
 }
 
@@ -19,7 +18,6 @@ vec3		vec_fmult(vec3 a, float n)
 	ret.x = a.x * n;
 	ret.y = a.y * n;
 	ret.z = a.z * n;
-	ret.w = a.w * n;
 	return (ret);
 }
 
@@ -30,7 +28,6 @@ vec3		vec_fadd(vec3 a, float n)
 	ret.x = a.x + n;
 	ret.y = a.y + n;
 	ret.z = a.z + n;
-	ret.w = a.w + n;
 	return (ret);
 }
 
@@ -41,7 +38,6 @@ vec3		vec_fsub(vec3 a, float n)
 	ret.x = a.x - n;
 	ret.y = a.y - n;
 	ret.z = a.z - n;
-	ret.w = a.w - n;
 	return (ret);
 }
 

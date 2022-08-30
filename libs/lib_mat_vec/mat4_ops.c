@@ -24,12 +24,5 @@ vec3		mat4_x_vec3(mat4 m, vec3 v)
 	out.x = m[0] * v.x + m[1] * v.y + m[2] * v.z + m[3];
 	out.y = m[4] * v.x + m[5] * v.y + m[6] * v.z + m[7];
 	out.z = m[8] * v.x + m[9] * v.y + m[10] * v.z + m[11];
-	out.w = m[12] * v.x + m[13] * v.y + m[14] * v.z + m[15];
-	// normalize if w is different than 1 (convert from homogeneous to Cartesian coordinates)
-	if (out.w != 1) { 
-		out.x /= out.w; 
-		out.y /= out.w; 
-		out.z /= out.w; 
-	}
 	return (out);
 }

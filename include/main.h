@@ -26,7 +26,6 @@
 // Local headers
 # include "./camera.h"
 # include "./error.h"
-# include "./light.h"
 # include "./keys.h"
 # include "./model.h"
 # include "./shaders.h"
@@ -82,9 +81,8 @@ typedef struct		s_window
 
 typedef struct	s_uniform
 {
-	GLint	texture, campos;
+	GLint	texture;
 	GLint	model, view, projection;
-	GLint	light[LIGHT_MAX];
 }				t_uniform;
 
 typedef struct	s_gltools
@@ -118,7 +116,6 @@ typedef struct		s_env
 	t_fps		fps;
 	t_mouse		mouse;
 	t_model		model;
-	t_light		light;
 	// Function pointers array linking actions functions with key binds
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;

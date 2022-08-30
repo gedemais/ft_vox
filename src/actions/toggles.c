@@ -10,10 +10,9 @@ __attribute__((noreturn)) void	exit_vox(t_env *env, int key)
 
 void		event_light(t_env *env, int key)
 {
+	(void)env;
 	(void)key;
-	env->light.is_active = !env->light.is_active;
-	//printf("%d\n", env->light.is_active);
-	glUniform1i(env->gl.uniform.light[LIGHT_ACTIVE], env->light.is_active);
+	printf("event light\n");
 }
 
 void		event_texture(t_env *env, int key)

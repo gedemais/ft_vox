@@ -15,17 +15,16 @@ static void				bind_textures(GLuint *textures, int id)
 static void				draw_faces(t_mesh *mesh, GLuint *textures)
 {
 	t_stride	*stride;
-	int			j;
+	int			csize;
 
-	j = 0;
-	while (j < mesh->vertices.nb_cells) {
-		stride = dyacc(&mesh->vertices, j);
+	csize = 0;
+	while (csize < mesh->vertices.nb_cells) {
+		stride = dyacc(&mesh->vertices, csize);
 		if (stride == NULL)
 			continue ;
 		bind_textures(textures, stride->tid);
-		glDrawArrays(GL_TRIANGLES, j, 6);
-		// j is face's index (3 vertices = 1 triangle, 2 triangles = 1 face)
-		j += 6;
+		glDrawArrays(GL_TRIANGLE_STRIP, csize, CUBE_SIZE);
+		csize += CUBE_SIZE;
 	}
 }
 
@@ -77,8 +76,6 @@ static void				mat4_mvp(t_env *env)
 
 static unsigned char	render_scene(t_env *env)
 {
-	glUseProgram(env->gl.shader_program);
-	glUniform4fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 	fps(&env->fps, true);
 	mat4_mvp(env);
 	set_uniforms(env);
@@ -93,6 +90,7 @@ unsigned char			display_loop(t_env *env)
 	glClearColor(255, 255, 255, 1);
 	while (!glfwWindowShouldClose(env->gl.window.ptr))
 	{
+		glUseProgram(env->gl.shader_program);
 		processInput(env->gl.window.ptr);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if ((code = render_scene(env)) != ERR_NONE)

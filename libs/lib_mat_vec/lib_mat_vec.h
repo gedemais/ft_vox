@@ -14,7 +14,7 @@ typedef float	mat4[16];
 
 typedef struct	s_vec3
 {
-	float		x, y, z, w;
+	float		x, y, z;
 }				vec3;
 
 typedef union	rsqrt
@@ -30,13 +30,10 @@ vec3		vec_fsub(vec3 a, float n);
 
 vec3		vec_cross(vec3 a, vec3 b);
 
-vec3		zero_vector(void);
-
 vec3		vec_add(vec3 a, vec3 b);
 vec3		vec_sub(vec3 a, vec3 b);
 vec3		vec_mult(vec3 a, vec3 b);
 vec3		vec_div(vec3 a, vec3 b);
-vec3		vec_relu(vec3 v);
 
 float		ft_rsqrt(float number);
 vec3		vec_normalize(vec3 vec);

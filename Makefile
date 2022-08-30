@@ -55,7 +55,6 @@ INC_NAME=main.h\
 	camera.h\
 	error.h\
 	keys.h\
-	light.h\
 	model.h\
 	shaders.h
 
