@@ -6,23 +6,24 @@
 unsigned char			cube(t_dynarray *vertices, vec3 o, unsigned int tid)
 {
 	int			i;
-	float		step = 1 / (float)TEXTURE_MAX;
+	float		step = (1 / (float)(TEXTURE_MAX)) * tid;
+
 	(void)tid;
 	t_stride	list_strides[CUBE_SIZE] = {
-		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 1, 1 } },
-		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 1, 1 } },
-		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 1, 1 } }
+		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 0 } },
+		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 0 } },
+		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 1 } },
+		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 1 } },
+		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 0 } },
+		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 1 } },
+		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 0 } },
+		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 1 } },
+		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 0 } },
+		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 1 } },
+		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 0 } },
+		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 0 } },
+		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 1 } },
+		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 1 } }
 	};
 
 	i = -1;
@@ -58,13 +59,13 @@ static void				set_mesh_center(t_mesh *mesh)
 static unsigned char	many_cubes(t_mesh *mesh)
 {
 	unsigned char	code;
-	int				i, j, max = 4;
+	int				i, j, max = 1444;
 		
 	i = -1;
 	while (++i < max) {
 		j = -1;
 		while (++j < max) {
-			if ((code = cube(&mesh->vertices, (vec3){ .x = i, .z = j }, TEXTURE_DEFAULT)) != ERR_NONE)
+			if ((code = cube(&mesh->vertices, (vec3){ .x = i, .z = j }, i % 2)) != ERR_NONE)
 				return (code);
 		}
 	}
@@ -96,7 +97,7 @@ unsigned char			model(t_env *env)
 		set_mesh_center(mesh);
 		env->model.center = vec_add(env->model.center, mesh->center);
 
-		print_fv(&mesh->vertices);
+		// print_fv(&mesh->vertices);
 
 		if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 			return (ERR_MALLOC_FAILED);

@@ -7,6 +7,8 @@
 enum			e_texture
 {
 	TEXTURE_DEFAULT,
+	TEXTURE_DEFAULT2,
+	TEXTURE_DEFAULT3,
 	TEXTURE_MAX
 };
 
@@ -18,7 +20,7 @@ typedef	struct	s_face
 
 typedef	struct	s_vertex_texture
 {
-	__fp16	u, v;
+	float	u, v;
 }				t_vt;
 
 typedef struct	s_stride

@@ -5,7 +5,7 @@ static void				draw_mesh(t_env *env)
 {
 	t_mesh		*mesh;
 	GLsizeiptr	size;
-	int			i;
+	int			i, j;
 
 	i = -1;
 	while (++i < env->model.meshs.nb_cells) {
@@ -13,7 +13,10 @@ static void				draw_mesh(t_env *env)
 		if (mesh == NULL)
 			continue ;
 		glBindVertexArray(mesh->vao);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh->vertices.nb_cells);
+
+		for (j = 0; j < mesh->vertices.nb_cells; j += 14)
+			glDrawArrays(GL_TRIANGLE_STRIP, j, 14);
+
 		glBindVertexArray(0);
 	}
 }

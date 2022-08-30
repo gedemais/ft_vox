@@ -108,7 +108,7 @@ static void				set_layouts()
 	glEnableVertexAttribArray(0);
 
 	// t_vt
-	glVertexAttribPointer(1, 2, GL_HALF_FLOAT, GL_FALSE, sizeof(t_stride),
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride),
 		(void *)sizeof(vec3));
 	glEnableVertexAttribArray(1);
 }
@@ -169,9 +169,9 @@ static void				gl_options(void)
 	glDepthFunc(GL_LESS);
 
 	// CULLING : we only draw front face in counter-clock-wise order
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
-	glFrontFace(GL_CCW);
+	// glEnable(GL_CULL_FACE);
+	// glCullFace(GL_FRONT);
+	// glFrontFace(GL_CCW);
 }
 
 unsigned char			init_shaders(t_env *env)

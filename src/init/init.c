@@ -23,7 +23,7 @@ static void				bind_actions_to_keys(t_env *env)
 
 static unsigned char	images(t_env *env)
 {
-	const char	path[] = "./resources/nyan.bmp";
+	const char	path[] = "./resources/texture.bmp";
 	t_texture	*texture;
 
 	texture = &env->model.texture;
