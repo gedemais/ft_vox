@@ -40,6 +40,7 @@ SRC_NAME=main.c\
 	init/camera.c\
 	init/settings.c\
 	init/init.c\
+	init/light.c\
 	init/model.c\
 	init/init_opengl.c\
 	init/init_shaders.c\
@@ -55,6 +56,7 @@ INC_NAME=main.h\
 	camera.h\
 	error.h\
 	keys.h\
+	light.h\
 	model.h\
 	shaders.h
 

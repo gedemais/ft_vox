@@ -31,31 +31,38 @@ static unsigned char	images(t_env *env)
 	return (texture->ptr == NULL ? ERR_MALLOC_FAILED : ERR_NONE);
 }
 
-unsigned char			init(t_env *env, int argc, char **argv)
+static unsigned char	init_env(t_env *env)
 {
-	unsigned char code;
-
-	// init env ?
-	env->gl.window.fullscreen = false;
+	unsigned char	code;
 
 	if ((code = images(env)) != ERR_NONE)
 		return (code);
 
+	env->gl.window.fullscreen = false;
+
+	light(&env->light);
 	model(env);
+	return (ERR_NONE);
+}
+
+unsigned char			init(t_env *env, int argc, char **argv)
+{
+	unsigned char code;
+
+	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
+		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
+		|| (code = init_env(env)) != ERR_NONE // init main env
+		|| (code = init_shaders(env)) != ERR_NONE) // init shaders after model because we need to buffer each mesh
+		return (code);
 
 	(void)argv;
 	(void)argc;
 	//if (argc != 2) // Arguments number check
 	//	return (ERR_INVALID_ARGC);
 
-	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
-		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
-		|| (code = init_shaders(env)) != ERR_NONE) // Load shader programs from .glsl files
-		return (code);
-
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
 
-	camera(env);
+	camera(env); // camera after load settings cause we need ww and wh
 
 	return (ERR_NONE);
 }

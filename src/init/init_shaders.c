@@ -111,6 +111,11 @@ static void				set_layouts()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride),
 		(void *)sizeof(vec3));
 	glEnableVertexAttribArray(1);
+
+	// vec3 normal
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+		(void *)(sizeof(vec3) + sizeof(t_vt)));
+	glEnableVertexAttribArray(2);
 }
 
 static unsigned char	gl_buffers(t_mesh *mesh)
@@ -156,9 +161,29 @@ static void				gl_uniforms(t_env *env)
 	env->gl.uniform.projection = glGetUniformLocation(env->gl.shader_program, "projection");
 
 	env->gl.uniform.texture = glGetUniformLocation(env->gl.shader_program, "texture_color");
+	env->gl.uniform.campos = glGetUniformLocation(env->gl.shader_program, "campos");
+
+	env->gl.uniform.light[LIGHT_ACTIVE] = glGetUniformLocation(env->gl.shader_program, "light.is_active");
+	env->gl.uniform.light[LIGHT_GAMMA] = glGetUniformLocation(env->gl.shader_program, "light.gamma");
+	env->gl.uniform.light[LIGHT_POSITION] = glGetUniformLocation(env->gl.shader_program, "light.pos");
+	env->gl.uniform.light[LIGHT_DIRECTION] = glGetUniformLocation(env->gl.shader_program, "light.dir");
+	env->gl.uniform.light[LIGHT_COLOR] = glGetUniformLocation(env->gl.shader_program, "light.color");
+	env->gl.uniform.light[LIGHT_AMBIENT] = glGetUniformLocation(env->gl.shader_program, "light.ambient");
+	env->gl.uniform.light[LIGHT_DIFFUSE] = glGetUniformLocation(env->gl.shader_program, "light.diffuse");
+	env->gl.uniform.light[LIGHT_SPECULAR] = glGetUniformLocation(env->gl.shader_program, "light.specular");
 
 	// consume uniforms
 	glUniform1i(env->gl.uniform.texture, 0);
+
+	glUniform1i(env->gl.uniform.light[LIGHT_ACTIVE], env->light.is_active);
+	glUniform1f(env->gl.uniform.light[LIGHT_GAMMA], env->light.gamma);
+	glUniform3fv(env->gl.uniform.light[LIGHT_POSITION], 1, (GLfloat *)&env->light.pos);
+	glUniform3fv(env->gl.uniform.light[LIGHT_DIRECTION], 1, (GLfloat *)&env->light.dir);
+	glUniform3fv(env->gl.uniform.light[LIGHT_COLOR], 1, (GLfloat *)&env->light.color);
+	glUniform3fv(env->gl.uniform.light[LIGHT_AMBIENT], 1, (GLfloat *)&env->light.ambient);
+	glUniform3fv(env->gl.uniform.light[LIGHT_DIFFUSE], 1, (GLfloat *)&env->light.diffuse);
+	glUniform3fv(env->gl.uniform.light[LIGHT_SPECULAR], 1, (GLfloat *)&env->light.specular);
+	
 }
 
 static void				gl_options(void)
@@ -172,6 +197,9 @@ static void				gl_options(void)
 	// glEnable(GL_CULL_FACE);
 	// glCullFace(GL_FRONT);
 	// glFrontFace(GL_CCW);
+
+	// GAMA CORRECTION
+	// glEnable(GL_FRAMEBUFFER_SRGB); 
 }
 
 unsigned char			init_shaders(t_env *env)

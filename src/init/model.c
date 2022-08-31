@@ -7,87 +7,57 @@ static void				update_vertex(t_stride *vertex, vec3 o, float step)
 	vertex->t.u = (vertex->t.u / (float)TEXTURE_MAX) + step;
 }
 
-static unsigned char	cube_light(t_dynarray *vertices, vec3 o, unsigned int tid)
-{
-	int			i;
-	float		step = (1 / (float)(TEXTURE_MAX)) * tid;
-	t_stride	list_strides[14] = {
-		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 1 } },
-		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 1, 1 } },
-		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 1, 1 } }
-	};
-
-	i = -1;
-	while (++i < 14) {
-		update_vertex(&list_strides[i], o, step);
-		if (dynarray_push(vertices, &list_strides[i], false) < 0)
-			return (ERR_MALLOC_FAILED);
-	} 
-	return (ERR_NONE);
-}
-
 static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid)
 {
 	int			i;
 	float		step = (1 / (float)(TEXTURE_MAX)) * tid;
-	t_stride	list_strides[36] = {
+	t_stride	list_strides[CUBE_SIZE] = {
 		// FRONT ----------------------------------------
-		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 1, 1 } },
-		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 1, 1 }, (vec3){ 0, 0, 1 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 0, 1 }, (vec3){ 0, 0, 1 } },
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 1, 0 }, (vec3){ 0, 0, 1 } },
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 1, 0 }, (vec3){ 0, 0, 1 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 0, 1 }, (vec3){ 0, 0, 1 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 0, 0 }, (vec3){ 0, 0, 1 } },
 		// BACK -----------------------------------------
-		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 1 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 0 }, (vec3){ 0, 0, -1 } },
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 0 }, (vec3){ 0, 0, -1 } },
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 1 }, (vec3){ 0, 0, -1 } },
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 1 }, (vec3){ 0, 0, -1 } },
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 0 }, (vec3){ 0, 0, -1 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 1 }, (vec3){ 0, 0, -1 } },
 		// TOP ------------------------------------------
-		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 1, 1 } },
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 0 }, (vec3){ 0, 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 0 }, (vec3){ 0, 1, 0 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 }, (vec3){ 0, 1, 0 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 }, (vec3){ 0, 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 0 }, (vec3){ 0, 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 1, 1 }, (vec3){ 0, 1, 0 } },
 		// BOTTOM ---------------------------------------
-		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 1 } },
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 0, 0 }, (vec3){ 0, -1, 0 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 }, (vec3){ 0, -1, 0 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 }, (vec3){ 0, -1, 0 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 }, (vec3){ 0, -1, 0 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 }, (vec3){ 0, -1, 0 } },
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 1 }, (vec3){ 0, -1, 0 } },
 		// RIGHT ----------------------------------------
-		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 1, 1 } },
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 0, 0 }, (vec3){ 1, 0, 0 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 1, 0 }, (vec3){ 1, 0, 0 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 }, (vec3){ 1, 0, 0 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 }, (vec3){ 1, 0, 0 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 1, 0 }, (vec3){ 1, 0, 0 } },
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 1, 1 }, (vec3){ 1, 0, 0 } },
 		// LEFT -----------------------------------------
-		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 0, 0 } },
-		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 } },
-		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
-		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 1, 1 } }
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 0, 0 }, (vec3){ -1, 0, 0 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 }, (vec3){ -1, 0, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 }, (vec3){ -1, 0, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 }, (vec3){ -1, 0, 0 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 }, (vec3){ -1, 0, 0 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 1, 1 }, (vec3){ -1, 0, 0 } }
 	};
 
 	i = -1;
-	while (++i < 36) {
+	while (++i < CUBE_SIZE) {
 		update_vertex(&list_strides[i], o, step);
 		if (dynarray_push(vertices, &list_strides[i], false) < 0)
 			return (ERR_MALLOC_FAILED);
@@ -121,22 +91,17 @@ static void				set_mesh_center(t_mesh *mesh)
 static unsigned char	many_cubes(t_mesh *mesh)
 {
 	unsigned char	code;
-	int				i, j, max = 666;
+	int				i, j, max = 1;
 		
 	i = -1;
 	while (++i < max) {
 		j = -1;
 		while (++j < max) {
-			if (CUBE_SIZE == 14) {
-				if ((code = cube_light(&mesh->vertices, (vec3){ .x = i, .z = j }, 0)) != ERR_NONE)
-					return (code);
-			} else {
-				if ((code = cube(&mesh->vertices, (vec3){ .x = i, .z = j }, 0)) != ERR_NONE)
-					return (code);
-			}
+			if ((code = cube(&mesh->vertices, (vec3){ .x = i, .z = j }, 0)) != ERR_NONE)
+				return (code);
 		}
 	}
-	printf("nb cubes : %d || %d\n", i * j, mesh->vertices.nb_cells);
+	printf("cubes : %d || vertices : %d\n", i * j, mesh->vertices.nb_cells);
 	return (ERR_NONE);
 }
 

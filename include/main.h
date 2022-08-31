@@ -28,6 +28,7 @@
 # include "./camera.h"
 # include "./error.h"
 # include "./keys.h"
+# include "./light.h"
 # include "./model.h"
 # include "./shaders.h"
 
@@ -82,7 +83,7 @@ typedef struct		s_window
 
 typedef struct	s_uniform
 {
-	GLint	texture;
+	GLint	texture, campos, light[LIGHT_MAX];
 	GLint	model, view, projection;
 }				t_uniform;
 
@@ -117,6 +118,7 @@ typedef struct		s_env
 	t_fps		fps;
 	t_mouse		mouse;
 	t_model		model;
+	t_light		light;
 	// Function pointers array linking actions functions with key binds
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;
@@ -124,6 +126,7 @@ typedef struct		s_env
 // Initializes scop
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
+void				light(t_light *light);
 unsigned char		model(t_env *env);
 
 // OpenGL
