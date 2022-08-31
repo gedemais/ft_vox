@@ -14,8 +14,12 @@ static void				draw_mesh(t_env *env)
 			continue ;
 		glBindVertexArray(mesh->vao);
 
-		for (j = 0; j < mesh->vertices.nb_cells; j += 14)
-			glDrawArrays(GL_TRIANGLE_STRIP, j, 14);
+		if (CUBE_SIZE == 14) {
+			for (j = 0; j < mesh->vertices.nb_cells; j += CUBE_SIZE)
+				glDrawArrays(GL_TRIANGLE_STRIP, j, CUBE_SIZE);
+		} else {
+			glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
+		}
 
 		glBindVertexArray(0);
 	}

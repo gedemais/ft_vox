@@ -4,11 +4,12 @@
 
 # include "./main.h"
 
+# define CUBE_SIZE	14
+// # define CUBE_SIZE	36
+
 enum			e_texture
 {
 	TEXTURE_DEFAULT,
-	TEXTURE_DEFAULT2,
-	TEXTURE_DEFAULT3,
 	TEXTURE_MAX
 };
 
@@ -32,8 +33,7 @@ typedef struct	s_stride
 typedef struct	s_texture
 {
 	unsigned char	*ptr;
-	int				id, w, h;
-	char			pad[4];
+	int				w, h;
 }				t_texture;
 
 typedef struct	s_mesh

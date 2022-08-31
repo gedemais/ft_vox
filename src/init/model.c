@@ -1,35 +1,97 @@
 #include "../../include/main.h"
 
 
-#define CUBE_SIZE		14
+static void				update_vertex(t_stride *vertex, vec3 o, float step)
+{
+	vertex->v = vec_add(vertex->v, o);
+	vertex->t.u = (vertex->t.u / (float)TEXTURE_MAX) + step;
+}
 
-unsigned char			cube(t_dynarray *vertices, vec3 o, unsigned int tid)
+static unsigned char	cube_light(t_dynarray *vertices, vec3 o, unsigned int tid)
 {
 	int			i;
 	float		step = (1 / (float)(TEXTURE_MAX)) * tid;
-
-	(void)tid;
-	t_stride	list_strides[CUBE_SIZE] = {
-		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 0 } },
-		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 0 } },
-		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 1 } },
-		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 1 } },
-		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 0 } },
-		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 1 } },
-		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 0 } },
-		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 1 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 1 } },
-		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 0 } },
-		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 1 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 1 } },
-		(t_stride){ (vec3){ 0 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 0 } },
-		(t_stride){ (vec3){ 1 + o.x, 0 + o.y, 0 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 0 } },
-		(t_stride){ (vec3){ 0 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 0 / (float)TEXTURE_MAX + step, 1 } },
-		(t_stride){ (vec3){ 1 + o.x, 1 + o.y, 0 + o.z }, (t_vt){ 1 / (float)TEXTURE_MAX + step, 1 } }
+	t_stride	list_strides[14] = {
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 1 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 1, 1 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 1, 1 } }
 	};
 
 	i = -1;
-	while (++i < CUBE_SIZE)
+	while (++i < 14) {
+		update_vertex(&list_strides[i], o, step);
 		if (dynarray_push(vertices, &list_strides[i], false) < 0)
 			return (ERR_MALLOC_FAILED);
+	} 
+	return (ERR_NONE);
+}
+
+static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid)
+{
+	int			i;
+	float		step = (1 / (float)(TEXTURE_MAX)) * tid;
+	t_stride	list_strides[36] = {
+		// FRONT ----------------------------------------
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 1, 1 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 0, 0 } },
+		// BACK -----------------------------------------
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 1 } },
+		// TOP ------------------------------------------
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 1, 1 } },
+		// BOTTOM ---------------------------------------
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 1, 1 } },
+		// RIGHT ----------------------------------------
+		(t_stride){ (vec3){ 0, 0, 0 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 0, 1, 0 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 0, 0, 1 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 0, 1, 1 }, (t_vt){ 1, 1 } },
+		// LEFT -----------------------------------------
+		(t_stride){ (vec3){ 1, 0, 1 }, (t_vt){ 0, 0 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 } },
+		(t_stride){ (vec3){ 1, 0, 0 }, (t_vt){ 1, 0 } },
+		(t_stride){ (vec3){ 1, 1, 0 }, (t_vt){ 1, 1 } }
+	};
+
+	i = -1;
+	while (++i < 36) {
+		update_vertex(&list_strides[i], o, step);
+		if (dynarray_push(vertices, &list_strides[i], false) < 0)
+			return (ERR_MALLOC_FAILED);
+	}
 	return (ERR_NONE);
 }
 
@@ -59,14 +121,19 @@ static void				set_mesh_center(t_mesh *mesh)
 static unsigned char	many_cubes(t_mesh *mesh)
 {
 	unsigned char	code;
-	int				i, j, max = 1444;
+	int				i, j, max = 666;
 		
 	i = -1;
 	while (++i < max) {
 		j = -1;
 		while (++j < max) {
-			if ((code = cube(&mesh->vertices, (vec3){ .x = i, .z = j }, i % 2)) != ERR_NONE)
-				return (code);
+			if (CUBE_SIZE == 14) {
+				if ((code = cube_light(&mesh->vertices, (vec3){ .x = i, .z = j }, 0)) != ERR_NONE)
+					return (code);
+			} else {
+				if ((code = cube(&mesh->vertices, (vec3){ .x = i, .z = j }, 0)) != ERR_NONE)
+					return (code);
+			}
 		}
 	}
 	printf("nb cubes : %d || %d\n", i * j, mesh->vertices.nb_cells);
