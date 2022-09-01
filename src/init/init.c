@@ -42,6 +42,7 @@ static unsigned char	init_env(t_env *env)
 
 	light(&env->light);
 	model(env);
+
 	return (ERR_NONE);
 }
 

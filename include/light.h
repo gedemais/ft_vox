@@ -4,10 +4,15 @@
 
 # include "./main.h"
 
-enum			e_light
+enum			e_light_sources
 {
-	LIGHT_ACTIVE,
-	LIGHT_GAMMA,
+	LIGHT_SOURCE_PLAYER,
+	LIGHT_SOURCE_SUN,
+	LIGHT_SOURCE_MAX
+};
+
+enum			e_light_tools
+{
 	LIGHT_POSITION,
 	LIGHT_DIRECTION,
 	LIGHT_COLOR,
@@ -17,12 +22,17 @@ enum			e_light
 	LIGHT_MAX
 };
 
-typedef struct	s_light
+typedef struct	s_light_source
 {
-	bool	is_active;
-	float	gamma;
 	vec3	pos, dir, color;
 	vec3	ambient, diffuse, specular;
+}				t_light_source;
+
+typedef struct	s_light
+{
+	bool			is_active;
+	float			gamma;
+	t_light_source	sources[LIGHT_SOURCE_MAX];
 }				t_light;
 
 

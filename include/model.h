@@ -4,7 +4,8 @@
 
 # include "./main.h"
 
-# define CUBE_SIZE	36
+# define CUBE_SIZE	14
+// # define CUBE_SIZE	36
 
 enum			e_texture
 {

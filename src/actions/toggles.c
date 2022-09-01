@@ -12,7 +12,7 @@ void		event_light(t_env *env, int key)
 {
 	(void)key;
 	env->light.is_active = !env->light.is_active;
-	glUniform1i(env->gl.uniform.light[LIGHT_ACTIVE], env->light.is_active);
+	glUniform1i(env->gl.uniform.light_active, env->light.is_active);
 }
 
 void		event_texture(t_env *env, int key)

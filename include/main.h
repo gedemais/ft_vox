@@ -83,7 +83,8 @@ typedef struct		s_window
 
 typedef struct	s_uniform
 {
-	GLint	texture, campos, light[LIGHT_MAX];
+	GLint	texture, campos;
+	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
 	GLint	model, view, projection;
 }				t_uniform;
 
@@ -127,6 +128,7 @@ typedef struct		s_env
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
 void				light(t_light *light);
+unsigned char		light_uniforms(t_env *env);
 unsigned char		model(t_env *env);
 
 // OpenGL
