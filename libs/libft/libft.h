@@ -6,7 +6,7 @@
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 11:28:45 by maboye            #+#    #+#             */
-/*   Updated: 2022/08/25 09:42:25 by maboye           ###   ########.fr       */
+/*   Updated: 2022/09/01 19:14:33 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ long			ft_atoi_base(const char *str, unsigned int base);
 int				ft_atoi(const char *str);
 int				ft_intlen(int nb);
 char			*ft_itoa_base(int nb, int base);
-char			*ft_itoa(int nb);
+char			*ft_itoa(long long int nb);
 char			*ft_mmapfile(char *file_path);
 char			*ft_readfile(char *file_path);
 char			*ft_strcat(char *dst, const char *src);

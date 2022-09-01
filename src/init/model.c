@@ -121,7 +121,7 @@ static void				set_mesh_center(t_mesh *mesh)
 static unsigned char	many_cubes(t_mesh *mesh)
 {
 	unsigned char	code;
-	int				i, j, max = 666;
+	int				i, j, max = 100;
 		
 	i = -1;
 	while (++i < max) {

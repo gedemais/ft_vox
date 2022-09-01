@@ -71,6 +71,7 @@ unsigned char			light_uniforms(t_env *env)
 	glUniform1f(env->gl.uniform.light_gamma, env->light.gamma);
 	i = -1;
 	while (++i < LIGHT_SOURCE_MAX) {
+
 		// get uniforms
 		if ((code = get_light_uniforms(&env->gl, i)) != ERR_NONE)
 			return (code);
@@ -96,7 +97,7 @@ static void				init_player(t_light_source *source)
 	source->specular	= (vec3){ 1, 1, 1 };
 }
 
-static void				init_sun(t_light_source *source)
+ static void			init_sun(t_light_source *source)
 {
 	source->pos			= (vec3){ 10, 2, 10 };				// z is reverse
 	source->dir			= (vec3){ 0, 0, 1 };				// unused yet
