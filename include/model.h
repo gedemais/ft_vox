@@ -28,7 +28,7 @@ typedef struct	s_stride
 {
 	vec3			v;
 	t_vt			t;
-	unsigned int	n;
+	vec3			n;
 }				t_stride;
 
 typedef struct	s_texture
