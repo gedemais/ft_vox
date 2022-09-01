@@ -5,6 +5,16 @@
 
 # include "./main.h"
 
+enum			e_normals
+{
+	N_UP,
+	N_DOWN,
+	N_WEST,
+	N_EAST,
+	N_NORTH,
+	N_SOUTH,
+	N_MAX
+};
 
 typedef	struct	s_vertex_texture
 {
@@ -14,10 +24,12 @@ typedef	struct	s_vertex_texture
 
 typedef struct	s_stride
 {
-	vec3		v;
-	vec3		n;
-	t_vt		t;
-	uint32_t	txt;
+	float		x; // Vertex position
+	float		y;
+	float		z;
+	t_vt		t; // Texture vertex
+	uint8_t		n; // Normal identifier (from e_normals)
+	uint8_t		type; // Bloc type identifier (from e_bloc_types in gen.h)
 }				t_stride;
 
 typedef struct	s_texture

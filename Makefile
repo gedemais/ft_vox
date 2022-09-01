@@ -41,6 +41,7 @@ SRC_NAME=main.c\
 	generation/generation.c\
 	generation/height_map.c\
 	generation/block_map.c\
+	generation/greedy_meshing.c\
 	init/camera.c\
 	init/settings.c\
 	init/init.c\

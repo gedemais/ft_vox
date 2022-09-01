@@ -3,6 +3,7 @@
 
 enum	e_bloc_types
 {
+	BT_NONE,
 	BT_ROCK,
 	BT_SAND,
 	BT_GROUND,
@@ -28,6 +29,13 @@ typedef struct	s_block
 {
 	uint8_t		type : 3;
 }				t_block;
+
+typedef	struct	s_group_unit
+{
+	unsigned char	x;
+	unsigned char	y;
+	unsigned char	z;
+}				t_group_unit;
 
 typedef struct	s_chunk
 {

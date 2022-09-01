@@ -30,12 +30,8 @@ static int	switch_block_type(unsigned int z)
 		return (BT_GROUND);
 	else if (z >= 60 && z < 80)
 		return (BT_GRASS);
-	else if (z >= 80 && z < 100)
-		return (BT_SNOW);
-	else if (z >= 100)
-		return (BT_AIR);
 	else
-		return (0);
+		return (BT_SNOW);
 }
 
 static void		gen_blocks(t_chunk *chunk, unsigned int size)
@@ -48,8 +44,8 @@ static void		gen_blocks(t_chunk *chunk, unsigned int size)
 			z = chunk->surface_hmap[x][y];
 			chunk->block_map[x][y][z].type = switch_block_type(z);
 
-			z = chunk->sub_hmap[x][y];
-			chunk->block_map[x][y][z].type = switch_block_type(z);
+			//z = chunk->sub_hmap[x][y];
+			//chunk->block_map[x][y][z].type = switch_block_type(z);
 		}
 }
 
