@@ -17,61 +17,63 @@ static unsigned char	quit_light_uniforms(char *ai)
 	return (ERR_MALLOC_FAILED);
 }
 
+static unsigned char	get_light_uniforms(t_gltools *gl, int i)
+{
+	char	*target, *ai;
+
+	if ((ai = ft_itoa(i)) == NULL)
+		return (ERR_MALLOC_FAILED);
+
+	if ((target = build_target("].pos", ai)) == NULL)
+		return (quit_light_uniforms(ai));
+	gl->uniform.light[i][LIGHT_POSITION] = glGetUniformLocation(gl->shader_program, target);
+	ft_strdel(&target);
+
+	if ((target = build_target("].dir", ai)) == NULL)
+		return (quit_light_uniforms(ai));
+	gl->uniform.light[i][LIGHT_DIRECTION] = glGetUniformLocation(gl->shader_program, target);
+	ft_strdel(&target);
+
+	if ((target = build_target("].color", ai)) == NULL)
+		return (quit_light_uniforms(ai));
+	gl->uniform.light[i][LIGHT_COLOR] = glGetUniformLocation(gl->shader_program, target);
+	ft_strdel(&target);
+
+	if ((target = build_target("].ambient", ai)) == NULL)
+		return (quit_light_uniforms(ai));
+	gl->uniform.light[i][LIGHT_AMBIENT] = glGetUniformLocation(gl->shader_program, target);
+	ft_strdel(&target);
+
+	if ((target = build_target("].diffuse", ai)) == NULL)
+		return (quit_light_uniforms(ai));
+	gl->uniform.light[i][LIGHT_DIFFUSE] = glGetUniformLocation(gl->shader_program, target);
+	ft_strdel(&target);
+
+	if ((target = build_target("].specular", ai)) == NULL)
+		return (quit_light_uniforms(ai));
+	gl->uniform.light[i][LIGHT_SPECULAR] = glGetUniformLocation(gl->shader_program, target);
+	ft_strdel(&target);
+
+	ft_strdel(&ai);
+	return (ERR_NONE);
+}
+
 unsigned char			light_uniforms(t_env *env)
 {
-	int		i;
-	char	*target, *ai;
+	unsigned char	code;
+	int				i;
 
 	// get uniforms
 	env->gl.uniform.light_active = glGetUniformLocation(env->gl.shader_program, "light.is_active");
 	env->gl.uniform.light_gamma = glGetUniformLocation(env->gl.shader_program, "light.gamma");
-
 	// consume uniforms
 	glUniform1i(env->gl.uniform.light_active, env->light.is_active);
 	glUniform1f(env->gl.uniform.light_gamma, env->light.gamma);
-
 	i = -1;
 	while (++i < LIGHT_SOURCE_MAX) {
-		if ((ai = ft_itoa(i)) == NULL)
-			return (ERR_MALLOC_FAILED);
-		
 		// get uniforms
-		if ((target = build_target("].pos", ai)) == NULL)
-			return (quit_light_uniforms(ai));
-		env->gl.uniform.light[i][LIGHT_POSITION] = glGetUniformLocation(env->gl.shader_program, target);
-		printf("target : %s\n", target);
-		ft_strdel(&target);
-
-		if ((target = build_target("].dir", ai)) == NULL)
-			return (quit_light_uniforms(ai));
-		env->gl.uniform.light[i][LIGHT_DIRECTION] = glGetUniformLocation(env->gl.shader_program, target);
-		printf("target : %s\n", target);
-		ft_strdel(&target);
-
-		if ((target = build_target("].color", ai)) == NULL)
-			return (quit_light_uniforms(ai));
-		env->gl.uniform.light[i][LIGHT_COLOR] = glGetUniformLocation(env->gl.shader_program, target);
-		printf("target : %s\n", target);
-		ft_strdel(&target);
-
-		if ((target = build_target("].ambient", ai)) == NULL)
-			return (quit_light_uniforms(ai));
-		env->gl.uniform.light[i][LIGHT_AMBIENT] = glGetUniformLocation(env->gl.shader_program, target);
-		printf("target : %s\n", target);
-		ft_strdel(&target);
-
-		if ((target = build_target("].diffuse", ai)) == NULL)
-			return (quit_light_uniforms(ai));
-		env->gl.uniform.light[i][LIGHT_DIFFUSE] = glGetUniformLocation(env->gl.shader_program, target);
-		printf("target : %s\n", target);
-		ft_strdel(&target);
-
-		if ((target = build_target("].specular", ai)) == NULL)
-			return (quit_light_uniforms(ai));
-		env->gl.uniform.light[i][LIGHT_SPECULAR] = glGetUniformLocation(env->gl.shader_program, target);
-		printf("target : %s\n", target);
-		ft_strdel(&target);
-
+		if ((code = get_light_uniforms(&env->gl, i)) != ERR_NONE)
+			return (code);
 		// consume uniforms
 		glUniform3fv(env->gl.uniform.light[i][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[i].pos);
 		glUniform3fv(env->gl.uniform.light[i][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[i].dir);

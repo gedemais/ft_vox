@@ -113,7 +113,7 @@ static void				set_layouts()
 	glEnableVertexAttribArray(1);
 
 	// vec3 : normal
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+	glVertexAttribPointer(2, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
 		(void *)(sizeof(vec3) + sizeof(t_vt)));
 	glEnableVertexAttribArray(2);
 }

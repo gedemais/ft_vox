@@ -70,7 +70,7 @@ void	main()
 		while (++i < LIGHT_SOURCE_MAX)
 			FragColor += compute_light_sources(light_sources[i], tools);
 		// gamma correction
-		//FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
+		FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 	} else {
 		FragColor = texture(texture_color, vTexture);
 	}
