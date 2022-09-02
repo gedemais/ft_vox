@@ -1,13 +1,7 @@
 #version 330 core
 
 #define LIGHT_SOURCE_MAX	2
-
-struct	LightTools {
-	vec3	color, n;
-	vec3	ambient, diffuse, specular;
-	vec3	view_dir, light_dir, half_dir;
-	float	a, d, l, s;
-};
+#define TEXTURE_MAX			3
 
 struct	LightSources {
 	vec3	pos, dir, color;
@@ -21,57 +15,52 @@ struct	Light {
 
 in vec3					vNormal;
 in vec3					vPosition;
-in vec2					vTexture;
+in vec2					vTextCoord;
+in float				vType;
 
 uniform vec3			campos;
+
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX]; 
-uniform sampler2D		texture_color;
+uniform sampler2D		vTextures[TEXTURE_MAX];
 
 out vec4				FragColor;
 
-vec4	compute_light_sources(LightSources source, LightTools tools)
+vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 {
-	// ambient
-	tools.ambient	= tools.color * source.ambient;
+	vec3	n, light_dir, half_dir;
+	float	attenuation, e;
+	
+	n				= normalize(vNormal);
+	light_dir		= normalize(source.pos - vPosition);
+	half_dir		= normalize(light_dir + view_dir);
 
-	// diffuse
-	tools.light_dir	= normalize(source.pos - vPosition);
-	tools.d			= max(dot(tools.n, tools.light_dir), 0);
-	tools.diffuse	= tools.color * tools.d * source.diffuse;
+	attenuation		= 1 / length(source.pos - vPosition);
 
-	// specular
-	tools.half_dir	= normalize(tools.light_dir + tools.view_dir);
-	tools.s			= pow(max(dot(tools.n, tools.half_dir), 0), 32);
-	tools.specular	= tools.color * tools.s * source.specular;
+	source.ambient	= color * source.ambient * attenuation;
+	e				= max(dot(n, light_dir), 0);
+	source.diffuse	= color * source.diffuse * e * attenuation;
+	e				= pow(max(dot(view_dir, half_dir), 0), 32);
+	source.specular	= color * source.specular * e * attenuation;
 
-	// attenuation
-	tools.l			= length(source.pos - vPosition);
-	tools.a			= 1 / (tools.l * tools.l);
-	tools.ambient	*= tools.a;
-	tools.diffuse	*= tools.a;
-	tools.specular	*= tools.a;
-
-	// result
-	return (vec4(tools.ambient + tools.diffuse + tools.specular, 1));
+	return (vec4(source.ambient + source.diffuse + source.specular, 1));
 }
 
 void	main()
 {
+	int	index = int(vType);
+
 	if (light.is_active == true) {
-		LightTools	tools;
-		int			i;
-		
-		tools.color		= texture(texture_color, vTexture).rgb;
-		tools.n			= normalize(vNormal);
-		tools.view_dir	= normalize(campos - vPosition);
-		FragColor		= vec4(0);
-		i = -1;
+		vec3		color		= texture(vTextures[index], vTextCoord).rgb;
+		vec3		view_dir	= normalize(campos - vPosition);
+		int			i			= -1;
+
+		FragColor	= vec4(0);
 		while (++i < LIGHT_SOURCE_MAX)
-			FragColor += compute_light_sources(light_sources[i], tools);
+			FragColor += compute_light_sources(light_sources[i], color, view_dir);
 		// gamma correction
 		FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 	} else {
-		FragColor = texture(texture_color, vTexture);
+		FragColor = texture(vTextures[index], vTextCoord);
 	}
 }

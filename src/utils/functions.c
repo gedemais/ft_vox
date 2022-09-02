@@ -44,7 +44,7 @@ void		print_fv(t_dynarray *vertices)
 
 		printf("v: [%.1f, %.1f, %.1f]	t: [%.1f, %.1f]\n",
 			v.x, v.y, v.z,
-			t.u, t.v
+			(float)t.u, (float)t.v
 		);
 	}
 }

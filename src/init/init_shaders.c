@@ -112,10 +112,15 @@ static void				set_layouts()
 		(void *)sizeof(vec3));
 	glEnableVertexAttribArray(1);
 
-	// vec3 : normal
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+	// uint : normal
+	glVertexAttribPointer(2, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride),
 		(void *)(sizeof(vec3) + sizeof(t_vt)));
 	glEnableVertexAttribArray(2);
+
+		// uint : tid
+	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(t_stride),
+		(void *)(sizeof(vec3) + sizeof(t_vt) + sizeof(unsigned int)));
+	glEnableVertexAttribArray(3);
 }
 
 static unsigned char	gl_buffers(t_mesh *mesh)
@@ -136,35 +141,36 @@ static unsigned char	gl_buffers(t_mesh *mesh)
 static void				gl_textures(t_env *env)
 {
 	t_texture	*texture;
+	int			i;
 
-	glGenTextures(1, &env->model.gl_texture);
-	
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, env->model.gl_texture);
+	glGenTextures(TEXTURE_MAX, env->model.gl_textures);
+	i = -1;
+	while (++i < TEXTURE_MAX) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, env->model.gl_textures[i]);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	texture = &env->model.texture;
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->w, texture->h,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
-	glGenerateMipmap(GL_TEXTURE_2D);
+		texture = &env->model.textures[i];
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->w, texture->h,
+			0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
 }
 
 static unsigned char	gl_uniforms(t_env *env)
 {
-	// get uniforms
 	env->gl.uniform.model = glGetUniformLocation(env->gl.shader_program, "model");
 	env->gl.uniform.view = glGetUniformLocation(env->gl.shader_program, "view");
 	env->gl.uniform.projection = glGetUniformLocation(env->gl.shader_program, "projection");
-
-	env->gl.uniform.texture = glGetUniformLocation(env->gl.shader_program, "texture_color");
 	env->gl.uniform.campos = glGetUniformLocation(env->gl.shader_program, "campos");
-
-	// consume uniforms
-	glUniform1i(env->gl.uniform.texture, 0);
+	
+	env->gl.uniform.textures = glGetUniformLocation(env->gl.shader_program, "vTextures");
+	int	samplers[TEXTURE_MAX] = { 0, 1, 2 };
+	glUniform1iv(env->gl.uniform.textures, TEXTURE_MAX, samplers);
 
 	return (light_uniforms(env));
 }
@@ -177,12 +183,12 @@ static void				gl_options(void)
 	glDepthFunc(GL_LESS);
 
 	// CULLING : we only draw front face in counter-clock-wise order
-	// glEnable(GL_CULL_FACE);
-	// glCullFace(GL_FRONT);
-	// glFrontFace(GL_CW);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CW);
 
 	// GAMA CORRECTION
-	// glEnable(GL_FRAMEBUFFER_SRGB); 
+	// glEnable(GL_FRAMEBUFFER_SRGB);
 }
 
 unsigned char			init_shaders(t_env *env)

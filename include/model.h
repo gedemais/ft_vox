@@ -4,20 +4,15 @@
 
 # include "./main.h"
 
-// # define CUBE_SIZE	14
 # define CUBE_SIZE	36
 
 enum			e_texture
 {
 	TEXTURE_DEFAULT,
+	TEXTURE_NYAN,
+	TEXTURE_DARKSOULS,
 	TEXTURE_MAX
 };
-
-typedef	struct	s_face
-{
-	uint32_t	a, b, c;
-	uint32_t	va, vb, vc;
-}				t_face;
 
 typedef	struct	s_vertex_texture
 {
@@ -28,7 +23,8 @@ typedef struct	s_stride
 {
 	vec3			v;
 	t_vt			t;
-	vec3			n;
+	unsigned int	n;
+	float			id;
 }				t_stride;
 
 typedef struct	s_texture
@@ -50,8 +46,8 @@ typedef struct	s_model
 	mat4		model;
 	vec3		center;
 	float		scale;
-	GLuint		gl_texture;		// gl's textures' id
-	t_texture	texture;		// textures' ptr
+	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
+	t_texture	textures[TEXTURE_MAX];		// textures' ptr
 }				t_model;
 
 #endif

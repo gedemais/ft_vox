@@ -14,12 +14,7 @@ static void				draw_mesh(t_env *env)
 			continue ;
 		glBindVertexArray(mesh->vao);
 
-		if (CUBE_SIZE == 14) {
-			for (j = 0; j < mesh->vertices.nb_cells; j += CUBE_SIZE)
-				glDrawArrays(GL_TRIANGLE_STRIP, j, CUBE_SIZE);
-		} else {
-			glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
-		}
+		glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
 
 		glBindVertexArray(0);
 	}
@@ -31,9 +26,9 @@ static void				set_uniforms(t_env *env)
 	glUniform3fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 
 	// update lightpos in shaders
-	env->light.sources[0].pos.x = 1 + sin(glfwGetTime()) * 2;
-	env->light.sources[0].pos.y = sin(glfwGetTime() / 2) * 1;
-	glUniform3fv(env->gl.uniform.light[0][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[0].pos);
+	// env->light.sources[0].pos.x = 1 + sin(glfwGetTime()) * 2;
+	// env->light.sources[0].pos.y = sin(glfwGetTime() / 2) * 1;
+	// glUniform3fv(env->gl.uniform.light[0][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[0].pos);
 	// glUniform3fv(env->gl.uniform.light[LIGHT_DIRECTION], 1, (GLfloat *)&env->camera.zaxis);
 
 	// update matrices in shaders
