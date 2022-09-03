@@ -31,6 +31,24 @@ unsigned char	init(t_env *env, int argc, char **argv)
 	//if (argc != 2) // Arguments number check
 	//	return (ERR_INVALID_ARGC);
 
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+	gen_chunk(env, 0, 0, 128);
+
+	exit(0);
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
 		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
 		|| (code = init_shaders(env)) != ERR_NONE) // Load shader programs from .glsl files
@@ -39,8 +57,6 @@ unsigned char	init(t_env *env, int argc, char **argv)
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
 
 	camera(env);
-
-	gen_chunk(env, 0, 0, 128);
 
 	return (ERR_NONE);
 }

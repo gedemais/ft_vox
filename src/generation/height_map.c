@@ -9,9 +9,9 @@ static	uint8_t	**allocate_height_map(unsigned int size)
 
 	for (unsigned int i = 0; i < size; i++)
 	{
-		ft_memset(&new[i], 0, sizeof(uint8_t) * size);
 		if (!(new[i] = (uint8_t*)malloc(sizeof(uint8_t) * size)))
 			return (NULL);
+		ft_memset(new[i], 0, sizeof(uint8_t) * size);
 	}
 
 	return (new);
@@ -30,7 +30,7 @@ uint8_t	**generate_height_map(int x_start, int y_start, unsigned int size)
 
 	for (unsigned int x = x_start; x < xbound; x++)
 		for (unsigned int y = y_start; y < ybound; y++)
-			hmap[x][y] = (uint8_t)(perlin2d_a((float)x, (float)y, 0.2f, 8.0f) * size);
+			hmap[x][y] = (uint8_t)(perlin2d_a((float)x, (float)y, 0.1f, 6.0f) * size);
 
 	return (hmap);
 }

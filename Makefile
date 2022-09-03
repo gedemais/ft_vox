@@ -39,9 +39,9 @@ SRC_NAME=main.c\
 	actions/live.c\
 	generation/noise.c\
 	generation/generation.c\
-	generation/height_map.c\
-	generation/block_map.c\
 	generation/greedy_meshing.c\
+	generation/height_map.c\
+	generation/vertexs.c\
 	init/camera.c\
 	init/settings.c\
 	init/init.c\

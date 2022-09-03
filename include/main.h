@@ -148,8 +148,11 @@ void				move_cam(t_env *env, int key);
 // Generation functions
 unsigned char		gen_chunk(t_env *env, int x_start, int y_start, unsigned int size);
 uint8_t				**generate_height_map(int x_start, int y_start, unsigned int size);
-unsigned char		gen_block_map(t_chunk *chunk, int x_start, int y_start, unsigned int size);
 unsigned char		greedy_meshing(t_chunk *chunk, int x_start, int y_start, unsigned int size);
+unsigned char		generate_top_plane(t_chunk *chunk, int x, int y, int z,
+									int x_start, int y_start, vec3 top_plane[6]);
+unsigned char	generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned int size, vec3 top_plane[6]);
+unsigned char	generate_bottom_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6]);
 
 float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 
