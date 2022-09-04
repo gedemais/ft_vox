@@ -16,7 +16,7 @@ struct	Light {
 in vec3					vNormal;
 in vec3					vPosition;
 in vec2					vTextCoord;
-in float				vType;
+flat in float			vType;
 
 uniform vec3			campos;
 
@@ -28,17 +28,16 @@ out vec4				FragColor;
 
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 {
-	vec3	n, light_dir, half_dir;
+	vec3	light_dir, half_dir;
 	float	attenuation, e;
-	
-	n				= normalize(vNormal);
+
 	light_dir		= normalize(source.pos - vPosition);
 	half_dir		= normalize(light_dir + view_dir);
 
 	attenuation		= 1 / length(source.pos - vPosition);
 
 	source.ambient	= color * source.ambient * attenuation;
-	e				= max(dot(n, light_dir), 0);
+	e				= max(dot(vNormal, light_dir), 0);
 	source.diffuse	= color * source.diffuse * e * attenuation;
 	e				= pow(max(dot(view_dir, half_dir), 0), 32);
 	source.specular	= color * source.specular * e * attenuation;
@@ -61,6 +60,6 @@ void	main()
 		// gamma correction
 		FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 	} else {
-		FragColor = texture(vTextures[index], vTextCoord);
+		FragColor = texture(vTextures[2], vTextCoord);
 	}
 }

@@ -21,10 +21,10 @@ typedef	struct	s_vertex_texture
 
 typedef struct	s_stride
 {
-	vec3			v;
-	t_vt			t;
-	unsigned int	n;
-	float			id;
+	vec3	v;
+	t_vt	t;
+	int		n;
+	float	id;
 }				t_stride;
 
 typedef struct	s_texture
