@@ -127,7 +127,7 @@ typedef struct		s_env
 // Initializes scop
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
-void				light(t_light *light);
+void				light(t_env *env);
 unsigned char		light_uniforms(t_env *env);
 unsigned char		model(t_env *env);
 

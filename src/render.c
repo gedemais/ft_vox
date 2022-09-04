@@ -26,15 +26,17 @@ static void				set_uniforms(t_env *env)
 	glUniform3fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 
 	// update lightpos in shaders
-	// env->light.sources[0].pos.x = 1 + sin(glfwGetTime()) * 2;
-	// env->light.sources[0].pos.y = sin(glfwGetTime() / 2) * 1;
-	// glUniform3fv(env->gl.uniform.light[0][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[0].pos);
-	// glUniform3fv(env->gl.uniform.light[LIGHT_DIRECTION], 1, (GLfloat *)&env->camera.zaxis);
+	env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
+	env->light.sources[LIGHT_SOURCE_PLAYER].dir = vec_fmult(env->camera.zaxis, -1);
+	glUniform3fv(env->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
+	glUniform3fv(env->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
 
 	// update matrices in shaders
 	glUniformMatrix4fv(env->gl.uniform.model, 1, GL_FALSE, env->model.model);
 	glUniformMatrix4fv(env->gl.uniform.view, 1, GL_FALSE, env->camera.view);
 	glUniformMatrix4fv(env->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
+
+	glUseProgram(env->gl.shader_program);
 }
 
 static void				mat4_view(t_camera *camera)
@@ -74,7 +76,6 @@ unsigned char			display_loop(t_env *env)
 	glClearColor(255, 255, 255, 1);
 	while (!glfwWindowShouldClose(env->gl.window.ptr))
 	{
-		glUseProgram(env->gl.shader_program);
 		processInput(env->gl.window.ptr);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if ((code = render_scene(env)) != ERR_NONE)

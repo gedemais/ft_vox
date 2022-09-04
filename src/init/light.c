@@ -26,6 +26,8 @@ static unsigned char	get_light_uniforms(t_gltools *gl, int i)
 	gl->uniform.light[i][LIGHT_DIFFUSE] = glGetUniformLocation(gl->shader_program, target);
 	build_target(target, "].specular", ai);
 	gl->uniform.light[i][LIGHT_SPECULAR] = glGetUniformLocation(gl->shader_program, target);
+	build_target(target, "].intensity", ai);
+	gl->uniform.light[i][LIGHT_INTENSITY] = glGetUniformLocation(gl->shader_program, target);
 	ft_strdel(&ai);
 	return (ERR_NONE);
 }
@@ -53,33 +55,38 @@ unsigned char			light_uniforms(t_env *env)
 		glUniform3fv(env->gl.uniform.light[i][LIGHT_AMBIENT], 1, (GLfloat *)&env->light.sources[i].ambient);
 		glUniform3fv(env->gl.uniform.light[i][LIGHT_DIFFUSE], 1, (GLfloat *)&env->light.sources[i].diffuse);
 		glUniform3fv(env->gl.uniform.light[i][LIGHT_SPECULAR], 1, (GLfloat *)&env->light.sources[i].specular);
+		glUniform1f(env->gl.uniform.light[i][LIGHT_INTENSITY], env->light.sources[i].intensity);
 	}
 	return (ERR_NONE);
 }
 
 static void				init_player(t_light_source *source)
 {
-	source->pos			= (vec3){ 5, 2, 0 };				// z is reverse
-	source->dir			= (vec3){ 0, 0, 1 };				// unused yet
+	source->pos			= (vec3){};				// z is reverse
+	source->dir			= (vec3){ 0, 0, -1 };
 	source->color		= (vec3){ 1, 1, 1 };
-	source->ambient		= (vec3){ 0.25f, 0.25f, 0.25f };
+	source->ambient		= (vec3){ 0.5f, 0.5f, 0.5f };
 	source->diffuse		= (vec3){ 0.75f, 0.75f, 0.75f };
-	source->specular	= (vec3){ .5, .5, .5 };
+	source->specular	= (vec3){ 2.5f, 2.5f, 2.5f };
+	source->intensity	= 5;
 }
 
  static void			init_sun(t_light_source *source)
 {
-	source->pos			= (vec3){ 10, 100, 10 };				// z is reverse
-	source->dir			= (vec3){ 0, 0, 1 };				// unused yet
+	source->pos			= (vec3){ 0, 512, 0 };		// z is reverse
+	source->dir			= (vec3){ 0, -1, 0 };		// z is reverse
 	source->color		= (vec3){ 1, 1, 1 };
 	source->ambient		= (vec3){ 0.25f, 0.25f, 0.25f };
-	// source->diffuse		= (vec3){ 10000, 10000, 10000 };
-	source->diffuse		= (vec3){};
-	source->specular	= (vec3){ 1, 1, 1 };
+	source->diffuse		= (vec3){ 0.5f, 0.5f, 0.5f };
+	source->specular	= (vec3){ 5, 5, 5 };
+	source->intensity	= 512;
 }
 
-void					light(t_light *light)
+void					light(t_env *env)
 {
+	t_light	*light;
+
+	light = &env->light;
 	light->is_active	= false;
 	light->gamma		= 2.0f;
 	init_player(&light->sources[LIGHT_SOURCE_PLAYER]);

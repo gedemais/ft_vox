@@ -19,6 +19,7 @@ enum			e_light_tools
 	LIGHT_AMBIENT,
 	LIGHT_DIFFUSE,
 	LIGHT_SPECULAR,
+	LIGHT_INTENSITY,
 	LIGHT_MAX
 };
 
@@ -26,6 +27,7 @@ typedef struct	s_light_source
 {
 	vec3	pos, dir, color;
 	vec3	ambient, diffuse, specular;
+	float	intensity;
 }				t_light_source;
 
 typedef struct	s_light

@@ -45,13 +45,13 @@ static unsigned char	init_env(t_env *env)
 {
 	unsigned char	code;
 
-	if ((code = images(env)) != ERR_NONE)
+	if ((code = images(env)) != ERR_NONE) // load the textures
 		return (code);
 
 	env->gl.window.fullscreen = false;
 
-	light(&env->light);
 	model(env);
+	light(env); // light after model because we set the sun's light pos with the model center
 
 	return (ERR_NONE);
 }

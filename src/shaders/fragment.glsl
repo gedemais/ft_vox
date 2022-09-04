@@ -6,6 +6,7 @@
 struct	LightSources {
 	vec3	pos, dir, color;
 	vec3	ambient, diffuse, specular;
+	float	intensity;
 };
 
 struct	Light {
@@ -21,7 +22,7 @@ flat in float			vType;
 uniform vec3			campos;
 
 uniform Light			light;
-uniform LightSources	light_sources[LIGHT_SOURCE_MAX]; 
+uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
 uniform sampler2D		vTextures[TEXTURE_MAX];
 
 out vec4				FragColor;
@@ -31,10 +32,13 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 	vec3	light_dir, half_dir;
 	float	attenuation, e;
 
-	light_dir		= normalize(source.pos - vPosition);
+	color			*= source.color;
+
+	light_dir		= normalize(source.dir);
 	half_dir		= normalize(light_dir + view_dir);
 
 	attenuation		= 1 / length(source.pos - vPosition);
+	attenuation		*= source.intensity;
 
 	source.ambient	= color * source.ambient * attenuation;
 	e				= max(dot(vNormal, light_dir), 0);
@@ -57,7 +61,6 @@ void	main()
 		FragColor	= vec4(0);
 		while (++i < LIGHT_SOURCE_MAX)
 			FragColor += compute_light_sources(light_sources[i], color, view_dir);
-		// gamma correction
 		FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 	} else {
 		FragColor = texture(vTextures[2], vTextCoord);
