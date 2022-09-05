@@ -182,13 +182,21 @@ static void				gl_options(void)
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
 
-	// CULLING : we only draw front face in counter-clock-wise order
+	// CULLING : we only draw front face in clock-wise order
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CW);
 
 	// GAMA CORRECTION
 	// glEnable(GL_FRAMEBUFFER_SRGB);
+
+	// ANTI ALIASING
+	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_LINE_SMOOTH);
+
+	// BLENDING => for water cube WIP
+	// glEnable(GL_BLEND);
+	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 }
 
 unsigned char			init_shaders(t_env *env)

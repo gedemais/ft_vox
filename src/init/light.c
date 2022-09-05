@@ -71,16 +71,16 @@ static void				init_player(t_light_source *source)
 	source->intensity	= 5;
 }
 
- static void			init_sun(t_light_source *source)
-{
-	source->pos			= (vec3){ 0, 512, 0 };		// z is reverse
-	source->dir			= (vec3){ 0, -1, 0 };		// z is reverse
-	source->color		= (vec3){ 1, 1, 1 };
-	source->ambient		= (vec3){ 0.25f, 0.25f, 0.25f };
-	source->diffuse		= (vec3){ 0.5f, 0.5f, 0.5f };
-	source->specular	= (vec3){ 5, 5, 5 };
-	source->intensity	= 512;
-}
+// static void			init_sun(t_light_source *source)
+// {
+// 	source->pos			= (vec3){ 0, 512, 0 };		// z is reverse
+// 	source->dir			= (vec3){ 0, -1, 0 };		// z is reverse
+// 	source->color		= (vec3){ 1, 1, 1 };
+// 	source->ambient		= (vec3){ 0.25f, 0.25f, 0.25f };
+// 	source->diffuse		= (vec3){ 0.5f, 0.5f, 0.5f };
+// 	source->specular	= (vec3){ 5, 5, 5 };
+// 	source->intensity	= 512;
+// }
 
 void					light(t_env *env)
 {
@@ -90,5 +90,5 @@ void					light(t_env *env)
 	light->is_active	= false;
 	light->gamma		= 2.0f;
 	init_player(&light->sources[LIGHT_SOURCE_PLAYER]);
-	init_sun(&light->sources[LIGHT_SOURCE_SUN]);
+	// init_sun(&light->sources[LIGHT_SOURCE_SUN]);
 }

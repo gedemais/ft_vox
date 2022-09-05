@@ -1,6 +1,6 @@
 #version 330 core
 
-#define LIGHT_SOURCE_MAX	2
+#define LIGHT_SOURCE_MAX	1
 #define TEXTURE_MAX			3
 
 struct	LightSources {
@@ -63,6 +63,6 @@ void	main()
 			FragColor += compute_light_sources(light_sources[i], color, view_dir);
 		FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 	} else {
-		FragColor = texture(vTextures[2], vTextCoord);
+		FragColor = texture(vTextures[index], vTextCoord);
 	}
 }

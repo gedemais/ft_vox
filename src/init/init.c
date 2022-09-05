@@ -24,7 +24,7 @@ static void				bind_actions_to_keys(t_env *env)
 static unsigned char	images(t_env *env)
 {
 	const char	*path[TEXTURE_MAX] = {
-		"./resources/texture.bmp",
+		"./resources/default.bmp",
 		"./resources/nyan.bmp",
 		"./resources/darksouls.bmp"
 	};
