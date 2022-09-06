@@ -140,7 +140,7 @@ unsigned char	push_skybox(t_env *env)
 		return (code);
 	set_mesh_center(mesh);
 
-	print_fv(&mesh->vertices);
+	// print_fv(&mesh->vertices);
 
 	if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 		return (ERR_MALLOC_FAILED);
@@ -154,8 +154,8 @@ unsigned char			model(t_env *env)
 	if (dynarray_init(&env->model.meshs, sizeof(t_mesh), 2) < 0)
 		return (ERR_MALLOC_FAILED);
 
-	if ((code = push_world(env)) != ERR_NONE
-		|| (code = push_skybox(env)) != ERR_NONE)
+	if ((code = push_world(env)) != ERR_NONE)
+		//|| (code = push_skybox(env)) != ERR_NONE)
 		return (code);
 
 	// push_skybox(env);

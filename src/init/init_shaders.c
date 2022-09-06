@@ -140,24 +140,24 @@ static unsigned char	gl_buffers(t_mesh *mesh)
 
 static void				load_skybox(t_env *env)
 {
-	t_texture	*texture;
-	int			i;
+	// t_texture	*texture;
+	// int			i;
 
-	glGenTextures(1, &env->model.gl_tskybox);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
+	// glGenTextures(1, &env->model.gl_tskybox);
+	// glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
 
-	i = -1;
-	while (++i < 6) {
-		texture = &env->model.textures[0];
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
-			texture->w, texture->h, 0, GL_RGB, GL_UNSIGNED_BYTE, texture->ptr);
-	}
+	// i = -1;
+	// while (++i < 6) {
+	// 	texture = &env->model.textures[0];
+	// 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
+	// 		texture->w, texture->h, 0, GL_RGB, GL_UNSIGNED_BYTE, texture->ptr);
+	// }
 
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	
 	(void)env;
 }
@@ -199,8 +199,8 @@ static unsigned char	gl_uniforms(t_env *env)
 	int	samplers[TEXTURE_MAX] = { 0, 1, 2 };
 	glUniform1iv(env->gl.uniform.textures, TEXTURE_MAX, samplers);
 
-	env->gl.uniform.skybox = glGetUniformLocation(env->gl.shader_program, "vSkybox");
-	glUniform1i(env->gl.uniform.skybox, 0);
+	// env->gl.uniform.skybox = glGetUniformLocation(env->gl.shader_program, "vSkybox");
+	// glUniform1i(env->gl.uniform.skybox, 0);
 
 	return (light_uniforms(env));
 }

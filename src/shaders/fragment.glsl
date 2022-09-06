@@ -1,4 +1,4 @@
-#version 330 core
+#version 400 core
 
 #define LIGHT_SOURCE_MAX	1
 #define TEXTURE_MAX			3
@@ -72,5 +72,5 @@ void	main()
 	//FragColor = texture(vSkybox, vPosition);
 
 	// gamma correction
-	// FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
+	FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 }
