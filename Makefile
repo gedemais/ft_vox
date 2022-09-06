@@ -45,7 +45,6 @@ SRC_NAME=main.c\
 	init/init_opengl.c\
 	init/init_shaders.c\
 	init/init_utils.c\
-	utils/bmp.c\
 	utils/functions.c\
 	utils/fps.c
 

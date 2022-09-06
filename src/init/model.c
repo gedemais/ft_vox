@@ -1,7 +1,7 @@
 #include "../../include/main.h"
 
 
-static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid)
+static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid, bool skybox)
 {
 	int			i;
 	t_stride	list_strides[36] = {
@@ -51,7 +51,10 @@ static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid)
 
 	i = -1;
 	while (++i < 36) {
-		list_strides[i].v = vec_add(list_strides[i].v, o);
+		if (skybox)
+			list_strides[i].v = vec_mult(list_strides[i].v, o);
+		else
+			list_strides[i].v = vec_add(list_strides[i].v, o);
 		if (dynarray_push(vertices, &list_strides[i], false) < 0)
 			return (ERR_MALLOC_FAILED);
 	}
@@ -61,7 +64,7 @@ static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid)
 static unsigned char	many_cubes(t_mesh *mesh)
 {
 	unsigned char	code;
-	int				x, y, z, i, max = 666;
+	int				x, y, z, i, max = 100;
 
 	i = 1;
 	x = -1;
@@ -71,7 +74,7 @@ static unsigned char	many_cubes(t_mesh *mesh)
 			y = -1;
 			(void)y;
 			// while (++y < max) {
-				if ((code = cube(&mesh->vertices, (vec3){ x, 0, z }, 0)) != ERR_NONE)
+				if ((code = cube(&mesh->vertices, (vec3){ x, 0, z }, 0, false)) != ERR_NONE)
 					return (code);
 			// }
 		}
@@ -111,11 +114,10 @@ static unsigned char	push_world(t_env *env)
 
 	env->model.center = (vec3){};
 	mesh = dyacc(&env->model.meshs, 0);
-	if (dynarray_init(&mesh->vertices, sizeof(t_stride), CUBE_SIZE) < 0)
+	if (dynarray_init(&mesh->vertices, sizeof(t_stride), 36) < 0)
 		return (ERR_MALLOC_FAILED);
 	if ((code = many_cubes(mesh)) != ERR_NONE)
 		return (code);
-
 	set_mesh_center(mesh);
 	env->model.center = vec_add(env->model.center, mesh->center);
 
@@ -126,22 +128,19 @@ static unsigned char	push_world(t_env *env)
 	return (ERR_NONE);
 }
 
-static unsigned char	push_skybox(t_env *env)
+ unsigned char	push_skybox(t_env *env)
 {
-	// il faut push un cube geant texture
-	// face 1 = tid, f2 = tid +1, fn = tid +n ...
-
 	unsigned char	code;
 	t_mesh			*mesh;
 
-	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells);
-	if (dynarray_init(&mesh->vertices, sizeof(t_stride), CUBE_SIZE) < 0)
+	mesh = dyacc(&env->model.meshs, 1);
+	if (dynarray_init(&mesh->vertices, sizeof(t_stride), 36) < 0)
 		return (ERR_MALLOC_FAILED);
-	if ((code = cube(&mesh->vertices, (vec3){ 0, 1000, 1000 }, TEXTURE_NYAN)) != ERR_NONE)
+	if ((code = cube(&mesh->vertices, (vec3){ 100, 100, 100 }, 0, true)) != ERR_NONE)
 		return (code);
 	set_mesh_center(mesh);
 
-	// print_fv(&mesh->vertices);
+	print_fv(&mesh->vertices);
 
 	if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 		return (ERR_MALLOC_FAILED);

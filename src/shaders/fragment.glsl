@@ -24,6 +24,7 @@ uniform vec3			campos;
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
 uniform sampler2D		vTextures[TEXTURE_MAX];
+uniform samplerCube		vSkybox;
 
 out vec4				FragColor;
 
@@ -51,18 +52,22 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 
 void	main()
 {
-	int	index = int(vType);
+	int		index = int(vType);
+	vec3	color;
+
+	if (index < 3)
+		color = texture(vTextures[index], vTextCoord).rgb;
 
 	if (light.is_active == true) {
-		vec3		color		= texture(vTextures[index], vTextCoord).rgb;
 		vec3		view_dir	= normalize(campos - vPosition);
 		int			i			= -1;
 
 		FragColor	= vec4(0);
 		while (++i < LIGHT_SOURCE_MAX)
 			FragColor += compute_light_sources(light_sources[i], color, view_dir);
-		FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 	} else {
-		FragColor = texture(vTextures[index], vTextCoord);
+		FragColor = vec4(color, 1);
 	}
+	// gamma correction
+	FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 }

@@ -138,11 +138,35 @@ static unsigned char	gl_buffers(t_mesh *mesh)
 	return (ERR_NONE);
 }
 
+static void				load_skybox(t_env *env)
+{
+	// t_texture	*texture;
+	// int			i;
+
+	// glGenTextures(1, &env->model.gl_tskybox);
+	// glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
+
+	// i = -1;
+	// while (++i < 6) {
+	// 	texture = &env->model.textures[0];
+	// 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
+	// 		texture->w, texture->h, 0, GL_RGB, GL_UNSIGNED_BYTE, texture->ptr);
+	// }
+
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	(void)env;
+}
+
 static void				gl_textures(t_env *env)
 {
 	t_texture	*texture;
 	int			i;
 
+	// model's textures
 	glGenTextures(TEXTURE_MAX, env->model.gl_textures);
 	i = -1;
 	while (++i < TEXTURE_MAX) {
@@ -155,10 +179,12 @@ static void				gl_textures(t_env *env)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		texture = &env->model.textures[i];
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->w, texture->h,
-			0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+			texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
+	// skybox's texture
+	load_skybox(env);
 }
 
 static unsigned char	gl_uniforms(t_env *env)
@@ -171,6 +197,9 @@ static unsigned char	gl_uniforms(t_env *env)
 	env->gl.uniform.textures = glGetUniformLocation(env->gl.shader_program, "vTextures");
 	int	samplers[TEXTURE_MAX] = { 0, 1, 2 };
 	glUniform1iv(env->gl.uniform.textures, TEXTURE_MAX, samplers);
+
+	// env->gl.uniform.skybox = glGetUniformLocation(env->gl.shader_program, "vSkybox");
+	// glUniform1i(env->gl.uniform.skybox, 0);
 
 	return (light_uniforms(env));
 }

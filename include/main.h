@@ -83,7 +83,7 @@ typedef struct		s_window
 
 typedef struct	s_uniform
 {
-	GLint	textures, campos;
+	GLint	textures, skybox, campos;
 	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
 	GLint	model, view, projection;
 }				t_uniform;
@@ -170,8 +170,6 @@ static const char	*settings_keys[SET_MAX] = {
 };
 
 // UTILS
-// bmp
-unsigned char		*load_bmp(char const *pathname, unsigned int *width, unsigned int *height);
 // functions
 void				print_fv(t_dynarray *vertices);
 void				print_faces(t_dynarray *faces);
