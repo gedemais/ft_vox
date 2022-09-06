@@ -107,7 +107,7 @@ static void				set_mesh_center(t_mesh *mesh)
 	}
 }
 
-static unsigned char	push_world(t_env *env)
+unsigned char	push_world(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			*mesh;
@@ -128,12 +128,12 @@ static unsigned char	push_world(t_env *env)
 	return (ERR_NONE);
 }
 
- unsigned char	push_skybox(t_env *env)
+unsigned char	push_skybox(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			*mesh;
 
-	mesh = dyacc(&env->model.meshs, 1);
+	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells);
 	if (dynarray_init(&mesh->vertices, sizeof(t_stride), 36) < 0)
 		return (ERR_MALLOC_FAILED);
 	if ((code = cube(&mesh->vertices, (vec3){ 100, 100, 100 }, 0, true)) != ERR_NONE)
@@ -157,6 +157,8 @@ unsigned char			model(t_env *env)
 	if ((code = push_world(env)) != ERR_NONE
 		|| (code = push_skybox(env)) != ERR_NONE)
 		return (code);
+
+	// push_skybox(env);
 
 	env->model.scale = 1;
 	return (ERR_NONE);

@@ -68,6 +68,9 @@ void	main()
 	} else {
 		FragColor = vec4(color, 1);
 	}
+
+	//FragColor = texture(vSkybox, vPosition);
+
 	// gamma correction
-	FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
+	// FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 }
