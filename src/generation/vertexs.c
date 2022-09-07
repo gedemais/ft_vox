@@ -35,13 +35,14 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 {
 	t_stride		vertex;
 	const t_vt	vts[6] = {
-							(t_vt){ 0, fall_size },
-							(t_vt){ fall_size, 0 },
-							(t_vt){ 0, 0 },
+							(t_vt){ 0, 1.0f }, // 4 (A)
+							(t_vt){ fall_size, 1.0f }, // 5 (B)
+							(t_vt){ fall_size, 0 }, // 6 (D)
 
-							(t_vt){ fall_size, fall_size },
-							(t_vt){ fall_size, 0 },
-							(t_vt){ 0, fall_size }
+							(t_vt){ 0, 1.0f }, // 1 (A)
+							(t_vt){ fall_size, 0 }, // 2 (D)
+							(t_vt){ 0, 0 } // 3 (C)
+
 						};
 
 	// Addition of 6 vertexs plane to the mesh's data stride

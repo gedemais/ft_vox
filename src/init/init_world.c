@@ -1,8 +1,8 @@
 # include "main.h"
 
 const char	*path[TEXTURE_MAX] = {
-	"./resources/default.bmp",
 	"./resources/nyan.bmp",
+	"./resources/default.bmp",
 	"./resources/darksouls.bmp"
 };
 
