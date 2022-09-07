@@ -46,7 +46,7 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 	{
 		// Constuction of the vertex
 		//printf("%f %f %f | %f %f | %d | %d\n", plane[i].x, plane[i].y, plane[i].z, vts[i].u, vts[i].v, normal, (uint8_t)switch_block_type(z));
-		vertex = (t_stride){plane[i], vts[i], normal, (uint8_t)switch_block_type(z)};
+		vertex = (t_stride){plane[i], vts[i], (int)normal, (float)switch_block_type(z)};
 		// Insertion of the vertex in the stride
 		if (dynarray_push(&chunk->stride, &vertex, false))
 			return (ERR_MALLOC_FAILED);

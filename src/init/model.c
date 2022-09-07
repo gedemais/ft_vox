@@ -60,7 +60,7 @@ static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid, bool s
 	}
 	return (ERR_NONE);
 }
-
+/*
 static unsigned char	many_cubes(t_mesh *mesh)
 {
 	unsigned char	code;
@@ -82,46 +82,27 @@ static unsigned char	many_cubes(t_mesh *mesh)
 	}
 	printf("cubes : %d || vertices %d\n", mesh->vertices.nb_cells / 36, mesh->vertices.nb_cells);
 	return (ERR_NONE);
-}
-
-static void				set_mesh_center(t_mesh *mesh)
-{
-	int			i;
-	vec3		sum = (vec3){};
-	t_stride	*vertices;
-
-	i = -1;
-	while (++i < mesh->vertices.nb_cells) {
-		vertices = dyacc(&mesh->vertices, i);
-		if (vertices == NULL)
-			continue ;
-		sum = vec_add(sum, vertices->v);
-	}
-	mesh->center = vec_fdiv(sum, i);
-	i = -1;
-	while (++i < mesh->vertices.nb_cells) {
-		vertices = dyacc(&mesh->vertices, i);
-		if (vertices == NULL)
-			continue ;
-		vertices->v = vec_add(vertices->v, vec_fmult(mesh->center, -1));
-	}
-}
+}*/
 
 unsigned char	push_world(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			*mesh;
+	t_chunk			*chunk;
 
-	env->model.center = (vec3){};
 	mesh = dyacc(&env->model.meshs, 0);
-	if (dynarray_init(&mesh->vertices, sizeof(t_stride), 36) < 0)
+	chunk = dyacc(&env->model.chunks, 0);
+	if (dynarray_init(&mesh->vertices, sizeof(t_stride), chunk->stride.nb_cells * sizeof(t_stride)) < 0)
 		return (ERR_MALLOC_FAILED);
-	if ((code = many_cubes(mesh)) != ERR_NONE)
-		return (code);
-	set_mesh_center(mesh);
-	env->model.center = vec_add(env->model.center, mesh->center);
 
-	// print_fv(&mesh->vertices);
+	//if ((code = many_cubes(mesh)) != ERR_NONE)
+	//	return (code);
+
+	for (int i = 0; i < chunk->stride.nb_cells; i++)
+		if (dynarray_push(&mesh->vertices, dyacc(&chunk->stride, i), false))
+			return (ERR_MALLOC_FAILED);
+
+	print_fv(&mesh->vertices);
 
 	if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 		return (ERR_MALLOC_FAILED);
@@ -138,7 +119,6 @@ unsigned char	push_skybox(t_env *env)
 		return (ERR_MALLOC_FAILED);
 	if ((code = cube(&mesh->vertices, (vec3){ 100, 100, 100 }, 0, true)) != ERR_NONE)
 		return (code);
-	set_mesh_center(mesh);
 
 	// print_fv(&mesh->vertices);
 

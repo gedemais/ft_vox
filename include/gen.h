@@ -55,10 +55,10 @@ typedef struct	s_chunk
 // Biomes Generation Parameters
 static const t_biome_params	bgp[TP_MAX] = {
 	[TP_SEA] = {0.01f, 6.0f, 0.0f},
-	[TP_DESERT] = {0.05f, 6.0f, 0.25f},
-	[TP_PLAINS] = {0.1f, 6.0f, 0.5f},
-	[TP_FOREST] = {0.2f, 6.0f, 0.75f},
-	[TP_MOUNTAINS] = {0.3f, 6.0f, 1.0f}
+	[TP_DESERT] = {0.03f, 6.0f, 0.25f},
+	[TP_PLAINS] = {0.05f, 6.0f, 0.5f},
+	[TP_FOREST] = {0.08f, 6.0f, 0.75f},
+	[TP_MOUNTAINS] = {0.15f, 6.0f, 1.0f}
 };
 
 #endif

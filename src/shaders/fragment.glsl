@@ -55,6 +55,7 @@ void	main()
 	int		index = int(vType);
 	vec3	color;
 
+	index = 0;
 	if (index < 3)
 		color = texture(vTextures[index], vTextCoord).rgb;
 

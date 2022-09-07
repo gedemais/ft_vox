@@ -34,8 +34,6 @@ enum			e_normals
 	N_MAX
 };
 
-
-
 typedef	struct	s_vertex_texture
 {
 	float	u, v;
@@ -58,7 +56,6 @@ typedef struct	s_texture
 typedef struct	s_mesh
 {
 	t_dynarray	vertices;
-	vec3		center;
 	GLuint		vao, vbo;
 }				t_mesh;
 
@@ -68,7 +65,6 @@ typedef struct	s_model
 	float		**biomes;
 	t_dynarray	chunks;
 	mat4		model;
-	vec3		center;
 	float		scale;
 	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
 	GLuint		gl_tskybox;					// gl's texture for skybox
