@@ -36,7 +36,7 @@ static void				set_uniforms(t_env *env)
 	glUniformMatrix4fv(env->gl.uniform.view, 1, GL_FALSE, env->camera.view);
 	glUniformMatrix4fv(env->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
 
-	glUseProgram(env->gl.shader_program);
+	// glUseProgram(env->gl.shader_program);
 }
 
 static void				mat4_view(t_camera *camera)

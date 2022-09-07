@@ -48,15 +48,13 @@ void					processInput(GLFWwindow *window)
 			&& g_env->keybinds_fts[i]) // Is a function associated with the key ?
 			switch_toggles(g_env, toggles, gl_keys_values[i], false); // Makes toggles available again.
 	}
-}
+	double	xpos, ypos;
 
-// ====================================================================
-
-static void				cb_cursor_position(GLFWwindow *window, double xpos, double ypos)
-{
 	glfwGetCursorPos(window, &xpos, &ypos);
 	events_mouse(g_env, (float)xpos, (float)ypos);
 }
+
+// ====================================================================
 
 static void				cb_framebuffer_size(GLFWwindow *window, int width, int height)
 {
@@ -121,10 +119,7 @@ static unsigned char	glfw_create_window(GLFWwindow* *window, const char *title, 
 
 static void 			glfw_init_callbacks(GLFWwindow* window)
 {
-	// glfwSetKeyCallback(window, cb_key);
-	glfwSetCursorPosCallback(window, cb_cursor_position);
 	glfwSetFramebufferSizeCallback(window, cb_framebuffer_size);
-	// glfwSetWindowFocusCallback(window, cb_window_focus);
 	glfwSetScrollCallback(window, cb_scroll);
 }
 
