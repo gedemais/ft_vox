@@ -12,7 +12,7 @@ typedef float	mat4[16];
 
 typedef struct	s_vec3
 {
-	float		x, y, z, w;
+	float		x, y, z;
 }				vec3;
 
 typedef union	rsqrt

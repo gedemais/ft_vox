@@ -12,8 +12,8 @@ static unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int y_start, 
 			z = chunk->surface_hmap[x][y];
 
 			if ((code = generate_top_plane(chunk, x, y, z, x_start, y_start, top_plane)) != ERR_NONE
-				|| (code = generate_side_plane(chunk, x, y, z, chunk_size, top_plane)) != ERR_NONE
-				|| (code = generate_bottom_plane(chunk, x, y, z, top_plane)) != ERR_NONE)
+				|| (code = generate_side_plane(chunk, x, y, z, chunk_size, top_plane)) != ERR_NONE)
+				//|| (code = generate_bottom_plane(chunk, x, y, z, top_plane)) != ERR_NONE)
 				return (code);
 		}
 
@@ -32,8 +32,7 @@ static void				load_chunk_params(t_env *env, int x_start, int y_start, unsigned 
 	while (i < TP_MAX - 1)
 	{
 		if (biome_factor >= bgp[i].bound && biome_factor < bgp[i + 1].bound)
-			break ;
-		i++;
+			break ; i++;
 	}
 	// Compute parameters with the biome factor with an interpolation
 	delta = bgp[i + 1].bound - bgp[i].bound; // Delta between both bounds

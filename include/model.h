@@ -24,9 +24,8 @@ typedef	struct	s_vertex_texture
 
 typedef struct	s_stride
 {
-	float		x; // Vertex position
-	float		y;
-	float		z;
+	vec3		pos; // Vertex position
+	t_vt		vt;
 	uint8_t		n; // Normal identifier (from e_normals)
 	uint8_t		type; // Bloc type identifier (from e_bloc_types in gen.h)
 }				t_stride;

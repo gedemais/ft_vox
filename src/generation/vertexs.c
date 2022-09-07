@@ -2,6 +2,8 @@
 
 enum	e_side_orientation
 {
+	PO_UP,
+	PO_DOWN,
 	PO_NORTH,
 	PO_SOUTH,
 	PO_EST,
@@ -11,10 +13,11 @@ enum	e_side_orientation
 
 const float		block_size = 1.0f;
 
-const vec3	orientations[PO_MAX] = {{0, 0, block_size, 0},
-									{0, 0, -block_size, 0},
-									{block_size, 0, 0, 0},
-									{-block_size, 0, 0, 0}};
+const vec3	orientations[PO_MAX] = {{0, 0, block_size},
+									{0, 0, -block_size},
+									{block_size, 0, 0},
+									{-block_size, 0, 0}};
+
 
 static int	switch_block_type(unsigned int z)
 {
@@ -30,19 +33,27 @@ static int	switch_block_type(unsigned int z)
 		return (BT_SNOW);
 }
 
-static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int z)
+static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int z, float fall_size)
 {
 	t_stride		vertex;
+	const t_vt	vts[6] = {  (t_vt){0, 0},
+							(t_vt){fall_size, 0},
+							(t_vt){0, fall_size},
+							(t_vt){0, fall_size},
+							(t_vt){fall_size, 0},
+							(t_vt){fall_size, fall_size}  };
 
 	// Addition of 6 vertexs plane to the mesh's data stride
 	for (unsigned int i = 0; i < 6; i++)
 	{
 		// Constuction of the vertex
-		vertex = (t_stride){plane[i].x, plane[i].y, plane[i].z, normal, (uint8_t)switch_block_type(z)};
+		printf("%f %f %f | %f %f | %d | %d\n", plane[i].x, plane[i].y, plane[i].z, vts[i].u, vts[i].v, normal, (uint8_t)switch_block_type(z));
+		vertex = (t_stride){plane[i], vts[i], normal, (uint8_t)switch_block_type(z)};
 		// Insertion of the vertex in the stride
 		if (dynarray_push(&chunk->stride, &vertex, false))
 			return (ERR_MALLOC_FAILED);
 	}
+	printf("-----------------------\n");
 	return (ERR_NONE);
 }
 
@@ -57,10 +68,10 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z,
 	zz = z * block_size;
 
 	// Cube's top plane ABCD points
-	a = (vec3){xx, yy, (z + 1) * block_size, 1};
-	b = (vec3){(x_start + x + 1) * block_size, yy, (z + 1) * block_size, 1};
-	c = (vec3){xx, yy, zz, 1};
-	d = (vec3){(x_start + x + 1) * block_size, yy, zz, 1};
+	a = (vec3){xx, yy, (z + 1) * block_size};
+	b = (vec3){(x_start + x + 1) * block_size, yy, (z + 1) * block_size};
+	c = (vec3){xx, yy, zz};
+	d = (vec3){(x_start + x + 1) * block_size, yy, zz};
 
 	top_plane[0] = c;
 	top_plane[1] = a;
@@ -69,7 +80,7 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z,
 	top_plane[4] = b;
 	top_plane[5] = d;
 
-	return (push_plane(chunk, top_plane, N_UP, z));
+	return (push_plane(chunk, top_plane, N_UP, z, 1.0f));
 }
 
 static unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth)
@@ -81,7 +92,7 @@ static unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int 
 
 	vec3 side_plane[6] = {c, a, b, c, b, d};
 
-	return (push_plane(chunk, side_plane, index, z));
+	return (push_plane(chunk, side_plane, index, z, depth));
 }
 
 static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int z)
