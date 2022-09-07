@@ -34,6 +34,7 @@
 # define CHUNK_SIZE			64 // Size of chunk blocks in cubes
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
+# define SQUARE_SIZE		10 // Size of visible chunks matrix for the player (max_limit)
 # define DEFAULT_COLOR		(t_color){ 1.0f, 1.0f, 1.0f, 1.0f }
 # define ROT_SPEED_DELTA	2
 # define MOVE_SPEED			0.01f
@@ -45,6 +46,7 @@ enum				e_settings
 {
 	SET_WIN_HEIGHT,
 	SET_WIN_WIDTH,
+	SET_GAMMA,
 	SET_KEY_EXIT, // Must remain after numeric values and before key assignments
 	SET_KEY_MOVE_CAM_FORWARD,
 	SET_KEY_MOVE_CAM_BACKWARD,
@@ -71,11 +73,12 @@ enum				e_keys
 // Settings data storing structure
 typedef struct		s_settings
 {
+	float		gamma;
 	uint16_t	w_wdt;
 	uint16_t	w_hgt;
 	uint8_t		keys[KEY_MAX];
-	bool		rotation;
-	bool		textured;
+	bool		rotation; // Osef nan ?
+	bool		textured; // Osef nan ?
 	char		pad[3];
 }					t_settings;
 
@@ -169,6 +172,7 @@ float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 static const char	*settings_keys[SET_MAX] = {
 	"window_height",
 	"window_width",
+	"gamma",
 	"exit",
 	"move_cam_forward",
 	"move_cam_backward",

@@ -46,13 +46,13 @@ unsigned char			init(t_env *env, int argc, char **argv)
 	env->gl.window.fullscreen = false;
 	srand(time(NULL));
 
-	if ((argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
-		|| (code = init_world(env)) != ERR_NONE)
+	if (argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
 		return (code);
 
 	printf("%zu bytes per vertex | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
 
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
+		|| (code = init_world(env)) != ERR_NONE
 		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
 		|| (code = init_shaders(env)) != ERR_NONE)
 		return (code);

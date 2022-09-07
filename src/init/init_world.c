@@ -18,9 +18,8 @@ static unsigned char	init_biomes(t_env *env)
 
 static unsigned char	init_map(t_env *env)
 {
-	unsigned int square = 10;
-	for (unsigned int x = 0; x < square; x++)
-		for (unsigned int y = 0; y < square; y++)
+	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
+		for (unsigned int y = 0; y < SQUARE_SIZE; y++)
 			gen_chunk(env, x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE);
 
 	return (ERR_NONE);

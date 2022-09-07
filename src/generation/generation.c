@@ -32,7 +32,8 @@ static void				load_chunk_params(t_env *env, int x_start, int y_start, unsigned 
 	while (i < TP_MAX - 1)
 	{
 		if (biome_factor >= bgp[i].bound && biome_factor < bgp[i + 1].bound)
-			break ; i++;
+			break ;
+		i++;
 	}
 	// Compute parameters with the biome factor with an interpolation
 	delta = bgp[i + 1].bound - bgp[i].bound; // Delta between both bounds
@@ -44,6 +45,11 @@ static void				load_chunk_params(t_env *env, int x_start, int y_start, unsigned 
 	// Interpolation
 	params->frequency = (delta_inf * bgp[i].frequency + delta_sup * bgp[i + 1].frequency);
 	params->depth = (delta_inf * bgp[i].depth + delta_sup * bgp[i + 1].depth);
+
+	if (params->frequency > 0.3f)
+		printf("factor : %f | lower bound : %f | upper bound : %f | delta_inf : %f | delta_sup : %f\n",
+				biome_factor, bgp[i].bound, bgp[i + 1].bound, delta_inf, delta_sup);
+
 }
 
 static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_start, int y_start, unsigned int size)

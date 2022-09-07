@@ -17,10 +17,11 @@ enum	e_bloc_types
 
 enum e_topography_type
 {
-	TP_PLAINS,
-	TP_MOUNTAINS,
-	TP_DESERT,
 	TP_SEA,
+	TP_DESERT,
+	TP_PLAINS,
+	TP_FOREST,
+	TP_MOUNTAINS,
 	TP_MAX
 };
 
@@ -53,10 +54,11 @@ typedef struct	s_chunk
 
 // Biomes Generation Parameters
 static const t_biome_params	bgp[TP_MAX] = {
-	[TP_PLAINS] = {0.1f, 6.0f, 0.0f},
-	[TP_MOUNTAINS] = {0.3f, 6.0f, (float)TP_MOUNTAINS / (float)TP_MAX},
-	[TP_DESERT] = {0.05f, 6.0f, (float)TP_DESERT / (float)TP_MAX},
-	[TP_SEA] = {0.01f, 6.0f, (float)TP_SEA / (float)TP_MAX}
+	[TP_SEA] = {0.01f, 6.0f, 0.0f},
+	[TP_DESERT] = {0.05f, 6.0f, 0.25f},
+	[TP_PLAINS] = {0.1f, 6.0f, 0.5f},
+	[TP_FOREST] = {0.2f, 6.0f, 0.75f},
+	[TP_MOUNTAINS] = {0.3f, 6.0f, 1.0f}
 };
 
 #endif

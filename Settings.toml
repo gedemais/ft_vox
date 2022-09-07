@@ -1,5 +1,7 @@
 window_height = 720
 window_width = 1280
+gamma = 1.0
+
 exit = escape
 move_cam_up = q
 move_cam_down = e
