@@ -75,7 +75,6 @@ enum				e_keys
 // Settings data storing structure
 typedef struct		s_settings
 {
-	float		gamma;
 	uint16_t	w_wdt;
 	uint16_t	w_hgt;
 	uint8_t		keys[KEY_MAX];
@@ -166,7 +165,7 @@ int					*biomes_seed(void);
 int					*map_seed(void);
 
 // Generation functions
-unsigned char		init_world(t_env *env);
+unsigned char		init_world(t_env *env, int argc, char **argv);
 unsigned char		gen_chunk(t_env *env, int x_start, int y_start, unsigned int size);
 uint8_t				**generate_height_map(t_biome_params params, int x_start, int y_start, unsigned int size);
 unsigned char		generate_top_plane(t_chunk *chunk, int x, int y, int z,

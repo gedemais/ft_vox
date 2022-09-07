@@ -57,7 +57,7 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 			env->settings.w_wdt = (uint16_t)n;
 			break;
 		case SET_GAMMA:
-			env->settings.gamma = f;
+			env->light.gamma = f;
 	// Key Bindings
 		case SET_KEY_EXIT:
 			env->settings.keys[KEY_EXIT] = (uint8_t)n;

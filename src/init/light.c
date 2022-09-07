@@ -88,7 +88,6 @@ void					light(t_env *env)
 
 	light = &env->light;
 	light->is_active	= false;
-	light->gamma		= 2.0f;
 	init_player(&light->sources[LIGHT_SOURCE_PLAYER]);
 	// init_sun(&light->sources[LIGHT_SOURCE_SUN]);
 }
