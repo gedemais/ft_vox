@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define WIDTH 1000
-#define HEIGHT 1000
+#define WIDTH 64
+#define HEIGHT 64
 #define LENGTH WIDTH * HEIGHT
 
 // 100 x 100 : 0.005s
@@ -86,15 +86,20 @@ float perlin2d(float x, float y, float freq, int depth)
     return fin/div;
 }
 
-int     main() {
+// Frequency looks like the mean delta between two pixels (useful for topography adaptation)
+// Depth defines the zoom of the generation
+
+int     main(int argc, char **argv) {
     float   elevation[LENGTH];
 	int		pos;
+
+	int nb = atoi(argv[1]);
 
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
 			pos = y * WIDTH + x;
-			elevation[pos] = perlin2d(x, y, 0.2, 6);
-        //    printf("%d,", (int)(255 * (elevation[pos] >= 0.0f ? elevation[pos] : 0.0f)));
+			elevation[pos] = perlin2d(x, y, 0.1f, (float)nb);
+            printf("%d,", (int)(255 * (elevation[pos] >= 0.0f ? elevation[pos] : 0.0f)));
 		}
     }
     return (0);

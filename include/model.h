@@ -62,6 +62,7 @@ typedef struct	s_mesh
 typedef struct	s_model
 {
 	t_dynarray	meshs;
+	float		**biomes;
 	t_dynarray	chunks;
 	mat4		model;
 	vec3		center;

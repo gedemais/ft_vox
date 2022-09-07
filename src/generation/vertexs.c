@@ -72,12 +72,12 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z,
 	return (push_plane(chunk, top_plane, N_UP, z));
 }
 
-static unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z)
+static unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth)
 {
 	vec3		c, d;
 
-	c = vec_add(a, orientations[index]);
-	d = vec_add(b, orientations[index]);
+	c = vec_add(a, vec_fmult(orientations[index], depth));
+	d = vec_add(b, vec_fmult(orientations[index], depth));
 
 	vec3 side_plane[6] = {c, a, b, c, b, d};
 
@@ -87,13 +87,21 @@ static unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int 
 static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int z)
 {
 	unsigned char	code;
+	uint8_t			prev_bt;
+	unsigned int	n = 0;
+	float			fall_size = 0.0f;
 
-	for (unsigned int n = 0; n < offset; n++)
+	while (n < offset)
 	{
-		if ((code = generate_fall(chunk, a, b, index, z - n)))
+		fall_size = 0;
+		prev_bt = switch_block_type(z + n);
+		while (n < offset && prev_bt == switch_block_type(z + n))
+		{
+			fall_size += 1.0f;
+			n++;
+		}
+		if ((code = generate_fall(chunk, a, b, index, z, fall_size)))
 			return (code);
-		a = vec_add(a, orientations[index]);
-		b = vec_add(b, orientations[index]);
 	}
 	return (ERR_NONE);
 }
@@ -126,7 +134,7 @@ unsigned char	generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned 
 		a = top_plane[fall_planes[i][0]];
 		b = top_plane[fall_planes[i][1]];
 
-		if ((offset == 1 && (code = generate_fall(chunk, a, b, i, z)))
+		if ((offset == 1 && (code = generate_fall(chunk, a, b, i, z, 1.0f)))
 			|| (code = generate_deep_fall(chunk, a, b, i, offset, z)))
 			return (code);
 	}

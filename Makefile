@@ -35,11 +35,11 @@ SRC_NAME=main.c\
 	error.c\
 	free.c\
 	render.c\
+	singletons.c\
 	actions/toggles.c\
 	actions/live.c\
 	generation/noise.c\
 	generation/generation.c\
-	generation/greedy_meshing.c\
 	generation/height_map.c\
 	generation/vertexs.c\
 	init/camera.c\
@@ -48,6 +48,7 @@ SRC_NAME=main.c\
 	init/init_opengl.c\
 	init/init_shaders.c\
 	init/init_utils.c\
+	init/init_world.c\
 	utils/bmp.c\
 	utils/fps.c
 
@@ -58,7 +59,8 @@ INC_NAME=main.h\
 	error.h\
 	keys.h\
 	model.h\
-	shaders.h
+	shaders.h\
+	gen.h
 
 INC=$(addprefix $(INC_PATH), $(INC_NAME))
 

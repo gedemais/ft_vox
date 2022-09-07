@@ -17,13 +17,19 @@ enum	e_bloc_types
 
 enum e_topography_type
 {
-	E_PLAINS,
-	E_MOUNTAINS,
-	E_DESERT,
-	E_SEA,
-	E_CAVE,
-	E_MAX
+	TP_PLAINS,
+	TP_MOUNTAINS,
+	TP_DESERT,
+	TP_SEA,
+	TP_MAX
 };
+
+typedef struct	s_biome_params
+{
+	float		frequency; // Mean delta between each block
+	float		depth; // Granularity of generation (kind of a zoom)
+	float		bound; // 0-1 value used to LERP the biomes params
+}				t_biome_params;
 
 typedef struct	s_block
 {
@@ -40,10 +46,17 @@ typedef	struct	s_group_unit
 typedef struct	s_chunk
 {
 	t_dynarray		stride;
-	t_block			***block_map;
 	uint8_t			**surface_hmap;
 	uint8_t			**sub_hmap;
 	int				x_pos, y_pos; // Chunk position (in chunks matrix)
 }				t_chunk;
+
+// Biomes Generation Parameters
+static const t_biome_params	bgp[TP_MAX] = {
+	[TP_PLAINS] = {0.1f, 6.0f, 0.0f},
+	[TP_MOUNTAINS] = {0.3f, 6.0f, (float)TP_MOUNTAINS / (float)TP_MAX},
+	[TP_DESERT] = {0.05f, 6.0f, (float)TP_DESERT / (float)TP_MAX},
+	[TP_SEA] = {0.01f, 6.0f, (float)TP_SEA / (float)TP_MAX}
+};
 
 #endif

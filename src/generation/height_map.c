@@ -17,9 +17,10 @@ static	uint8_t	**allocate_height_map(unsigned int size)
 	return (new);
 }
 
-uint8_t	**generate_height_map(int x_start, int y_start, unsigned int size)
+uint8_t	**generate_height_map(t_biome_params params, int x_start, int y_start, unsigned int size)
 {
 	uint8_t	**hmap;
+	uint8_t	height;
 	unsigned int	xbound, ybound;
 
 	if (!(hmap = allocate_height_map(size)))
@@ -30,7 +31,10 @@ uint8_t	**generate_height_map(int x_start, int y_start, unsigned int size)
 
 	for (unsigned int x = x_start; x < xbound; x++)
 		for (unsigned int y = y_start; y < ybound; y++)
-			hmap[x][y] = (uint8_t)(perlin2d_a((float)x, (float)y, 0.1f, 6.0f) * size);
+		{
+			height = (uint8_t)(perlin2d_a((float)x, (float)y, params.frequency, params.depth) * size);
+			hmap[x - x_start][y - y_start] = height;
+		}
 
 	return (hmap);
 }

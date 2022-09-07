@@ -19,39 +19,42 @@ static void		bind_actions_to_keys(t_env *env)
 		env->keybinds_fts[env->settings.keys[i]] = keys_fts[i];
 }
 
-unsigned char	init(t_env *env, int argc, char **argv)
+static unsigned char	read_seed(int argc, char **argv)
+{
+	long long int	seed;
+	if (argc > 2)
+		return (ERR_INVALID_ARGC);
+
+	for (unsigned int i = 0; argv[1][i]; i++)
+		if (i > 10 || ft_isdigit(argv[1][i]) == false)
+			return (ERR_INVALID_SEED);
+
+	seed = ft_atoi(argv[1]);
+
+	printf("seed : %lld\n", seed);
+
+	*map_seed() = seed;
+
+	return (ERR_NONE);
+}
+
+unsigned char			init(t_env *env, int argc, char **argv)
 {
 	unsigned char code;
 
 	// init env ?
 	env->gl.window.fullscreen = false;
+	srand(time(NULL));
 
-	(void)argv;
-	(void)argc;
-	//if (argc != 2) // Arguments number check
-	//	return (ERR_INVALID_ARGC);
+	if ((argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
+		|| (code = init_world(env)) != ERR_NONE)
+		return (code);
 
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
-	gen_chunk(env, 0, 0, 128);
+	printf("%zu bytes per vertex | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
 
-	exit(0);
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
 		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
-		|| (code = init_shaders(env)) != ERR_NONE) // Load shader programs from .glsl files
+		|| (code = init_shaders(env)) != ERR_NONE)
 		return (code);
 
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
