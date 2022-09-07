@@ -51,6 +51,7 @@ static void				mat4_model(t_model *model)
 {
 	mat4_identity(model->model);
 	mat4_scale(model->model, model->scale);
+	mat4_rotate(model->model, ft_to_radians(90.0f), 0.0f, 0.0f);
 }
 
 static void				mat4_mvp(t_env *env)

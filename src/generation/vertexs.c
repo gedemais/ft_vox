@@ -34,12 +34,15 @@ static int	switch_block_type(unsigned int z)
 static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int z, float fall_size)
 {
 	t_stride		vertex;
-	const t_vt	vts[6] = {  (t_vt){0, 0},
-							(t_vt){fall_size, 0},
-							(t_vt){0, fall_size},
-							(t_vt){0, fall_size},
-							(t_vt){fall_size, 0},
-							(t_vt){fall_size, fall_size}  };
+	const t_vt	vts[6] = {
+							(t_vt){ 0, fall_size },
+							(t_vt){ fall_size, 0 },
+							(t_vt){ 0, 0 },
+
+							(t_vt){ fall_size, fall_size },
+							(t_vt){ fall_size, 0 },
+							(t_vt){ 0, fall_size }
+						};
 
 	// Addition of 6 vertexs plane to the mesh's data stride
 	for (unsigned int i = 0; i < 6; i++)
