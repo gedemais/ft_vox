@@ -8,6 +8,7 @@
 // GLSL
 
 # include <unistd.h>
+# include <time.h>
 # include <stdio.h>
 # include <stdbool.h>
 # include <errno.h>
@@ -20,25 +21,30 @@
 # include <string.h>
 
 // Homemade libs
-# include "../libs/libft/libft.h"
-# include "../libs/lib_mat_vec/lib_mat_vec.h"
-# include "../libs/libbmp/bmp.h"
+# include "libft.h"
+# include "lib_mat_vec.h"
+# include "bmp.h"
 
 // Local headers
-# include "./camera.h"
-# include "./error.h"
-# include "./keys.h"
-# include "./light.h"
-# include "./model.h"
-# include "./shaders.h"
+# include "shaders.h"
+# include "camera.h"
+# include "light.h"
+# include "error.h"
+# include "model.h"
+# include "keys.h"
+# include "gen.h"
 
-# define DEFAULT_COLOR		(t_color){ 1.0f, 1.0f, 1.0f, 1.0f }
+# define CHUNK_SIZE			64 // Size of chunk blocks in cubes
+# define MAP_SIZE			256 // Size of map chunk matrix in chunks
+# define BIOME_SIZE			2 // Size of individual biome matrix in chunks
+# define SQUARE_SIZE		10 // Size of visible chunks matrix for the player (max_limit)
 
 // Settings instances
 enum				e_settings
 {
 	SET_WIN_HEIGHT,
 	SET_WIN_WIDTH,
+	SET_GAMMA,
 	SET_KEY_EXIT, // Must remain after numeric values and before key assignments
 	SET_KEY_MOVE_CAM_FORWARD,
 	SET_KEY_MOVE_CAM_BACKWARD,
@@ -69,9 +75,11 @@ enum				e_keys
 // Settings data storing structure
 typedef struct		s_settings
 {
+	float		gamma;
 	uint16_t	w_wdt;
 	uint16_t	w_hgt;
 	uint8_t		keys[KEY_MAX];
+	char		pad[3];
 }					t_settings;
 
 typedef struct		s_window
@@ -107,7 +115,6 @@ typedef struct		s_mouse
 {
 	vec3	pos;
 	float	sensitivity;
-
 }					t_mouse;
 
 // Main environment structure
@@ -154,10 +161,27 @@ void				events_mouse(t_env *env, float xpos, float ypos);
 void				event_light(t_env *env, int key);
 void				event_texture(t_env *env, int key);
 
+// Singletons
+int					*biomes_seed(void);
+int					*map_seed(void);
+
+// Generation functions
+unsigned char		init_world(t_env *env);
+unsigned char		gen_chunk(t_env *env, int x_start, int y_start, unsigned int size);
+uint8_t				**generate_height_map(t_biome_params params, int x_start, int y_start, unsigned int size);
+unsigned char		generate_top_plane(t_chunk *chunk, int x, int y, int z,
+									int x_start, int y_start, vec3 top_plane[6]);
+unsigned char		generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned int size, vec3 top_plane[6]);
+unsigned char		generate_bottom_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6]);
+size_t				*stride_bytesize(void);
+
+float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
+
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {
 	"window_height",
 	"window_width",
+	"gamma",
 	"exit",
 	"move_cam_forward",
 	"move_cam_backward",

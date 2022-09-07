@@ -5,11 +5,10 @@ ifeq ($(UNAME_S), Linux)
 	FLAGS_OS = -lGL -ldl -lm
 else
 	FLAGS_OS = -framework OpenGL
-	EVE = -Weverything
 endif
 
 CC=gcc
-FLAGS = -Wall -Werror -Wextra # $(EVE)
+FLAGS = -Wall -Werror -Wextra
 FLAGS += -Wno-documentation
 FLAGS += -Wno-documentation-unknown-command
 FLAGS += -Wno-reserved-id-macro
@@ -35,8 +34,13 @@ SRC_NAME=main.c\
 	error.c\
 	free.c\
 	render.c\
+	singletons.c\
 	actions/toggles.c\
 	actions/live.c\
+	generation/noise.c\
+	generation/generation.c\
+	generation/height_map.c\
+	generation/vertexs.c\
 	init/camera.c\
 	init/settings.c\
 	init/init.c\
@@ -46,6 +50,7 @@ SRC_NAME=main.c\
 	init/init_shaders.c\
 	init/init_utils.c\
 	utils/functions.c\
+	init/init_world.c\
 	utils/fps.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
@@ -57,7 +62,8 @@ INC_NAME=main.h\
 	keys.h\
 	light.h\
 	model.h\
-	shaders.h
+	shaders.h\
+	gen.h
 
 INC=$(addprefix $(INC_PATH), $(INC_NAME))
 

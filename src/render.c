@@ -1,4 +1,4 @@
-#include "../include/main.h"
+#include "main.h"
 
 
 static void				draw_mesh(t_env *env)

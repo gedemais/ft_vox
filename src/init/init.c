@@ -1,4 +1,4 @@
-#include "../../include/main.h"
+#include "main.h"
 
 
 static void				bind_actions_to_keys(t_env *env)
@@ -21,6 +21,25 @@ static void				bind_actions_to_keys(t_env *env)
 		env->keybinds_fts[env->settings.keys[i]] = keys_fts[i];
 }
 
+static unsigned char	read_seed(int argc, char **argv)
+{
+	long long int	seed;
+	if (argc > 2)
+		return (ERR_INVALID_ARGC);
+
+	for (unsigned int i = 0; argv[1][i]; i++)
+		if (i > 10 || ft_isdigit(argv[1][i]) == false)
+			return (ERR_INVALID_SEED);
+
+	seed = ft_atoi(argv[1]);
+
+	printf("seed : %lld\n", seed);
+
+	*map_seed() = seed;
+
+	return (ERR_NONE);
+}
+
 static unsigned char	images(t_env *env)
 {
 	const char	*path[TEXTURE_MAX] = {
@@ -41,7 +60,7 @@ static unsigned char	images(t_env *env)
 	return (ERR_NONE);
 }
 
-static unsigned char	init_env(t_env *env)
+static unsigned char	init_env(t_env *env, int argc, char **argv)
 {
 	unsigned char	code;
 
@@ -49,6 +68,10 @@ static unsigned char	init_env(t_env *env)
 		return (code);
 
 	env->gl.window.fullscreen = false;
+	srand(time(NULL));
+
+	if (argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
+		return (code);
 
 	model(env);
 	light(env); // light after model because we set the sun's light pos with the model center
@@ -60,9 +83,12 @@ unsigned char			init(t_env *env, int argc, char **argv)
 {
 	unsigned char code;
 
+	printf("%zu bytes per vertex | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
+
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
+		|| (code = init_world(env)) != ERR_NONE
 		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
-		|| (code = init_env(env)) != ERR_NONE // init main env
+		|| (code = init_env(env, argc, argv)) != ERR_NONE // init main env
 		|| (code = init_shaders(env)) != ERR_NONE) // init shaders after model because we need to buffer each mesh
 		return (code);
 

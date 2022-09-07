@@ -1,4 +1,4 @@
-#include "../../include/main.h"
+#include "main.h"
 
 
 void		fps(t_fps *fps, bool print)

@@ -1,5 +1,4 @@
-#include "../../include/main.h"
-
+#include "main.h"
 
 static unsigned char	load_integer(char *line, char *token, long long int *n)
 {
@@ -8,6 +7,17 @@ static unsigned char	load_integer(char *line, char *token, long long int *n)
 	{
 		ft_putendl_fd(line, 2);
 		return (ERR_OUT_OF_BOUNDS_VALUE);
+	}
+	return (ERR_NONE);
+}
+
+static unsigned char	load_float(char *line, char *token, float *f)
+{
+	*f = ft_atof(token);
+	if (*f < 1.0f || *f > 4.0f)
+	{
+		ft_putendl_fd(line, 2);
+		return (ERR_INVALID_GAMMA_VALUE);
 	}
 	return (ERR_NONE);
 }
@@ -28,15 +38,14 @@ static unsigned char	load_keybind(char *line, char *token, long long int *n)
 static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *token)
 {
 	long long int	n = 0;
+	float			f = 0;
 	unsigned char	code;
 
-	// Read value (integer)
-	if (j < SET_KEY_EXIT) // if the information to load is an integer
-	{
-		if ((code = load_integer(line, token, &n)) != ERR_NONE)
-			return (code);
-	}
-	else if ((code = load_keybind(line, token, &n)) != ERR_NONE)
+	if (j == SET_GAMMA && (code = load_float(line, token, &f)) != ERR_NONE)
+		return (code);
+	if (j < SET_KEY_EXIT && (code = load_integer(line, token, &n)) != ERR_NONE)
+		return (code);
+	if (j >= SET_KEY_EXIT && (code = load_keybind(line, token, &n)) != ERR_NONE)
 		return (code);
 
 	switch (j) {
@@ -47,10 +56,12 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 		case SET_WIN_WIDTH:
 			env->settings.w_wdt = (uint16_t)n;
 			break;
+		case SET_GAMMA:
+			env->settings.gamma = f;
+	// Key Bindings
 		case SET_KEY_EXIT:
 			env->settings.keys[KEY_EXIT] = (uint8_t)n;
 			break;
-	// Key Bindings
 		case SET_KEY_MOVE_CAM_FORWARD:
 			env->settings.keys[KEY_MOVE_CAM_FORWARD] = (uint8_t)n;
 			break;

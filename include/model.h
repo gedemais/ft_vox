@@ -23,6 +23,19 @@ enum			e_skybox
 	TEXTURE_SB_MAX
 };
 
+enum			e_normals
+{
+	N_NORTH,
+	N_SOUTH,
+	N_WEST,
+	N_EAST,
+	N_UP,
+	N_DOWN,
+	N_MAX
+};
+
+
+
 typedef	struct	s_vertex_texture
 {
 	float	u, v;
@@ -52,6 +65,8 @@ typedef struct	s_mesh
 typedef struct	s_model
 {
 	t_dynarray	meshs;
+	float		**biomes;
+	t_dynarray	chunks;
 	mat4		model;
 	vec3		center;
 	float		scale;
