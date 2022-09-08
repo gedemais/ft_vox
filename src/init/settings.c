@@ -58,6 +58,7 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 			break;
 		case SET_GAMMA:
 			env->light.gamma = f;
+			break;
 	// Key Bindings
 		case SET_KEY_EXIT:
 			env->settings.keys[KEY_EXIT] = (uint8_t)n;
