@@ -1,22 +1,27 @@
 # include "main.h"
 
-const char	*path[TEXTURE_MAX] = {
-	"./resources/nyan.bmp",
-	"./resources/default.bmp",
-	"./resources/darksouls.bmp"
+const char	*textures_paths[TEXTURE_MAX] = {
+	"./resources/ground.png",
+	"./resources/default.png",
+	"./resources/darksouls.png"
 };
 
 static unsigned char	load_textures(t_env *env)
 {
-	t_texture	*texture;
-	int			i;
+	t_texture		*txt;
+	unsigned int	err;
 
-	i = -1;
-	while (++i < TEXTURE_MAX) {
-		texture = &env->model.textures[i];
-		loadBMP(path[i], &texture->ptr, &texture->w, &texture->h); // Load image from path
-		if (texture->ptr == NULL)
-			return (ERR_MALLOC_FAILED);
+	for (int i = 0; i < TEXTURE_MAX; i++)
+	{
+		txt = &env->model.textures[i];
+
+		err = lodepng_decode32_file(&txt->ptr, &txt->w, &txt->h, textures_paths[i]);
+
+		if (err)
+		{
+			ft_putendl_fd(lodepng_error_text(err), 2);
+			return (ERR_TEXTURE_LOADING_FAILED);
+		}
 	}
 	return (ERR_NONE);
 }
@@ -32,8 +37,6 @@ static unsigned char	read_seed(int argc, char **argv)
 			return (ERR_INVALID_SEED);
 
 	seed = ft_atoi(argv[1]);
-
-	printf("seed : %lld\n", seed);
 
 	*map_seed() = seed;
 
@@ -78,6 +81,7 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 		|| (code = load_textures(env)) != ERR_NONE)
 		return (code);
 
+	printf("seed : %d\n", *map_seed());
 	model(env);
 	light(env); // light after model because we set the sun's light pos with the model center
 

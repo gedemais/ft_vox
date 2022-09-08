@@ -17,14 +17,15 @@ void			error_handler(t_env *env, unsigned char code)
 	msg = &errors[code].msg[0]; // Get the current error message
 
 	// Display it
-	write(2, "ft_vox : ", 7);
-	write(2, "error : ", 8);
-	write(2, msg, ft_strlen(msg));
-	write(2, "\n", 1);
+	if (write(2, "ft_vox : ", 7) == 0
+		|| write(2, "error : ", 8) == 0
+		|| write(2, msg, ft_strlen(msg)) == 0
+		|| write(2, "\n", 1) == 0)
+		return ;
 
 	// Display usage if needed
-	if (errors[code].usage)
-		write(2, usage, ft_strlen(usage));
+	if (errors[code].usage && write(2, usage, ft_strlen(usage)))
+		return ;
 
 	// Free environment content before the main returns
 	free_env(env);

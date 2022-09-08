@@ -13,12 +13,8 @@ static unsigned char	load_integer(char *line, char *token, long long int *n)
 
 static unsigned char	load_float(char *line, char *token, float *f)
 {
+	(void)line;
 	*f = ft_atof(token);
-	if (*f < 1.0f || *f > 4.0f)
-	{
-		ft_putendl_fd(line, 2);
-		return (ERR_INVALID_GAMMA_VALUE);
-	}
 	return (ERR_NONE);
 }
 
@@ -41,11 +37,11 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 	float			f = 0;
 	unsigned char	code;
 
-	if (j == SET_GAMMA && (code = load_float(line, token, &f)) != ERR_NONE)
+	if (j < SET_GAMMA && (code = load_integer(line, token, &n)) != ERR_NONE)
 		return (code);
-	if (j < SET_KEY_EXIT && (code = load_integer(line, token, &n)) != ERR_NONE)
+	else if (j < SET_KEY_EXIT && j >= SET_GAMMA && (code = load_float(line, token, &f)) != ERR_NONE)
 		return (code);
-	if (j >= SET_KEY_EXIT && (code = load_keybind(line, token, &n)) != ERR_NONE)
+	else if (j >= SET_KEY_EXIT && (code = load_keybind(line, token, &n)) != ERR_NONE)
 		return (code);
 
 	switch (j) {
@@ -56,8 +52,28 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 		case SET_WIN_WIDTH:
 			env->settings.w_wdt = (uint16_t)n;
 			break;
+	// Floating point values
 		case SET_GAMMA:
+		{
+			if (f < 1.0f || f > 4.0f)
+				return (ERR_INVALID_GAMMA_VALUE);
 			env->light.gamma = f;
+		}
+			break;
+		case SET_PLAYER_SPEED:
+		{
+				env->camera.speed = f;
+				env->camera.tspeed = f * 20.0f;
+		}
+			break;
+		case SET_PLAYER_LIGHT_INTENSITY:
+			printf("player_light_intensity : %f\n", f);
+			break;
+		case SET_SUNLIGHT_INTENSITY:
+			printf("sunlight_intensity : %f\n", f);
+			break;
+		case SET_MOUSE_SENSITIVITY:
+			env->mouse.sensitivity = f;
 			break;
 	// Key Bindings
 		case SET_KEY_EXIT:

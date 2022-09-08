@@ -6,7 +6,7 @@
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 11:28:45 by maboye            #+#    #+#             */
-/*   Updated: 2022/09/01 19:14:33 by maboye           ###   ########.fr       */
+/*   Updated: 2022/09/08 13:18:43 by gedemais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@
 # include "dynarray/dynarray.h"
 
 # define BUFF_SIZE	4096
+
+#ifndef M_PI
 # define M_PI		3.14159
+#endif
 
 typedef union	u_rsqrt
 {

@@ -33,11 +33,6 @@ unsigned char			init(t_env *env, int argc, char **argv)
 		|| (code = init_shaders(env)) != ERR_NONE) // init shaders after model because we need to buffer each mesh
 		return (code);
 
-	(void)argv;
-	(void)argc;
-	//if (argc != 2) // Arguments number check
-	//	return (ERR_INVALID_ARGC);
-
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
 
 	camera(env); // camera after load settings cause we need ww and wh

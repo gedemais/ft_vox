@@ -50,7 +50,7 @@ typedef struct	s_stride
 typedef struct	s_texture
 {
 	unsigned char	*ptr;
-	int				w, h;
+	unsigned int	w, h;
 }				t_texture;
 
 typedef struct	s_mesh
@@ -65,6 +65,7 @@ typedef struct	s_model
 	float		**biomes;
 	t_dynarray	chunks;
 	mat4		model;
+	mat4		mvp;
 	float		scale;
 	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
 	GLuint		gl_tskybox;					// gl's texture for skybox

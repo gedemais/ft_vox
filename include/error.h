@@ -29,6 +29,7 @@ enum	e_error_id
 	ERR_FAILED_TO_LINK_SHADER_PROGRAM,
 	ERR_PRIMARY_MONITOR_NOT_FOUND,
 	ERR_INVALID_GAMMA_VALUE,
+	ERR_TEXTURE_LOADING_FAILED,
 	ERR_MAX
 };
 
@@ -59,7 +60,10 @@ static const t_error	errors[ERR_MAX] = {
 	[ERR_CHDIR_FAILED] = {"Chdir failed.", false},
 	[ERR_FAILED_TO_LINK_SHADER_PROGRAM] = {"OpenGL : Failed to link shader program.", false},
 	[ERR_PRIMARY_MONITOR_NOT_FOUND] = {"OpenGL : Failed to find primary monitor", false},
-	[ERR_INVALID_GAMMA_VALUE] = {"Invalid gamma value", false}
+	[ERR_INVALID_GAMMA_VALUE] = {"Invalid gamma value", false},
+	[ERR_TEXTURE_LOADING_FAILED] = {"lodepng : Failed to load texture file", false}
+	//[] = {"", false}
+	//[] = {"", false}
 	//[] = {"", false}
 };
 

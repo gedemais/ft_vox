@@ -78,8 +78,8 @@ LIB=$(LIB_PATH)/libft.a
 LIB_MAT_VEC_PATH=$(LIBS_PATH)/lib_mat_vec
 LIB_MAT_VEC=$(LIB_MAT_VEC_PATH)/lib_mat_vec.a
 
-LIBBMP_PATH=$(LIBS_PATH)/libbmp
-LIBBMP=$(LIBBMP_PATH)/libbmp.a
+LODEPNG_PATH=$(LIBS_PATH)/lodepng
+LODEPNG=$(LODEPNG_PATH)/liblodepng.a
 
 LIB_GLAD_PATH = $(LIBS_PATH)/glad
 GLAD_PATH = $(LIB_GLAD_PATH)/include/glad/
@@ -89,15 +89,15 @@ LIB_GLAD = $(LIB_GLAD_PATH)/libglad.a
 
 all: $(NAME)
 
-$(NAME): $(LIB) $(LIB_MAT_VEC) $(LIBBMP) $(LIB_GLAD) $(OBJS)
-	$(CC) $(FLAGS) -o $(NAME) $(OBJS) $(LIB) $(LIB_MAT_VEC) $(LIBBMP) $(LIB_GLAD) -lpthread -lglfw $(FLAGS_OS)
+$(NAME): $(LIB) $(LIB_MAT_VEC) $(LODEPNG) $(LIB_GLAD) $(OBJS)
+	$(CC) $(FLAGS) -o $(NAME) $(OBJS) $(LIB) $(LIB_MAT_VEC) $(LODEPNG) $(LIB_GLAD) -lpthread -lglfw $(FLAGS_OS)
 
 $(SRC_PATH)%.o: $(SRC_PATH)%.c $(INC)
 	@tput civis
 	@printf " Compiling $<"
 	@printf "									   \\r"
 	@tput cnorm
-	@$(CC) $(FLAGS) -I$(INC_PATH) -I$(LIB_PATH) -I$(LIB_MAT_VEC_PATH) -I$(LIBBMP_PATH) -I$(GLAD_PATH) -o $@ -c $<
+	@$(CC) $(FLAGS) -I$(INC_PATH) -I$(LIB_PATH) -I$(LIB_MAT_VEC_PATH) -I$(GLAD_PATH) -I$(LODEPNG_PATH) -o $@ -c $<
 
 ########################## Library rules ##########################
 
@@ -109,9 +109,9 @@ $(LIB_MAT_VEC): $(LIB_MAT_MAT_VEC_PATH)
 	@echo "Making lib_mat_vec..."
 	@make -C $(LIB_MAT_VEC_PATH) -j4
 
-$(LIBBMP): $(LIBBMP_PATH)
-	@echo "Making libbmp..."
-	@make -C $(LIBBMP_PATH) -j4
+$(LODEPNG): $(LODEPNG_PATH)
+	@echo "Making lodepng..."
+	@make -C $(LODEPNG_PATH) -j4
 
 $(LIB_GLAD): $(LIB_GLAD_PATH)
 	@echo "Making libglad..."
@@ -124,14 +124,12 @@ clean:
 	@rm -rf $(OBJS)
 	@make -C $(LIB_PATH) clean
 	@make -C $(LIB_MAT_VEC_PATH) clean
-	@make -C $(LIBBMP_PATH) clean
 	@make -C $(LIB_GLAD_PATH) clean
 
 fclean: clean
 	@rm -rf $(NAME)
 	@make -C $(LIB_PATH) fclean
 	@make -C $(LIB_MAT_VEC_PATH) fclean
-	@make -C $(LIBBMP_PATH) fclean
 	@make -C $(LIB_GLAD_PATH) fclean
 
 re: fclean all

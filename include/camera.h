@@ -12,6 +12,7 @@ typedef struct	s_camera
 	vec3		pos, yaxis, zaxis;
 	float		speed, tspeed;
 	bool		ground_fixed;
+	bool		sprint;
 }				t_camera;
 
 

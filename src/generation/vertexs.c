@@ -29,12 +29,12 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 {
 	t_stride		vertex;
 	const t_vt	vts[6] = {
-							(t_vt){fall_size, 0},
-							(t_vt){fall_size, 1},
-							(t_vt){0, 1},
+							(t_vt){1, 0},
+							(t_vt){1, fall_size},
+							(t_vt){0, fall_size},
 
-							(t_vt){0, 1},
-							(t_vt){fall_size, 0},
+							(t_vt){1, 0},
+							(t_vt){0, fall_size},
 							(t_vt){0, 0}
 						};
 
@@ -58,7 +58,6 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z,
 	float			xx, yy, zz;
 	vec3			a, b, c, d;
 
-	(void)y_start;
 	xx = (x_start + x) * block_size;
 	yy = y * block_size;
 	zz = (y_start + z) * block_size;

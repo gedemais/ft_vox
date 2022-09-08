@@ -51,7 +51,6 @@ static void				mat4_model(t_model *model)
 {
 	mat4_identity(model->model);
 	mat4_scale(model->model, model->scale);
-	//mat4_rotate(model->model, ft_to_radians(90.0f), 0.0f, 0.0f);
 }
 
 static void				mat4_mvp(t_env *env)
@@ -63,6 +62,7 @@ static void				mat4_mvp(t_env *env)
 
 static unsigned char	render_scene(t_env *env)
 {
+	env->camera.sprint = glfwGetKey(env->gl.window.ptr, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
 	fps(&env->fps, true);
 	mat4_mvp(env);
 	set_uniforms(env);

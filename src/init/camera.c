@@ -27,7 +27,6 @@ static void	init_camera(t_env *env)
 
 static void	init_mouse(t_env *env)
 {
-	env->mouse.sensitivity = 2.0f;
 	env->mouse.pos.x = env->settings.w_wdt / 2;
 	env->mouse.pos.y = env->settings.w_hgt / 2;
 	glfwSetInputMode(env->gl.window.ptr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

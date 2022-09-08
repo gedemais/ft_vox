@@ -1,7 +1,6 @@
 #ifndef MAIN_H
 # define MAIN_H
 
-
 // OpenGL Libs
 # include "glad.h"
 # include <GLFW/glfw3.h>
@@ -23,7 +22,7 @@
 // Homemade libs
 # include "libft.h"
 # include "lib_mat_vec.h"
-# include "bmp.h"
+# include "lodepng.h"
 
 // Local headers
 # include "shaders.h"
@@ -34,7 +33,7 @@
 # include "keys.h"
 # include "gen.h"
 
-# define CHUNK_SIZE			64 // Size of chunk blocks in cubes
+# define CHUNK_SIZE			128 // Size of chunk blocks in cubes
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
 # define SQUARE_SIZE		1 // Size of visible chunks matrix for the player (max_limit)
@@ -45,6 +44,10 @@ enum				e_settings
 	SET_WIN_HEIGHT,
 	SET_WIN_WIDTH,
 	SET_GAMMA,
+	SET_PLAYER_SPEED,
+	SET_PLAYER_LIGHT_INTENSITY,
+	SET_SUNLIGHT_INTENSITY,
+	SET_MOUSE_SENSITIVITY,
 	SET_KEY_EXIT, // Must remain after numeric values and before key assignments
 	SET_KEY_MOVE_CAM_FORWARD,
 	SET_KEY_MOVE_CAM_BACKWARD,
@@ -178,10 +181,14 @@ float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {
-	"window_height",
+	"window_height", // integers
 	"window_width",
-	"gamma",
-	"exit",
+	"gamma", // floating points
+	"player_speed",
+	"player_light_intensity",
+	"sunlight_intensity",
+	"mouse_sensitivity",
+	"exit", // Keybinds
 	"move_cam_forward",
 	"move_cam_backward",
 	"move_cam_up",
