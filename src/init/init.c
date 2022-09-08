@@ -13,7 +13,6 @@ static void				bind_actions_to_keys(t_env *env)
 		[KEY_MOVE_CAM_LEFT] = move_cam,
 		[KEY_MOVE_CAM_RIGHT] = move_cam,
 		[KEY_LIGHT] = event_light,
-		[KEY_TEXTURE] = event_texture
 	};
 
 	// Assignation of actions functions in respect with handled key indices.

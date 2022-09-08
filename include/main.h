@@ -56,7 +56,6 @@ enum				e_settings
 	SET_KEY_MOVE_CAM_LEFT,
 	SET_KEY_MOVE_CAM_RIGHT,
 	SET_KEY_LIGHT,
-	SET_KEY_TEXTURE,
 	SET_MAX
 };
 
@@ -71,7 +70,6 @@ enum				e_keys
 	KEY_MOVE_CAM_LEFT,
 	KEY_MOVE_CAM_RIGHT,
 	KEY_LIGHT,
-	KEY_TEXTURE,
 	KEY_MAX
 };
 
@@ -161,7 +159,6 @@ void				move_cam(t_env *env, int key);
 void				events_mouse(t_env *env, float xpos, float ypos);
 
 void				event_light(t_env *env, int key);
-void				event_texture(t_env *env, int key);
 
 // Singletons
 int					*biomes_seed(void);
@@ -196,7 +193,6 @@ static const char	*settings_keys[SET_MAX] = {
 	"move_cam_left",
 	"move_cam_right",
 	"toggle_light",
-	"toggle_texture"
 };
 
 // UTILS
