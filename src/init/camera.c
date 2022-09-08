@@ -15,7 +15,7 @@ static void	init_camera(t_env *env)
 	// FOV
 	camera->fov = 45.0f;
 	// Camera starting position and orientation
-	camera->pos = (vec3){ 0, 0, -25};
+	camera->pos = (vec3){ 0, 20, -1};
 	camera->yaxis = (vec3){ 0, 1, 0};
 	camera->zaxis = (vec3) { 0, 0, 1};
 	// Camera movements speed

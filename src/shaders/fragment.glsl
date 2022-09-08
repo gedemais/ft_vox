@@ -1,7 +1,7 @@
 #version 400 core
 
 #define LIGHT_SOURCE_MAX	1
-#define TEXTURE_MAX			3
+#define TEXTURE_MAX			4
 
 struct	LightSources {
 	vec3	pos, dir, color;

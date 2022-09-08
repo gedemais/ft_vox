@@ -11,12 +11,6 @@ enum	e_side_orientation
 
 const float		block_size = 1.0f;
 
-const vec3	orientations[PO_MAX] = {{0, 0, block_size},
-									{0, 0, -block_size},
-									{block_size, 0, 0},
-									{-block_size, 0, 0}};
-
-
 static int	switch_block_type(unsigned int z)
 {
 	if (z < 20)
@@ -35,14 +29,13 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 {
 	t_stride		vertex;
 	const t_vt	vts[6] = {
-							(t_vt){ 0, 1.0f }, // 4 (A)
-							(t_vt){ fall_size, 1.0f }, // 5 (B)
-							(t_vt){ fall_size, 0 }, // 6 (D)
+							(t_vt){fall_size, 0},
+							(t_vt){fall_size, 1},
+							(t_vt){0, 1},
 
-							(t_vt){ 0, 1.0f }, // 1 (A)
-							(t_vt){ fall_size, 0 }, // 2 (D)
-							(t_vt){ 0, 0 } // 3 (C)
-
+							(t_vt){0, 1},
+							(t_vt){fall_size, 0},
+							(t_vt){0, 0}
 						};
 
 	// Addition of 6 vertexs plane to the mesh's data stride
@@ -65,9 +58,10 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z,
 	float			xx, yy, zz;
 	vec3			a, b, c, d;
 
+	(void)y_start;
 	xx = (x_start + x) * block_size;
-	yy = (y_start + y) * block_size;
-	zz = z * block_size;
+	yy = y * block_size;
+	zz = (y_start + z) * block_size;
 
 	// Cube's top plane ABCD points
 	a = (vec3){xx, yy, (z + 1) * block_size};
@@ -89,8 +83,8 @@ static unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int 
 {
 	vec3		c, d;
 
-	c = vec_add(a, vec_fmult(orientations[index], depth));
-	d = vec_add(b, vec_fmult(orientations[index], depth));
+	c = vec_add(a, vec_fmult((vec3){0, -block_size, 0}, depth));
+	d = vec_add(b, vec_fmult((vec3){0, -block_size, 0}, depth));
 
 	vec3 side_plane[6] = {c, a, b, c, b, d};
 
@@ -129,8 +123,8 @@ unsigned char	generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned 
 	// Based on cbacbd order
 	const uint8_t	fall_planes[4][2] =	{{2, 1},
 										 {0, 5},
-										 {2, 0},
-										 {1, 5}};
+										 {2, 5},
+										 {1, 0}};
 	vec3			a, b;
 	int				n_x, n_y;
 	int				offset;

@@ -34,7 +34,7 @@
 # include "keys.h"
 # include "gen.h"
 
-# define CHUNK_SIZE			32 // Size of chunk blocks in cubes
+# define CHUNK_SIZE			256 // Size of chunk blocks in cubes
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
 # define SQUARE_SIZE		1 // Size of visible chunks matrix for the player (max_limit)
@@ -166,7 +166,7 @@ int					*map_seed(void);
 
 // Generation functions
 unsigned char		init_world(t_env *env, int argc, char **argv);
-unsigned char		gen_chunk(t_env *env, int x_start, int y_start, unsigned int size);
+unsigned char		gen_chunk(t_env *env, int x_start, int z_start, unsigned int size);
 uint8_t				**generate_height_map(t_biome_params params, int x_start, int y_start, unsigned int size);
 unsigned char		generate_top_plane(t_chunk *chunk, int x, int y, int z,
 									int x_start, int y_start, vec3 top_plane[6]);
