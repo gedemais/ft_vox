@@ -74,6 +74,9 @@ unsigned char	push_world(t_env *env)
 
 	for (int c = 0; c < env->model.chunks.nb_cells; c++)
 	{
+		if (c % 2 != 0)
+			continue;
+
 		chunk = dyacc(&env->model.chunks, c);
 		for (int i = 0; i < chunk->stride.nb_cells; i++)
 			if (dynarray_push(&mesh->vertices, dyacc(&chunk->stride, i), false))

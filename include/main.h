@@ -33,10 +33,10 @@
 # include "keys.h"
 # include "gen.h"
 
-# define CHUNK_SIZE			768 // Size of chunk blocks in cubes
+# define CHUNK_SIZE			64 // Size of chunk blocks in cubes
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
-# define SQUARE_SIZE		1 // Size of visible chunks matrix for the player (max_limit)
+# define SQUARE_SIZE		2 // Size of visible chunks matrix for the player (max_limit)
 
 // Settings instances
 enum				e_settings
