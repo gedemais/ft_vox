@@ -24,13 +24,12 @@ unsigned char			init(t_env *env, int argc, char **argv)
 {
 	unsigned char code;
 
-	printf("%zu bytes per vertex | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
-
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
 		|| (code = init_world(env, argc, argv)) != ERR_NONE
 		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
 		|| (code = init_shaders(env)) != ERR_NONE) // init shaders after model because we need to buffer each mesh
 		return (code);
+
 
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
 

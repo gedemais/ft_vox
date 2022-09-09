@@ -69,8 +69,7 @@ unsigned char	push_world(t_env *env)
 
 	mesh = dyacc(&env->model.meshs, 0);
 
-	if (dynarray_init(&mesh->vertices, sizeof(t_stride),
-		env->model.chunks.nb_cells * CHUNK_SIZE * CHUNK_SIZE *  6 * sizeof(t_stride)) < 0)
+	if (dynarray_init(&mesh->vertices, sizeof(t_stride), CHUNK_SIZE *  6 * sizeof(t_stride)) < 0)
 		return (ERR_MALLOC_FAILED);
 
 	for (int c = 0; c < env->model.chunks.nb_cells; c++)

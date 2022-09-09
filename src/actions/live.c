@@ -7,18 +7,19 @@ void		move_cam(t_env *env, int key)
 	float		speed;
 
 	camera = &env->camera;
+	speed = camera->sprint ? camera->tspeed : camera->speed;
 	if (key == GLFW_KEY_D)
-		camera->pos = vec_add(camera->pos, vec_fmult(vec_cross(camera->zaxis, camera->yaxis), camera->speed));
+		camera->pos = vec_add(camera->pos, vec_fmult(vec_cross(camera->zaxis, camera->yaxis), speed));
 	if (key == GLFW_KEY_A)
-		camera->pos = vec_sub(camera->pos, vec_fmult(vec_cross(camera->zaxis, camera->yaxis), camera->speed));
+		camera->pos = vec_sub(camera->pos, vec_fmult(vec_cross(camera->zaxis, camera->yaxis), speed));
 	if (key == GLFW_KEY_W)
-		camera->pos = vec_add(camera->pos, vec_fmult(camera->zaxis, camera->speed));
+		camera->pos = vec_add(camera->pos, vec_fmult(camera->zaxis, speed));
 	if (key == GLFW_KEY_S)
-		camera->pos = vec_sub(camera->pos, vec_fmult(camera->zaxis, camera->speed));
+		camera->pos = vec_sub(camera->pos, vec_fmult(camera->zaxis, speed));
 	if (key == GLFW_KEY_R)
-		camera->pos = vec_add(camera->pos, vec_fmult(camera->yaxis, camera->speed));
+		camera->pos = vec_add(camera->pos, vec_fmult(camera->yaxis, speed));
 	if (key == GLFW_KEY_F)
-		camera->pos = vec_sub(camera->pos, vec_fmult(camera->yaxis, camera->speed));
+		camera->pos = vec_sub(camera->pos, vec_fmult(camera->yaxis, speed));
 }
 
 static void update_directions(t_camera *camera)
