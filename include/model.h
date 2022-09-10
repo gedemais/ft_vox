@@ -1,14 +1,28 @@
-#ifndef SCENE_H
-# define SCENE_H
+#ifndef MODEL_H
+# define MODEL_H
 
 
 # include "./main.h"
+# include "./gen.h"
 
 enum			e_texture
 {
-	TEXTURE_DEFAULT,
-	TEXTURE_NYAN,
-	TEXTURE_DARKSOULS,
+	TEXTURE_HD_GRASS_SIDE,
+	TEXTURE_HD_GRASS,
+	TEXTURE_HD_GRAVEL,
+	TEXTURE_HD_GROUND,
+	TEXTURE_HD_SAND,
+	TEXTURE_HD_SNOW,
+	TEXTURE_HD_STONE_SIDE,
+	TEXTURE_HD_STONE,
+	TEXTURE_LD_GRASS_SIDE,
+	TEXTURE_LD_GRASS,
+	TEXTURE_LD_GRAVEL,
+	TEXTURE_LD_GROUND,
+	TEXTURE_LD_SAND,
+	TEXTURE_LD_SNOW,
+	TEXTURE_LD_STONE_SIDE,
+	TEXTURE_LD_STONE,
 	TEXTURE_MAX
 };
 
@@ -69,7 +83,7 @@ typedef struct	s_model
 	float		scale;
 	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
 	GLuint		gl_tskybox;					// gl's texture for skybox
-	t_texture	textures[TEXTURE_MAX];		// textures' ptr
+	t_texture	textures[TEXTURE_SB_MAX];	// textures' ptr
 }				t_model;
 
 #endif

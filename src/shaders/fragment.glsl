@@ -1,7 +1,7 @@
 #version 400 core
 
 #define LIGHT_SOURCE_MAX	1
-#define TEXTURE_MAX			4
+#define TEXTURE_MAX			8
 
 struct	LightSources {
 	vec3	pos, dir, color;
@@ -23,7 +23,8 @@ uniform vec3			campos;
 
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
-uniform sampler2D		vTextures[TEXTURE_MAX];
+uniform sampler2D		vTexturesHD[TEXTURE_MAX];
+uniform sampler2D		vTexturesLD[TEXTURE_MAX];
 uniform samplerCube		vSkybox;
 
 out vec4				FragColor;
@@ -55,9 +56,12 @@ void	main()
 	int		index = int(vType);
 	vec3	color;
 
-	index = 0;
-	if (index < 3)
-		color = texture(vTextures[index], vTextCoord).rgb;
+	index = 1;
+	if (distance(campos, vPosition) > 100) {
+		color = texture(vTexturesLD[index], vTextCoord).rgb;
+	}
+	else
+		color = texture(vTexturesHD[index], vTextCoord).rgb;
 
 	if (light.is_active == true) {
 		vec3		view_dir	= normalize(campos - vPosition);

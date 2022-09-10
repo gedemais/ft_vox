@@ -8,10 +8,10 @@ enum	e_bloc_types
 	BT_SAND,
 	BT_GROUND,
 	BT_GRASS,
+	BT_GRASS_PODZOL,
 	BT_SNOW,
+	BT_GRAVEL,
 	BT_WATER,
-	BT_AIR,
-	BT_CACTUS,
 	BT_MAX
 };
 

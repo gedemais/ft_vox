@@ -1,24 +1,41 @@
 # include "main.h"
 
-const char	*textures_paths[TEXTURE_MAX] = {
-	"./resources/ground.png",
-	"./resources/default.png",
-	"./resources/darksouls.png"
+const char	*textures_paths[TEXTURE_SB_MAX] = {
+	"./resources/HD/grass_side.png",
+	"./resources/HD/grass.png",
+	"./resources/HD/gravel.png",
+	"./resources/HD/ground.png",
+	"./resources/HD/sand.png",
+	"./resources/HD/snow.png",
+	"./resources/HD/stone_side.png",
+	"./resources/HD/stone.png",
+	"./resources/LD/grass_side.png",
+	"./resources/LD/grass.png",
+	"./resources/LD/gravel.png",
+	"./resources/LD/ground.png",
+	"./resources/LD/sand.png",
+	"./resources/LD/snow.png",
+	"./resources/LD/stone_side.png",
+	"./resources/LD/stone.png",
+	"./resources/skybox/nx.png",
+	"./resources/skybox/ny.png",
+	"./resources/skybox/nz.png",
+	"./resources/skybox/px.png",
+	"./resources/skybox/py.png",
+	"./resources/skybox/pz.png"
 };
 
 static unsigned char	load_textures(t_env *env)
 {
 	t_texture		*txt;
 	unsigned int	err;
+	int				i;
 
-	for (int i = 0; i < TEXTURE_MAX; i++)
-	{
+	i = -1;
+	while (++i < TEXTURE_SB_MAX) {
 		txt = &env->model.textures[i];
-
 		err = lodepng_decode32_file(&txt->ptr, &txt->w, &txt->h, textures_paths[i]);
-
-		if (err)
-		{
+		if (err) {
 			ft_putendl_fd(lodepng_error_text(err), 2);
 			return (ERR_TEXTURE_LOADING_FAILED);
 		}

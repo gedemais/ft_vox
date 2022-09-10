@@ -148,9 +148,9 @@ static void				load_skybox(t_env *env)
 
 	// i = -1;
 	// while (++i < 6) {
-	// 	texture = &env->model.textures[0];
-	// 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
-	// 		texture->w, texture->h, 0, GL_RGB, GL_UNSIGNED_BYTE, texture->ptr);
+	// 	texture = &env->model.textures[TEXTURE_SB_FRONT + i];
+	// 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
+	// 		texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
 	// }
 
 	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -158,7 +158,7 @@ static void				load_skybox(t_env *env)
 	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	
+
 	(void)env;
 }
 
@@ -198,9 +198,11 @@ static unsigned char	gl_uniforms(t_env *env)
 	env->gl.uniform.projection = glGetUniformLocation(env->gl.shader_program, "projection");
 	env->gl.uniform.campos = glGetUniformLocation(env->gl.shader_program, "campos");
 	
-	env->gl.uniform.textures = glGetUniformLocation(env->gl.shader_program, "vTextures");
-	int	samplers[TEXTURE_MAX] = { 0, 1, 2 };
-	glUniform1iv(env->gl.uniform.textures, TEXTURE_MAX, samplers);
+	env->gl.uniform.texturesHD = glGetUniformLocation(env->gl.shader_program, "vTexturesHD");
+	env->gl.uniform.texturesLD = glGetUniformLocation(env->gl.shader_program, "vTexturesLD");
+	int	samplers[TEXTURE_MAX / 2] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+	glUniform1iv(env->gl.uniform.texturesHD, TEXTURE_MAX / 2, samplers);
+	glUniform1iv(env->gl.uniform.texturesLD, TEXTURE_MAX / 2, samplers);
 
 	// env->gl.uniform.skybox = glGetUniformLocation(env->gl.shader_program, "vSkybox");
 	// glUniform1i(env->gl.uniform.skybox, 0);
