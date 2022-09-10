@@ -52,21 +52,20 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 	return (ERR_NONE);
 }
 
-unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z,
-									int x_start, int y_start, vec3 top_plane[6])
+unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6])
 {
 	float			xx, yy, zz;
 	vec3			a, b, c, d;
 
-	xx = (x_start + x) * block_size;
+	xx = (x) * block_size;
 	yy = y * block_size;
-	zz = (y_start + z) * block_size;
+	zz = (z) * block_size;
 
 	// Cube's top plane ABCD points
 	a = (vec3){xx, yy, (z + 1) * block_size};
-	b = (vec3){(x_start + x + 1) * block_size, yy, (z + 1) * block_size};
+	b = (vec3){(x + 1) * block_size, yy, (z + 1) * block_size};
 	c = (vec3){xx, yy, zz};
-	d = (vec3){(x_start + x + 1) * block_size, yy, zz};
+	d = (vec3){(x + 1) * block_size, yy, zz};
 
 	top_plane[0] = c;
 	top_plane[1] = a;
@@ -106,6 +105,7 @@ static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned
 			fall_size += 1.0f;
 			n++;
 		}
+		fall_size += 1.0f;
 		if ((code = generate_fall(chunk, a, b, index, z, fall_size)))
 			return (code);
 	}
@@ -125,16 +125,16 @@ unsigned char	generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned 
 										 {2, 5},
 										 {1, 0}};
 	vec3			a, b;
-	int				n_x, n_y;
+	int				n_x, n_z;
 	int				offset;
 
 	for (unsigned int i = 0; i < PO_MAX; i++)
 	{
 		n_x = x + neighbours[i][0];
-		n_y = y + neighbours[i][1];
+		n_z = z + neighbours[i][1];
 
-		if (n_x < 0 || n_x >= (int)size || n_y < 0 || n_y >= (int)size
-			|| (offset = z - chunk->surface_hmap[n_x][n_y]) <= 0)
+		if (n_x < 0 || n_x >= (int)size || n_z < 0 || n_z >= (int)size
+			|| (offset = y - chunk->surface_hmap[n_x][n_z]) <= 0)
 			continue ;
 
 		a = top_plane[fall_planes[i][0]];

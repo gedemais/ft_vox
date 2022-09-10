@@ -1,8 +1,8 @@
-#ifndef SCENE_H
-# define SCENE_H
+#ifndef MODEL_H
+# define MODEL_H
 
 
-# include "./main.h"
+# include "gen.h"
 
 enum			e_texture
 {
@@ -63,7 +63,7 @@ typedef struct	s_model
 {
 	t_dynarray	meshs;
 	float		**biomes;
-	t_dynarray	chunks;
+	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
 	mat4		model;
 	mat4		mvp;
 	float		scale;

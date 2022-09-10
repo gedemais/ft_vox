@@ -72,16 +72,14 @@ unsigned char	push_world(t_env *env)
 	if (dynarray_init(&mesh->vertices, sizeof(t_stride), CHUNK_SIZE *  6 * sizeof(t_stride)) < 0)
 		return (ERR_MALLOC_FAILED);
 
-	for (int c = 0; c < env->model.chunks.nb_cells; c++)
-	{
-		if (c % 2 != 0)
-			continue;
-
-		chunk = dyacc(&env->model.chunks, c);
-		for (int i = 0; i < chunk->stride.nb_cells; i++)
-			if (dynarray_push(&mesh->vertices, dyacc(&chunk->stride, i), false))
-				return (ERR_MALLOC_FAILED);
-	}
+	for (int x = 0; x < SQUARE_SIZE; x++)
+		for (int y = 0; y < SQUARE_SIZE; y++)
+		{
+				chunk = &env->model.chunks[x][y];
+				for (int i = 0; i < chunk->stride.nb_cells; i++)
+					if (dynarray_push(&mesh->vertices, dyacc(&chunk->stride, i), false))
+						return (ERR_MALLOC_FAILED);
+		}
 
 	//print_fv(&mesh->vertices);
 

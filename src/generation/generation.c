@@ -11,8 +11,8 @@ static unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start, 
 		{
 			y = chunk->surface_hmap[x][z];
 
-			if ((code = generate_top_plane(chunk, x, y, z, x_start, z_start, top_plane)) != ERR_NONE
-				|| (code = generate_side_plane(chunk, x, z, y, chunk_size, top_plane)) != ERR_NONE)
+			if ((code = generate_top_plane(chunk, x + x_start, y, z + z_start, top_plane)) != ERR_NONE
+				|| (code = generate_side_plane(chunk, x, y, z, chunk_size, top_plane)) != ERR_NONE)
 				//|| (code = generate_bottom_plane(chunk, x, y, z, top_plane)) != ERR_NONE)
 				return (code);
 		}
@@ -78,21 +78,15 @@ size_t	*stride_bytesize(void)
 	return (&bytesize);
 }
 
-unsigned char			gen_chunk(t_env *env, int x_start, int z_start, unsigned int size)
+unsigned char			gen_chunk(t_env *env, t_chunk *chunk, int x_start, int z_start, unsigned int size)
 {
-	t_chunk			chunk;
 	unsigned char	code;
 
-	if ((code = generate_chunk_content(env, &chunk, x_start, z_start, size)) != ERR_NONE)
+	if ((code = generate_chunk_content(env, chunk, x_start, z_start, size)) != ERR_NONE)
 		return (code);
 
-	*stride_bytesize() += sizeof(t_stride) * chunk.stride.nb_cells;
-	printf("%d vertexs | %zu bytes per chunk | %.2f Mo\n", chunk.stride.nb_cells, sizeof(t_stride), sizeof(t_stride) * chunk.stride.nb_cells / 1000000.0f);
-
-	if ((env->model.chunks.arr == NULL
-		&& dynarray_init(&env->model.chunks, sizeof(t_chunk), CHUNK_SIZE))
-		|| dynarray_push(&env->model.chunks, &chunk, false))
-		return (ERR_MALLOC_FAILED);
+	*stride_bytesize() += sizeof(t_stride) * chunk->stride.nb_cells;
+	printf("%d vertexs | %zu bytes per chunk | %.2f Mo\n", chunk->stride.nb_cells, sizeof(t_stride), *stride_bytesize() / 1000000.0f);
 
 	return (ERR_NONE);
 }
