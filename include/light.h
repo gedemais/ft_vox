@@ -7,7 +7,7 @@
 enum			e_light_sources
 {
 	LIGHT_SOURCE_PLAYER,
-	// LIGHT_SOURCE_SUN,
+	LIGHT_SOURCE_SUN,
 	LIGHT_SOURCE_MAX
 };
 

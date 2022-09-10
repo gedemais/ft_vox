@@ -2,8 +2,8 @@ window_height = 720
 window_width = 1280
 gamma = 1.0
 player_speed = 0.1
-player_light_intensity = 2.0
-sunlight_intensity = 1.0
+player_light_intensity = 20.0
+sunlight_intensity = 512.0
 mouse_sensitivity = 8.0
 
 exit = escape

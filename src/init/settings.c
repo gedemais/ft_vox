@@ -54,26 +54,23 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 			break;
 	// Floating point values
 		case SET_GAMMA:
-		{
 			if (f < 1.0f || f > 4.0f)
 				return (ERR_INVALID_GAMMA_VALUE);
 			env->light.gamma = f;
-		}
 			break;
 		case SET_PLAYER_SPEED:
-		{
-				env->camera.speed = f;
-				env->camera.tspeed = f * 20.0f;
-		}
+			env->camera.speed = f;
+			env->camera.tspeed = f * 20.0f;
 			break;
 		case SET_PLAYER_LIGHT_INTENSITY:
-			printf("player_light_intensity : %f\n", f);
+			env->light.sources[LIGHT_SOURCE_PLAYER].intensity = f;
 			break;
 		case SET_SUNLIGHT_INTENSITY:
-			printf("sunlight_intensity : %f\n", f);
+			env->light.sources[LIGHT_SOURCE_SUN].intensity = f;
 			break;
 		case SET_MOUSE_SENSITIVITY:
 			env->mouse.sensitivity = f;
+			env->mouse.base_sensitivity = f;
 			break;
 	// Key Bindings
 		case SET_KEY_EXIT:

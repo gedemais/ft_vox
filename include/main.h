@@ -114,6 +114,7 @@ typedef struct		s_fps
 typedef struct		s_mouse
 {
 	vec3	pos;
+	float	base_sensitivity;
 	float	sensitivity;
 }					t_mouse;
 
