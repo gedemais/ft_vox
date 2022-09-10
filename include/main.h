@@ -168,6 +168,8 @@ unsigned char		generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_
 unsigned char		generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned int size, vec3 top_plane[6]);
 unsigned char		generate_bottom_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6]);
 size_t				*stride_bytesize(void);
+unsigned char		borders(t_env *env);
+unsigned char		generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth);
 
 float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 

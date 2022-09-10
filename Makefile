@@ -41,6 +41,7 @@ SRC_NAME=main.c\
 	generation/generation.c\
 	generation/height_map.c\
 	generation/vertexs.c\
+	generation/borders.c\
 	init/camera.c\
 	init/settings.c\
 	init/init.c\

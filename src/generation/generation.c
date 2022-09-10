@@ -61,6 +61,8 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 	printf("frequency : %f | depth : %f\n", params.frequency, params.depth);
 	// Generate height maps for surface and cave
 	// Topography type should be a parameter which would affect perlin noise generation
+	chunk->x_start = x_start;
+	chunk->z_start = z_start;
 	if (!(chunk->surface_hmap = generate_height_map(params, x_start, z_start, size))
 		|| !(chunk->sub_hmap = generate_height_map(params, x_start, z_start, size))
 		|| dynarray_init(&chunk->stride, sizeof(t_stride), size * size * 6 * 2))

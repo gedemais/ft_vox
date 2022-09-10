@@ -4,7 +4,16 @@
 # define CHUNK_SIZE			64 // Size of chunk blocks in cubes
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
-# define SQUARE_SIZE		10 // Size of visible chunks matrix for the player (max_limit)
+# define SQUARE_SIZE		5 // Size of visible chunks matrix for the player (max_limit)
+
+enum	e_side_orientation
+{
+	PO_NORTH,
+	PO_SOUTH,
+	PO_EST,
+	PO_WEST,
+	PO_MAX
+};
 
 enum	e_bloc_types
 {
@@ -54,7 +63,7 @@ typedef struct	s_chunk
 	t_dynarray		stride;
 	uint8_t			**surface_hmap;
 	uint8_t			**sub_hmap;
-	int				x_pos, y_pos; // Chunk position (in chunks matrix)
+	int				x_start, z_start;
 }				t_chunk;
 
 // Biomes Generation Parameters

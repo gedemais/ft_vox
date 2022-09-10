@@ -68,6 +68,9 @@ static unsigned char	init_map(t_env *env)
 			if ((code = gen_chunk(env, &env->model.chunks[x][y], x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE)))
 				return (code);
 
+	if ((code = borders(env)))
+		return (code);
+
 	return (ERR_NONE);
 }
 

@@ -1,14 +1,5 @@
 # include "main.h"
 
-enum	e_side_orientation
-{
-	PO_NORTH,
-	PO_SOUTH,
-	PO_EST,
-	PO_WEST,
-	PO_MAX
-};
-
 const float		block_size = 1.0f;
 
 static int	switch_block_type(unsigned int z)
@@ -57,9 +48,9 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_p
 	float			xx, yy, zz;
 	vec3			a, b, c, d;
 
-	xx = (x) * block_size;
+	xx = x * block_size;
 	yy = y * block_size;
-	zz = (z) * block_size;
+	zz = z * block_size;
 
 	// Cube's top plane ABCD points
 	a = (vec3){xx, yy, (z + 1) * block_size};
@@ -77,7 +68,7 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_p
 	return (push_plane(chunk, top_plane, N_UP, z, 1.0f));
 }
 
-static unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth)
+unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth)
 {
 	vec3		c, d;
 
