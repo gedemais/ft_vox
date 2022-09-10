@@ -43,8 +43,8 @@ static void				load_chunk_params(t_env *env, int x_start, int z_start, unsigned 
 	delta_inf /= delta;
 	delta_sup /= delta;
 	// Interpolation
-	params->frequency = (delta_inf * bgp[i].frequency + delta_sup * bgp[i + 1].frequency);
-	params->depth = (delta_inf * bgp[i].depth + delta_sup * bgp[i + 1].depth);
+	params->frequency = 0.02f;//(delta_inf * bgp[i].frequency + delta_sup * bgp[i + 1].frequency);
+	params->depth = 6.0f;//(delta_inf * bgp[i].depth + delta_sup * bgp[i + 1].depth);
 
 	//if (params->frequency > 0.3f)
 	//	printf("factor : %f | lower bound : %f | upper bound : %f | delta_inf : %f | delta_sup : %f\n",
