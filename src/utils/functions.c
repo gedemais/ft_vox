@@ -28,7 +28,7 @@
 // 	return (normal);
 // }
 
-void		printfv(t_dynarray *vertices)
+void		print_fv(t_dynarray *vertices)
 {
 	t_stride		*elt;
 	vec3			v;

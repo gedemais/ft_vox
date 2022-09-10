@@ -47,11 +47,12 @@ SRC_NAME=main.c\
 	init/light.c\
 	init/model.c\
 	init/init_opengl.c\
-	init/init_shaders.c\
+	init/init_meshs.c\
 	init/init_utils.c\
 	utils/functions.c\
 	init/init_world.c\
-	utils/fps.c
+	utils/fps.c\
+	utils/shaders.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
 

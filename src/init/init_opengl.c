@@ -65,8 +65,8 @@ static void				cb_framebuffer_size(GLFWwindow *window, int width, int height)
 	g_env->settings.w_wdt = (uint16_t)width;
 	g_env->settings.w_hgt = (uint16_t)height;
 
-	g_env->gl.window.w = width;
-	g_env->gl.window.h = height;
+	g_env->window.w = width;
+	g_env->window.h = height;
 	g_env->camera.ratio = (float)width / (float)height;
 }
 
@@ -154,17 +154,17 @@ unsigned char			init_display(t_env *env)
 	}
 #endif
 
-	env->gl.window.w = env->settings.w_wdt;
-	env->gl.window.h = env->settings.w_hgt;
+	env->window.w = env->settings.w_wdt;
+	env->window.h = env->settings.w_hgt;
 
-	if ((code = glfw_create_window(&env->gl.window.ptr, "ft_vox",
-		env->gl.window.w, env->gl.window.h, env->gl.window.fullscreen) != ERR_NONE))
+	if ((code = glfw_create_window(&env->window.ptr, "ft_vox",
+		env->window.w, env->window.h, env->window.fullscreen) != ERR_NONE))
 		return (code);
-	glfwMakeContextCurrent(env->gl.window.ptr);
+	glfwMakeContextCurrent(env->window.ptr);
 	if (!gladLoadGL())
 		return (ERR_FAILED_GLAD);
 	glfwSwapInterval(1);
-	glfw_init_callbacks(env->gl.window.ptr);
+	glfw_init_callbacks(env->window.ptr);
 	env->fps.time = glfwGetTime();
 	return (ERR_NONE);
 }

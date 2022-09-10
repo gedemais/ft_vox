@@ -29,7 +29,7 @@ static void	init_mouse(t_env *env)
 {
 	env->mouse.pos.x = env->settings.w_wdt / 2;
 	env->mouse.pos.y = env->settings.w_hgt / 2;
-	glfwSetInputMode(env->gl.window.ptr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(env->window.ptr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void		camera(t_env *env)

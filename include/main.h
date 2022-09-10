@@ -89,23 +89,6 @@ typedef struct		s_window
 	GLFWwindow		*ptr;
 }					t_window;
 
-typedef struct	s_uniform
-{
-	GLint	texturesHD, texturesLD;
-	GLint	skybox, campos;
-	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
-	GLint	model, view, projection;
-}				t_uniform;
-
-typedef struct	s_gltools
-{
-	GLuint			shader_program;
-	GLuint			shader_vertex, shader_fragment;
-	const GLchar	*shader_vertex_text, *shader_fragment_text;
-	t_window		window;
-	t_uniform		uniform;
-}				t_gltools;
-
 typedef struct		s_fps
 {
 	unsigned int	frames, value;
@@ -122,8 +105,8 @@ typedef struct		s_mouse
 // Main environment structure
 typedef struct		s_env
 {
+	t_window	window;
 	t_settings	settings;
-	t_gltools	gl;
 	t_camera	camera;
 	t_fps		fps;
 	t_mouse		mouse;
@@ -142,7 +125,7 @@ unsigned char		model(t_env *env);
 
 // OpenGL
 unsigned char   	init_display(t_env *env);
-unsigned char		init_shaders(t_env *env);
+unsigned char		init_meshs(t_env *env);
 unsigned char   	display_loop(t_env *env);
 void				processInput(GLFWwindow *window);
 
@@ -203,6 +186,8 @@ void				print_fv(t_dynarray *vertices);
 void				print_faces(t_dynarray *faces);
 // fps
 void				fps(t_fps *fps, bool print);
+// shaders
+unsigned char		mount_shaders(t_mesh *mesh, char *svertex_path, char *sfragment_path);
 
 
 #endif

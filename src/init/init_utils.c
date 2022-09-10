@@ -32,16 +32,20 @@ unsigned char	readlines(char *path, char ***lines)
 	}
 
 	// Map file in memory
-	if (!(file = read_file(fd, &file_size)))
+	if (!(file = read_file(fd, &file_size))) {
+		close(fd);
 		return (ERR_READING_FILE);
+	}
 
 	// Split file to lines
 	if (!(*lines = ft_strsplit(file, "\n")))
 	{
+		close(fd);
 		munmap(file, file_size);
 		return (ERR_MALLOC_FAILED);
 	}
 
+	close(fd);
 	// Free file mapping
 	munmap(file, file_size);
 	return (ERR_NONE);

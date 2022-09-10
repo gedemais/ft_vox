@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec3	aPosition;
 layout (location = 1) in vec2	aTextCoord;
-layout (location = 2) in int	aNormal;
+layout (location = 2) in float	aNormal;
 layout (location = 3) in float	aType;
 
 uniform mat4 					model;
@@ -38,12 +38,12 @@ vec3	get_normal(int n)
 			normal = vec3(-1, 0, 0);
 			break ;
 	}
-	return (normalize(normal));
+	return (normal);
 }
 
 void	main()
 {
-	vNormal		= get_normal(aNormal);
+	vNormal		= get_normal(int(aNormal));
 	vPosition	= aPosition;
 	vTextCoord	= aTextCoord;
 	vType		= aType;

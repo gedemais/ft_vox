@@ -36,26 +36,29 @@ unsigned char			light_uniforms(t_env *env)
 {
 	unsigned char	code;
 	int				i;
+	t_mesh			*mesh;
 
+	mesh = dyacc(&env->model.meshs, 0);
+	glUseProgram(mesh->gl.shader_program);
 	// get uniforms
-	env->gl.uniform.light_active = glGetUniformLocation(env->gl.shader_program, "light.is_active");
-	env->gl.uniform.light_gamma = glGetUniformLocation(env->gl.shader_program, "light.gamma");
+	mesh->gl.uniform.light_active = glGetUniformLocation(mesh->gl.shader_program, "light.is_active");
+	mesh->gl.uniform.light_gamma = glGetUniformLocation(mesh->gl.shader_program, "light.gamma");
 	// consume uniforms
-	glUniform1i(env->gl.uniform.light_active, env->light.is_active);
-	glUniform1f(env->gl.uniform.light_gamma, env->light.gamma);
+	glUniform1i(mesh->gl.uniform.light_active, env->light.is_active);
+	glUniform1f(mesh->gl.uniform.light_gamma, env->light.gamma);
 	i = -1;
 	while (++i < LIGHT_SOURCE_MAX) {
 		// get uniforms
-		if ((code = get_light_uniforms(&env->gl, i)) != ERR_NONE)
+		if ((code = get_light_uniforms(&mesh->gl, i)) != ERR_NONE)
 			return (code);
 		// consume uniforms
-		glUniform3fv(env->gl.uniform.light[i][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[i].pos);
-		glUniform3fv(env->gl.uniform.light[i][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[i].dir);
-		glUniform3fv(env->gl.uniform.light[i][LIGHT_COLOR], 1, (GLfloat *)&env->light.sources[i].color);
-		glUniform3fv(env->gl.uniform.light[i][LIGHT_AMBIENT], 1, (GLfloat *)&env->light.sources[i].ambient);
-		glUniform3fv(env->gl.uniform.light[i][LIGHT_DIFFUSE], 1, (GLfloat *)&env->light.sources[i].diffuse);
-		glUniform3fv(env->gl.uniform.light[i][LIGHT_SPECULAR], 1, (GLfloat *)&env->light.sources[i].specular);
-		glUniform1f(env->gl.uniform.light[i][LIGHT_INTENSITY], env->light.sources[i].intensity);
+		glUniform3fv(mesh->gl.uniform.light[i][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[i].pos);
+		glUniform3fv(mesh->gl.uniform.light[i][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[i].dir);
+		glUniform3fv(mesh->gl.uniform.light[i][LIGHT_COLOR], 1, (GLfloat *)&env->light.sources[i].color);
+		glUniform3fv(mesh->gl.uniform.light[i][LIGHT_AMBIENT], 1, (GLfloat *)&env->light.sources[i].ambient);
+		glUniform3fv(mesh->gl.uniform.light[i][LIGHT_DIFFUSE], 1, (GLfloat *)&env->light.sources[i].diffuse);
+		glUniform3fv(mesh->gl.uniform.light[i][LIGHT_SPECULAR], 1, (GLfloat *)&env->light.sources[i].specular);
+		glUniform1f(mesh->gl.uniform.light[i][LIGHT_INTENSITY], env->light.sources[i].intensity);
 	}
 	return (ERR_NONE);
 }
@@ -85,7 +88,7 @@ void					light(t_env *env)
 	t_light	*light;
 
 	light = &env->light;
-	light->is_active	= false;
+	light->is_active = false;
 	init_player(&light->sources[LIGHT_SOURCE_PLAYER]);
 	init_sun(&light->sources[LIGHT_SOURCE_SUN]);
 }

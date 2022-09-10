@@ -1,5 +1,26 @@
 #include "main.h"
 
+static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
+{
+	glUseProgram(mesh->gl.shader_program);
+	// update matrices in shaders
+	glUniformMatrix4fv(mesh->gl.uniform.view, 1, GL_FALSE, env->camera.view);
+	glUniformMatrix4fv(mesh->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
+	if (skybox == false) {
+		glUniformMatrix4fv(mesh->gl.uniform.model, 1, GL_FALSE, env->model.model);
+		// update campos in shaders
+		glUniform3fv(mesh->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
+
+		// update lightpos in shaders
+		env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
+		env->light.sources[LIGHT_SOURCE_PLAYER].dir = vec_fmult(env->camera.zaxis, -1);
+		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
+		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
+	} else {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
+	}
+}
 
 static void				draw_mesh(t_env *env)
 {
@@ -12,31 +33,15 @@ static void				draw_mesh(t_env *env)
 		mesh = dyacc(&env->model.meshs, i);
 		if (mesh == NULL)
 			continue ;
-		glBindVertexArray(mesh->vao);
+
+		set_uniforms(env, mesh, i == env->model.meshs.nb_cells - 1);
+
+		glBindVertexArray(mesh->gl.vao);
 
 		glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
 
 		glBindVertexArray(0);
 	}
-}
-
-static void				set_uniforms(t_env *env)
-{
-	// update campos in shaders
-	glUniform3fv(env->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
-
-	// update lightpos in shaders
-	env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
-	env->light.sources[LIGHT_SOURCE_PLAYER].dir = vec_fmult(env->camera.zaxis, -1);
-	glUniform3fv(env->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
-	glUniform3fv(env->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
-
-	// update matrices in shaders
-	glUniformMatrix4fv(env->gl.uniform.model, 1, GL_FALSE, env->model.model);
-	glUniformMatrix4fv(env->gl.uniform.view, 1, GL_FALSE, env->camera.view);
-	glUniformMatrix4fv(env->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
-
-	glUseProgram(env->gl.shader_program);
 }
 
 static void				mat4_view(t_camera *camera)
@@ -62,10 +67,9 @@ static void				mat4_mvp(t_env *env)
 
 static unsigned char	render_scene(t_env *env)
 {
-	env->camera.sprint = glfwGetKey(env->gl.window.ptr, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
+	env->camera.sprint = glfwGetKey(env->window.ptr, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
 	fps(&env->fps, true);
 	mat4_mvp(env);
-	set_uniforms(env);
 	draw_mesh(env);
 	return (ERR_NONE);
 }
@@ -75,13 +79,13 @@ unsigned char			display_loop(t_env *env)
 	unsigned char	code;
 
 	glClearColor(0.5f, 0.8f, 1.0f, 1);
-	while (!glfwWindowShouldClose(env->gl.window.ptr))
+	while (!glfwWindowShouldClose(env->window.ptr))
 	{
-		processInput(env->gl.window.ptr);
+		processInput(env->window.ptr);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if ((code = render_scene(env)) != ERR_NONE)
 			return (code);
-		glfwSwapBuffers(env->gl.window.ptr);
+		glfwSwapBuffers(env->window.ptr);
 		glfwPollEvents();
 	}
 	glfwTerminate();

@@ -12,7 +12,7 @@ const char	*textures_paths[TEXTURE_SB_MAX] = {
 	[TEXTURE_HD_GRASS_SIDE]	= "./resources/HD/grass_side.png",
 	[TEXTURE_HD_STONE_SIDE]	= "./resources/HD/stone_side.png",
 	// TEXTURES LD
-	[TEXTURE_LD_WATER]		= "./resources/HD/gravel.png",
+	[TEXTURE_LD_WATER]		= "./resources/LD/gravel.png",
 	[TEXTURE_LD_SAND]		= "./resources/LD/sand.png",
 	[TEXTURE_LD_GRASS]		= "./resources/LD/grass.png",
 	[TEXTURE_LD_GROUND]		= "./resources/LD/ground.png",
@@ -94,7 +94,7 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 	unsigned char	code;
 
 	srand(time(NULL));
-	env->gl.window.fullscreen = false;
+	env->window.fullscreen = false;
 
 	if ((argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
 		|| (code = init_biomes(env)) != ERR_NONE
@@ -103,7 +103,8 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 		return (code);
 
 	printf("seed : %d\n", *map_seed());
-	model(env);
+	if ((code = model(env)) != ERR_NONE)
+		return (code);
 	light(env); // light after model because we set the sun's light pos with the model center
 
 	return (ERR_NONE);

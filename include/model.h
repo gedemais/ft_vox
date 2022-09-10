@@ -2,8 +2,8 @@
 # define MODEL_H
 
 
-# include "./main.h"
-# include "./gen.h"
+# include "main.h"
+# include "gen.h"
 
 enum			e_texture
 {
@@ -57,8 +57,7 @@ typedef struct	s_stride
 {
 	vec3	v;
 	t_vt	t;
-	int		n;
-	float	id;
+	float	n, id;
 }				t_stride;
 
 typedef struct	s_texture
@@ -67,10 +66,26 @@ typedef struct	s_texture
 	unsigned int	w, h;
 }				t_texture;
 
+typedef struct	s_uniform
+{
+	GLint	texturesHD, texturesLD;
+	GLint	skybox, campos;
+	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
+	GLint	model, view, projection;
+}				t_uniform;
+
+typedef struct	s_gltools
+{
+	GLuint		vao, vbo;
+	GLuint		shader_program;
+	GLuint		shader_vertex, shader_fragment;
+	t_uniform	uniform;
+}				t_gltools;
+
 typedef struct	s_mesh
 {
 	t_dynarray	vertices;
-	GLuint		vao, vbo;
+	t_gltools	gl;
 }				t_mesh;
 
 typedef struct	s_model

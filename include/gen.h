@@ -9,6 +9,7 @@ enum	e_bloc_types
 	BT_GROUND,
 	BT_STONE,
 	BT_SNOW,
+	BT_SKYBOX,
 	BT_MAX
 };
 

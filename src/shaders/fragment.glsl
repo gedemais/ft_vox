@@ -2,7 +2,6 @@
 
 #define LIGHT_SOURCE_MAX	1
 #define TEXTURE_MAX			8
-#define TYPE_MAX			6
 
 struct	LightSources {
 	vec3	pos, dir, color;
@@ -26,7 +25,6 @@ uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
 uniform sampler2D		vTexturesHD[TEXTURE_MAX];
 uniform sampler2D		vTexturesLD[TEXTURE_MAX];
-uniform samplerCube		vSkybox;
 
 out vec4				FragColor;
 
@@ -44,7 +42,7 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 	attenuation		*= source.intensity;
 
 	source.ambient	= color * source.ambient * attenuation;
-	e				= max(dot(vNormal, light_dir), 0);
+	e				= max(dot(normalize(vNormal), light_dir), 0);
 	source.diffuse	= color * source.diffuse * e * attenuation;
 	e				= pow(max(dot(view_dir, half_dir), 0), 32);
 	source.specular	= color * source.specular * e * attenuation;
@@ -52,26 +50,9 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 	return (vec4(source.ambient + source.diffuse + source.specular, 1));
 }
 
-int		get_index(int index, int n) {
-	int	new_index;
-
-	new_index = index;
-	if (n == 0) {
-		if (index == 2)
-			new_index = 6;
-		else if (index == 4)
-			new_index = 7;
-	}
-	return (new_index);
-}
-
-void	main()
+void	model(int index)
 {
-	int		index = int(vType);
 	vec3	color;
-
-	if (index == 2 || index == 4)
-		index = get_index(index, int(vNormal.y));
 
 	if (distance(campos, vPosition) > 100) {
 		color = texture(vTexturesLD[index], vTextCoord).rgb;
@@ -89,8 +70,13 @@ void	main()
 	} else {
 		FragColor = vec4(color, 1);
 	}
+}
 
-	//FragColor = texture(vSkybox, vPosition);
+void	main()
+{
+	int		index = int(vType);
+
+	model(index);
 
 	// gamma correction
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
