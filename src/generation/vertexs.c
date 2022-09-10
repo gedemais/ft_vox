@@ -4,14 +4,16 @@ const float		block_size = 1.0f;
 
 static int	switch_block_type(unsigned int z)
 {
-	if (z < 20)
-		return (BT_STONE);
-	else if (z >= 20 && z < 40)
+	if (z < 10)
+		return (BT_SAND); //Water
+	else if (z >= 10 && z < 20)
 		return (BT_SAND);
-	else if (z >= 40 && z < 60)
+	else if (z >= 20 && z < 30)
 		return (BT_GROUND);
-	else if (z >= 60 && z < 80)
+	else if (z >= 30 && z < 40)
 		return (BT_GRASS);
+	else if (z >= 40 && z < 50)
+		return (BT_STONE);
 	else
 		return (BT_SNOW);
 }
@@ -65,10 +67,10 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_p
 	top_plane[4] = b;
 	top_plane[5] = d;
 
-	return (push_plane(chunk, top_plane, N_UP, z, 1.0f));
+	return (push_plane(chunk, top_plane, N_UP, y, 1.0f));
 }
 
-unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth)
+unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int y, float depth)
 {
 	vec3		c, d;
 
@@ -77,10 +79,10 @@ unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, 
 
 	vec3 side_plane[6] = {c, a, b, c, b, d};
 
-	return (push_plane(chunk, side_plane, index, z, depth));
+	return (push_plane(chunk, side_plane, index, y, depth));
 }
 
-static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int z)
+static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y)
 {
 	unsigned char	code;
 	uint8_t			prev_bt;
@@ -90,14 +92,14 @@ static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned
 	while (n < offset)
 	{
 		fall_size = 0;
-		prev_bt = switch_block_type(z + n);
-		while (n < offset && prev_bt == switch_block_type(z + n))
+		prev_bt = switch_block_type(y + n);
+		while (n < offset && prev_bt == switch_block_type(y + n))
 		{
 			fall_size += 1.0f;
 			n++;
 		}
 		fall_size += 1.0f;
-		if ((code = generate_fall(chunk, a, b, index, z, fall_size)))
+		if ((code = generate_fall(chunk, a, b, index, y, fall_size)))
 			return (code);
 	}
 	return (ERR_NONE);
@@ -131,8 +133,8 @@ unsigned char	generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned 
 		a = top_plane[fall_planes[i][0]];
 		b = top_plane[fall_planes[i][1]];
 
-		if ((offset == 1 && (code = generate_fall(chunk, a, b, i, z, 1.0f)))
-			|| (code = generate_deep_fall(chunk, a, b, i, offset, z)))
+		if ((offset == 1 && (code = generate_fall(chunk, a, b, i, y, 1.0f)))
+			|| (code = generate_deep_fall(chunk, a, b, i, offset, y)))
 			return (code);
 	}
 	return (ERR_NONE);

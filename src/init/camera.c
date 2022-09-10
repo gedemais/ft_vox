@@ -4,6 +4,7 @@
 static void	init_camera(t_env *env)
 {
 	t_camera	*camera;
+	const float	cam_offset = CHUNK_SIZE * SQUARE_SIZE / 2.0f;
 
 	camera = &env->camera;
 	camera->ground_fixed = false;
@@ -15,7 +16,7 @@ static void	init_camera(t_env *env)
 	// FOV
 	camera->fov = 45.0f;
 	// Camera starting position and orientation
-	camera->pos = (vec3){ 0, 20, -1};
+	camera->pos = (vec3){ cam_offset, CHUNK_SIZE, cam_offset};
 	camera->yaxis = (vec3){ 0, 1, 0};
 	camera->zaxis = (vec3) { 0, 0, 1};
 	// Camera movements speed
