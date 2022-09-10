@@ -37,6 +37,7 @@
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
 # define SQUARE_SIZE		2 // Size of visible chunks matrix for the player (max_limit)
+# define SUN_SPEED			10 // sun's rotation speed
 
 // Settings instances
 enum				e_settings

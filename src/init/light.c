@@ -65,22 +65,22 @@ unsigned char			light_uniforms(t_env *env)
 
 static void				init_player(t_light_source *source)
 {
-	source->pos			= (vec3){};				// z is reverse
+	source->pos			= (vec3){};
 	source->dir			= (vec3){ 0, 0, -1 };
 	source->color		= (vec3){ 1, 1, 1 };
-	source->ambient		= (vec3){ 0.5f, 0.5f, 0.5f };
-	source->diffuse		= (vec3){ 0.75f, 0.75f, 0.75f };
-	source->specular	= (vec3){ 1.0f, 1.0f, 1.0f };
+	source->ambient		= (vec3){ 0.25f, 0.25f, 0.25f };
+	source->diffuse		= (vec3){ 0.5f, 0.5f, 0.5f };
+	source->specular	= (vec3){ 0.5f, 0.5f, 0.5f };
 }
 
 static void			init_sun(t_light_source *source)
 {
-	source->pos			= (vec3){ 0, 512, 0 };		// z is reverse
-	source->dir			= (vec3){ 0, -1, 0 };		// z is reverse
+	source->pos			= (vec3){ 420, 360, -500 };	// z is reverse
+	source->dir			= (vec3){ 1, 1, 1 };		// z is reverse
 	source->color		= (vec3){ 1, 1, 1 };
-	source->ambient		= (vec3){ 0.25f, 0.25f, 0.25f };
-	source->diffuse		= (vec3){ 0.5f, 0.5f, 0.5f };
-	source->specular	= (vec3){ 1.0, 1.0, 1.0 };
+	source->ambient		= (vec3){ 0.125f, 0.125f, 0.125f };
+	source->diffuse		= (vec3){ 0.25f, 0.25f, 0.25f };
+	source->specular	= (vec3){ 0.25f, 0.25f, 0.25f };
 }
 
 void					light(t_env *env)

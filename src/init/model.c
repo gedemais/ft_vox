@@ -3,49 +3,49 @@
 
 static unsigned char	cube(t_dynarray *vertices, vec3 o)
 {
-	int			i;
-	t_stride	list_strides[36] = {
-		(t_stride){ (vec3){ -1, 1, -1 }, (t_vt){ 1, 1 }, 0, 0 },
-		(t_stride){ (vec3){ -1, -1, -1 }, (t_vt){ 0, 1 }, 0, 0 },
-		(t_stride){ (vec3){ 1, -1, -1 }, (t_vt){ 1, 0 }, 0, 0 },
-		(t_stride){ (vec3){ 1, -1, -1 }, (t_vt){ 1, 0 }, 0, 0 },
-		(t_stride){ (vec3){ 1, 1, -1 }, (t_vt){ 0, 1 }, 0, 0 },
-		(t_stride){ (vec3){ -1, 1, -1 }, (t_vt){ 0, 0 }, 0, 0 },
-		(t_stride){ (vec3){ -1, -1, 1 }, (t_vt){ 0, 0 }, 1, 0 },
-		(t_stride){ (vec3){ -1, -1, -1 }, (t_vt){ 1, 0 }, 1, 0 },
-		(t_stride){ (vec3){ -1, 1, -1 }, (t_vt){ 0, 1 }, 1, 0 },
-		(t_stride){ (vec3){ -1, 1, -1 }, (t_vt){ 0, 1 }, 1, 0 },
-		(t_stride){ (vec3){ -1, 1, 1 }, (t_vt){ 1, 0 }, 1, 0 },
-		(t_stride){ (vec3){ -1, -1, 1 }, (t_vt){ 1, 1 }, 1, 0 },
-		(t_stride){ (vec3){ 1, -1, -1 }, (t_vt){ 0, 0 }, 2, 0 },
-		(t_stride){ (vec3){ 1, -1, 1 }, (t_vt){ 1, 0 }, 2, 0 },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 }, 2, 0 },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 }, 2, 0 },
-		(t_stride){ (vec3){ 1, 1, -1 }, (t_vt){ 1, 0 }, 2, 0 },
-		(t_stride){ (vec3){ 1, -1, -1 }, (t_vt){ 1, 1 }, 2, 0 },
-		(t_stride){ (vec3){ -1, -1, 1 }, (t_vt){ 0, 0 }, 3, 0 },
-		(t_stride){ (vec3){ -1, 1, 1 }, (t_vt){ 1, 0 }, 3, 0 },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 }, 3, 0 },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 }, 3, 0 },
-		(t_stride){ (vec3){ 1, -1, 1 }, (t_vt){ 1, 0 }, 3, 0 },
-		(t_stride){ (vec3){ -1, -1, 1 }, (t_vt){ 1, 1 }, 3, 0 },
-		(t_stride){ (vec3){ -1, 1, -1 }, (t_vt){ 0, 0 }, 4, 0 },
-		(t_stride){ (vec3){ 1, 1, -1 }, (t_vt){ 1, 0 }, 4, 0 },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 }, 4, 0 },
-		(t_stride){ (vec3){ 1, 1, 1 }, (t_vt){ 0, 1 }, 4, 0 },
-		(t_stride){ (vec3){ -1, 1, 1 }, (t_vt){ 1, 0 }, 4, 0 },
-		(t_stride){ (vec3){ -1, 1, -1 }, (t_vt){ 1, 1 }, 4, 0 },
-		(t_stride){ (vec3){ -1, -1, -1 }, (t_vt){ 0, 0 }, 5, 0 },
-		(t_stride){ (vec3){ -1, -1, 1 }, (t_vt){ 1, 0 }, 5, 0 },
-		(t_stride){ (vec3){ 1, -1, -1 }, (t_vt){ 0, 1 }, 5, 0 },
-		(t_stride){ (vec3){ 1, -1, -1 }, (t_vt){ 0, 1 }, 5, 0 },
-		(t_stride){ (vec3){ -1, -1, 1 }, (t_vt){ 1, 0 }, 5, 0 },
-		(t_stride){ (vec3){ 1, -1, 1 }, (t_vt){ 1, 1 }, 5, 0 }
+	int		i;
+	vec3	list_strides[36] = {
+		(vec3){ -1, 1, -1 },
+		(vec3){ -1, -1, -1 },
+		(vec3){ 1, -1, -1 },
+		(vec3){ 1, -1, -1 },
+		(vec3){ 1, 1, -1 }, 
+		(vec3){ -1, 1, -1 },
+		(vec3){ -1, -1, 1 },
+		(vec3){ -1, -1, -1 },
+		(vec3){ -1, 1, -1 },
+		(vec3){ -1, 1, -1 },
+		(vec3){ -1, 1, 1 }, 
+		(vec3){ -1, -1, 1 },
+		(vec3){ 1, -1, -1 },
+		(vec3){ 1, -1, 1 }, 
+		(vec3){ 1, 1, 1 },
+		(vec3){ 1, 1, 1 },
+		(vec3){ 1, 1, -1 }, 
+		(vec3){ 1, -1, -1 },
+		(vec3){ -1, -1, 1 },
+		(vec3){ -1, 1, 1 }, 
+		(vec3){ 1, 1, 1 },
+		(vec3){ 1, 1, 1 },
+		(vec3){ 1, -1, 1 }, 
+		(vec3){ -1, -1, 1 },
+		(vec3){ -1, 1, -1 },
+		(vec3){ 1, 1, -1 }, 
+		(vec3){ 1, 1, 1 },
+		(vec3){ 1, 1, 1 },
+		(vec3){ -1, 1, 1 }, 
+		(vec3){ -1, 1, -1 },
+		(vec3){ -1, -1, -1 },
+		(vec3){ -1, -1, 1 },
+		(vec3){ 1, -1, -1 },
+		(vec3){ 1, -1, -1 },
+		(vec3){ -1, -1, 1 },
+		(vec3){ 1, -1, 1 }
 	};
 
 	i = -1;
 	while (++i < 36) {
-		list_strides[i].v = vec_mult(list_strides[i].v, o);
+		list_strides[i] = vec_mult(list_strides[i], o);
 		if (dynarray_push(vertices, &list_strides[i], false) < 0)
 			return (ERR_MALLOC_FAILED);
 	}
@@ -87,7 +87,7 @@ unsigned char	push_skybox(t_env *env)
 	t_mesh			*mesh;
 
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells);
-	if (dynarray_init(&mesh->vertices, sizeof(t_stride), 36) < 0)
+	if (dynarray_init(&mesh->vertices, sizeof(vec3), 36) < 0)
 		return (ERR_MALLOC_FAILED);
 	if ((code = cube(&mesh->vertices, (vec3){ 500, 500, 500 })) != ERR_NONE)
 		return (code);

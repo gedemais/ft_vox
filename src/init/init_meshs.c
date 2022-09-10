@@ -7,24 +7,24 @@ static void				set_layouts(bool skybox)
 	// id ptr, size, GL_type, GL_FALSE, totalsize, start pos
 
 	// vec3 : position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_stride),
-		(void *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+		skybox ? sizeof(vec3) : sizeof(t_stride), (void *)0);
 	glEnableVertexAttribArray(0);
 
 	if (skybox == false) {
 		// t_vt : texture
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_stride),
-			(void *)sizeof(vec3));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+			sizeof(t_stride), (void *)sizeof(vec3));
 		glEnableVertexAttribArray(1);
 
 		// int : normal
-		glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(t_stride),
-			(void *)(sizeof(vec3) + sizeof(t_vt)));
+		glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE,
+			sizeof(t_stride), (void *)(sizeof(vec3) + sizeof(t_vt)));
 		glEnableVertexAttribArray(2);
 
 		// float : tid
-		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(t_stride),
-			(void *)(sizeof(vec3) + sizeof(t_vt) + sizeof(float)));
+		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE,
+			sizeof(t_stride), (void *)(sizeof(vec3) + sizeof(t_vt) + sizeof(float)));
 		glEnableVertexAttribArray(3);
 	}
 }
@@ -50,6 +50,7 @@ static void				load_skybox(t_env *env)
 	int			i;
 
 	glGenTextures(1, &env->model.gl_tskybox);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
 	i = -1;
 	while (++i < 6) {

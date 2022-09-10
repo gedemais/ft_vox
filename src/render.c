@@ -2,12 +2,19 @@
 
 static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 {
+	mat4	m;
+	vec3	tmp;
+	float	e;
+
+	e = (glfwGetTime() * SUN_SPEED) / 100;
+	mat4_identity(m);
+	mat4_yrotation(m, e);
+	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
+
 	glUseProgram(mesh->gl.shader_program);
-	// update matrices in shaders
-	glUniformMatrix4fv(mesh->gl.uniform.view, 1, GL_FALSE, env->camera.view);
-	glUniformMatrix4fv(mesh->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
-	if (skybox == false) {
-		glUniformMatrix4fv(mesh->gl.uniform.model, 1, GL_FALSE, env->model.model);
+	if (skybox == true) {
+		mat4_multiply(env->model.model, m);
+	} else {
 		// update campos in shaders
 		glUniform3fv(mesh->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 
@@ -16,10 +23,13 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 		env->light.sources[LIGHT_SOURCE_PLAYER].dir = vec_fmult(env->camera.zaxis, -1);
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
-	} else {
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
+		tmp = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].pos);
+		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&tmp);
 	}
+	// update matrices in shaders
+	glUniformMatrix4fv(mesh->gl.uniform.model, 1, GL_FALSE, env->model.model);
+	glUniformMatrix4fv(mesh->gl.uniform.view, 1, GL_FALSE, env->camera.view);
+	glUniformMatrix4fv(mesh->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
 }
 
 static void				draw_mesh(t_env *env)

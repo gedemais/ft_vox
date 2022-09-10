@@ -1,6 +1,6 @@
 #version 400 core
 
-#define LIGHT_SOURCE_MAX	1
+#define LIGHT_SOURCE_MAX	2
 #define TEXTURE_MAX			8
 
 struct	LightSources {
