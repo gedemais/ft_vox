@@ -1,28 +1,32 @@
 # include "main.h"
 
+
 const char	*textures_paths[TEXTURE_SB_MAX] = {
-	"./resources/HD/grass_side.png",
-	"./resources/HD/grass.png",
-	"./resources/HD/gravel.png",
-	"./resources/HD/ground.png",
-	"./resources/HD/sand.png",
-	"./resources/HD/snow.png",
-	"./resources/HD/stone_side.png",
-	"./resources/HD/stone.png",
-	"./resources/LD/grass_side.png",
-	"./resources/LD/grass.png",
-	"./resources/LD/gravel.png",
-	"./resources/LD/ground.png",
-	"./resources/LD/sand.png",
-	"./resources/LD/snow.png",
-	"./resources/LD/stone_side.png",
-	"./resources/LD/stone.png",
-	"./resources/skybox/nx.png",
-	"./resources/skybox/ny.png",
-	"./resources/skybox/nz.png",
-	"./resources/skybox/px.png",
-	"./resources/skybox/py.png",
-	"./resources/skybox/pz.png"
+	// TEXTURES HD
+	[TEXTURE_HD_WATER]		= "./resources/HD/gravel.png",
+	[TEXTURE_HD_SAND]		= "./resources/HD/sand.png",
+	[TEXTURE_HD_GRASS]		= "./resources/HD/grass.png",
+	[TEXTURE_HD_GROUND]		= "./resources/HD/ground.png",
+	[TEXTURE_HD_STONE]		= "./resources/HD/stone.png",
+	[TEXTURE_HD_SNOW]		= "./resources/HD/snow.png",
+	[TEXTURE_HD_GRASS_SIDE]	= "./resources/HD/grass_side.png",
+	[TEXTURE_HD_STONE_SIDE]	= "./resources/HD/stone_side.png",
+	// TEXTURES LD
+	[TEXTURE_LD_WATER]		= "./resources/HD/gravel.png",
+	[TEXTURE_LD_SAND]		= "./resources/LD/sand.png",
+	[TEXTURE_LD_GRASS]		= "./resources/LD/grass.png",
+	[TEXTURE_LD_GROUND]		= "./resources/LD/ground.png",
+	[TEXTURE_LD_STONE]		= "./resources/LD/stone.png",
+	[TEXTURE_LD_SNOW]		= "./resources/LD/snow.png",
+	[TEXTURE_LD_GRASS_SIDE]	= "./resources/LD/grass_side.png",
+	[TEXTURE_LD_STONE_SIDE]	= "./resources/LD/stone_side.png",
+	// TEXTURES SKYBOX
+	[TEXTURE_SB_PX]			= "./resources/skybox/px.png",
+	[TEXTURE_SB_PY]			= "./resources/skybox/py.png",
+	[TEXTURE_SB_PZ]			= "./resources/skybox/pz.png",
+	[TEXTURE_SB_NX]			= "./resources/skybox/nx.png",
+	[TEXTURE_SB_NY]			= "./resources/skybox/ny.png",
+	[TEXTURE_SB_NZ]			= "./resources/skybox/nz.png"
 };
 
 static unsigned char	load_textures(t_env *env)

@@ -3,15 +3,12 @@
 
 enum	e_bloc_types
 {
-	BT_NONE,
-	BT_ROCK,
-	BT_SAND,
-	BT_GROUND,
-	BT_GRASS,
-	BT_GRASS_PODZOL,
-	BT_SNOW,
-	BT_GRAVEL,
 	BT_WATER,
+	BT_SAND,
+	BT_GRASS,
+	BT_GROUND,
+	BT_STONE,
+	BT_SNOW,
 	BT_MAX
 };
 

@@ -148,7 +148,7 @@ static void				load_skybox(t_env *env)
 
 	// i = -1;
 	// while (++i < 6) {
-	// 	texture = &env->model.textures[TEXTURE_SB_FRONT + i];
+	// 	texture = &env->model.textures[TEXTURE_SB_PX + i];
 	// 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
 	// 		texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
 	// }
@@ -200,9 +200,10 @@ static unsigned char	gl_uniforms(t_env *env)
 	
 	env->gl.uniform.texturesHD = glGetUniformLocation(env->gl.shader_program, "vTexturesHD");
 	env->gl.uniform.texturesLD = glGetUniformLocation(env->gl.shader_program, "vTexturesLD");
-	int	samplers[TEXTURE_MAX / 2] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-	glUniform1iv(env->gl.uniform.texturesHD, TEXTURE_MAX / 2, samplers);
-	glUniform1iv(env->gl.uniform.texturesLD, TEXTURE_MAX / 2, samplers);
+	int	samplersHD[TEXTURE_MAX / 2] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+	int	samplersLD[TEXTURE_MAX / 2] = { 8, 9, 10, 11, 12, 13, 14, 15 };
+	glUniform1iv(env->gl.uniform.texturesHD, TEXTURE_MAX / 2, samplersHD);
+	glUniform1iv(env->gl.uniform.texturesLD, TEXTURE_MAX / 2, samplersLD);
 
 	// env->gl.uniform.skybox = glGetUniformLocation(env->gl.shader_program, "vSkybox");
 	// glUniform1i(env->gl.uniform.skybox, 0);

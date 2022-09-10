@@ -2,6 +2,7 @@
 
 #define LIGHT_SOURCE_MAX	1
 #define TEXTURE_MAX			8
+#define TYPE_MAX			6
 
 struct	LightSources {
 	vec3	pos, dir, color;
@@ -51,12 +52,27 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 	return (vec4(source.ambient + source.diffuse + source.specular, 1));
 }
 
+int		get_index(int index, int n) {
+	int	new_index;
+
+	new_index = index;
+	if (n == 0) {
+		if (index == 2)
+			new_index = 6;
+		else if (index == 4)
+			new_index = 7;
+	}
+	return (new_index);
+}
+
 void	main()
 {
 	int		index = int(vType);
 	vec3	color;
 
-	index = 1;
+	if (index == 2 || index == 4)
+		index = get_index(index, int(vNormal.y));
+
 	if (distance(campos, vPosition) > 100) {
 		color = texture(vTexturesLD[index], vTextCoord).rgb;
 	}
@@ -67,7 +83,7 @@ void	main()
 		vec3		view_dir	= normalize(campos - vPosition);
 		int			i			= -1;
 
-		FragColor	= vec4(0);
+		FragColor = vec4(0);
 		while (++i < LIGHT_SOURCE_MAX)
 			FragColor += compute_light_sources(light_sources[i], color, view_dir);
 	} else {

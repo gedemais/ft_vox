@@ -14,7 +14,7 @@ const float		block_size = 1.0f;
 static int	switch_block_type(unsigned int z)
 {
 	if (z < 20)
-		return (BT_ROCK);
+		return (BT_STONE);
 	else if (z >= 20 && z < 40)
 		return (BT_SAND);
 	else if (z >= 40 && z < 60)

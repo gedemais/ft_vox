@@ -86,7 +86,6 @@ static void				cb_scroll(GLFWwindow *window, double xoffset, double yoffset)
 	g_env->camera.fov = g_env->camera.fov > 90 ? 90 : g_env->camera.fov;
 	g_env->camera.fov = g_env->camera.fov < 1 ? 1 : g_env->camera.fov;
 	g_env->mouse.sensitivity = g_env->mouse.base_sensitivity * clamp(1.0f, 90.0f, g_env->camera.fov);
-	printf("%f\n", g_env->mouse.sensitivity);
 }
 
 // ====================================================================
