@@ -74,7 +74,7 @@ unsigned char			display_loop(t_env *env)
 {
 	unsigned char	code;
 
-	glClearColor(255, 255, 255, 1);
+	glClearColor(0.5f, 0.8f, 1.0f, 1);
 	while (!glfwWindowShouldClose(env->gl.window.ptr))
 	{
 		processInput(env->gl.window.ptr);

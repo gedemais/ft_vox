@@ -1,24 +1,45 @@
 # include "main.h"
 
-const char	*textures_paths[TEXTURE_MAX] = {
-	"./resources/ground.png",
-	"./resources/default.png",
-	"./resources/darksouls.png"
+
+const char	*textures_paths[TEXTURE_SB_MAX] = {
+	// TEXTURES HD
+	[TEXTURE_HD_WATER]		= "./resources/HD/gravel.png",
+	[TEXTURE_HD_SAND]		= "./resources/HD/sand.png",
+	[TEXTURE_HD_GRASS]		= "./resources/HD/grass.png",
+	[TEXTURE_HD_GROUND]		= "./resources/HD/ground.png",
+	[TEXTURE_HD_STONE]		= "./resources/HD/stone.png",
+	[TEXTURE_HD_SNOW]		= "./resources/HD/snow.png",
+	[TEXTURE_HD_GRASS_SIDE]	= "./resources/HD/grass_side.png",
+	[TEXTURE_HD_STONE_SIDE]	= "./resources/HD/stone_side.png",
+	// TEXTURES LD
+	[TEXTURE_LD_WATER]		= "./resources/HD/gravel.png",
+	[TEXTURE_LD_SAND]		= "./resources/LD/sand.png",
+	[TEXTURE_LD_GRASS]		= "./resources/LD/grass.png",
+	[TEXTURE_LD_GROUND]		= "./resources/LD/ground.png",
+	[TEXTURE_LD_STONE]		= "./resources/LD/stone.png",
+	[TEXTURE_LD_SNOW]		= "./resources/LD/snow.png",
+	[TEXTURE_LD_GRASS_SIDE]	= "./resources/LD/grass_side.png",
+	[TEXTURE_LD_STONE_SIDE]	= "./resources/LD/stone_side.png",
+	// TEXTURES SKYBOX
+	[TEXTURE_SB_PX]			= "./resources/skybox/px.png",
+	[TEXTURE_SB_PY]			= "./resources/skybox/py.png",
+	[TEXTURE_SB_PZ]			= "./resources/skybox/pz.png",
+	[TEXTURE_SB_NX]			= "./resources/skybox/nx.png",
+	[TEXTURE_SB_NY]			= "./resources/skybox/ny.png",
+	[TEXTURE_SB_NZ]			= "./resources/skybox/nz.png"
 };
 
 static unsigned char	load_textures(t_env *env)
 {
 	t_texture		*txt;
 	unsigned int	err;
+	int				i;
 
-	for (int i = 0; i < TEXTURE_MAX; i++)
-	{
+	i = -1;
+	while (++i < TEXTURE_SB_MAX) {
 		txt = &env->model.textures[i];
-
 		err = lodepng_decode32_file(&txt->ptr, &txt->w, &txt->h, textures_paths[i]);
-
-		if (err)
-		{
+		if (err) {
 			ft_putendl_fd(lodepng_error_text(err), 2);
 			return (ERR_TEXTURE_LOADING_FAILED);
 		}

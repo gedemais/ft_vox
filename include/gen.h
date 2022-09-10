@@ -17,15 +17,12 @@ enum	e_side_orientation
 
 enum	e_bloc_types
 {
-	BT_NONE,
-	BT_ROCK,
-	BT_SAND,
-	BT_GROUND,
-	BT_GRASS,
-	BT_SNOW,
 	BT_WATER,
-	BT_AIR,
-	BT_CACTUS,
+	BT_SAND,
+	BT_GRASS,
+	BT_GROUND,
+	BT_STONE,
+	BT_SNOW,
 	BT_MAX
 };
 
