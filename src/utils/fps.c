@@ -12,5 +12,8 @@ void		fps(t_fps *fps, bool print)
 	
 		print ? printf("fps: %d\n", fps->value) : 0;
 	}
+
+	fps->delta = fps->current_seconds - fps->lastframe;
+	fps->lastframe = fps->current_seconds;
 	++fps->frames;
 }

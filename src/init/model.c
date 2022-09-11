@@ -5,42 +5,18 @@ static unsigned char	cube(t_dynarray *vertices, vec3 o)
 {
 	int		i;
 	vec3	list_strides[36] = {
-		(vec3){ -1, 1, -1 },
-		(vec3){ -1, -1, -1 },
-		(vec3){ 1, -1, -1 },
-		(vec3){ 1, -1, -1 },
-		(vec3){ 1, 1, -1 }, 
-		(vec3){ -1, 1, -1 },
-		(vec3){ -1, -1, 1 },
-		(vec3){ -1, -1, -1 },
-		(vec3){ -1, 1, -1 },
-		(vec3){ -1, 1, -1 },
-		(vec3){ -1, 1, 1 }, 
-		(vec3){ -1, -1, 1 },
-		(vec3){ 1, -1, -1 },
-		(vec3){ 1, -1, 1 }, 
-		(vec3){ 1, 1, 1 },
-		(vec3){ 1, 1, 1 },
-		(vec3){ 1, 1, -1 }, 
-		(vec3){ 1, -1, -1 },
-		(vec3){ -1, -1, 1 },
-		(vec3){ -1, 1, 1 }, 
-		(vec3){ 1, 1, 1 },
-		(vec3){ 1, 1, 1 },
-		(vec3){ 1, -1, 1 }, 
-		(vec3){ -1, -1, 1 },
-		(vec3){ -1, 1, -1 },
-		(vec3){ 1, 1, -1 }, 
-		(vec3){ 1, 1, 1 },
-		(vec3){ 1, 1, 1 },
-		(vec3){ -1, 1, 1 }, 
-		(vec3){ -1, 1, -1 },
-		(vec3){ -1, -1, -1 },
-		(vec3){ -1, -1, 1 },
-		(vec3){ 1, -1, -1 },
-		(vec3){ 1, -1, -1 },
-		(vec3){ -1, -1, 1 },
-		(vec3){ 1, -1, 1 }
+		(vec3){ -1,  1, -1 }, (vec3){ -1, -1, -1 }, (vec3){  1, -1, -1 },
+		(vec3){  1, -1, -1 }, (vec3){  1,  1, -1 }, (vec3){ -1,  1, -1 },
+		(vec3){ -1, -1,  1 }, (vec3){ -1, -1, -1 }, (vec3){ -1,  1, -1 },
+		(vec3){ -1,  1, -1 }, (vec3){ -1,  1,  1 }, (vec3){ -1, -1,  1 },
+		(vec3){  1, -1, -1 }, (vec3){  1, -1,  1 }, (vec3){  1,  1,  1 },
+		(vec3){  1,  1,  1 }, (vec3){  1,  1, -1 }, (vec3){  1, -1, -1 },
+		(vec3){ -1, -1,  1 }, (vec3){ -1,  1,  1 }, (vec3){  1,  1,  1 },
+		(vec3){  1,  1,  1 }, (vec3){  1, -1,  1 }, (vec3){ -1, -1,  1 },
+		(vec3){ -1,  1, -1 }, (vec3){  1,  1, -1 }, (vec3){  1,  1,  1 },
+		(vec3){  1,  1,  1 }, (vec3){ -1,  1,  1 }, (vec3){ -1,  1, -1 },
+		(vec3){ -1, -1, -1 }, (vec3){ -1, -1,  1 }, (vec3){  1, -1, -1 },
+		(vec3){  1, -1, -1 }, (vec3){ -1, -1,  1 }, (vec3){  1, -1,  1 }
 	};
 
 	i = -1;
@@ -50,6 +26,25 @@ static unsigned char	cube(t_dynarray *vertices, vec3 o)
 			return (ERR_MALLOC_FAILED);
 	}
 	return (ERR_NONE);
+}
+
+static void			set_mesh_center(t_mesh *mesh)
+{
+	int			i;
+	vec3		sum = (vec3){};
+	t_stride	*vertices;
+
+	i = -1;
+	while (++i < mesh->vertices.nb_cells) {
+		vertices = dyacc(&mesh->vertices, i);
+		sum = vec_add(sum, vertices->v);
+	}
+	sum = vec_fdiv(sum, i);
+	i = -1;
+	while (++i < mesh->vertices.nb_cells) {
+		vertices = dyacc(&mesh->vertices, i);
+		vertices->v = vec_sub(vertices->v, sum);
+	}
 }
 
 unsigned char	push_world(t_env *env)
@@ -92,6 +87,8 @@ unsigned char	push_skybox(t_env *env)
 	if ((code = cube(&mesh->vertices, (vec3){ 500, 500, 500 })) != ERR_NONE)
 		return (code);
 
+	set_mesh_center(mesh);
+
 	// print_fv(&mesh->vertices);
 
 	if (dynarray_push(&env->model.meshs, mesh, false) < 0)
@@ -110,6 +107,6 @@ unsigned char			model(t_env *env)
 		|| (code = push_skybox(env)) != ERR_NONE)
 		return (code);
 
-	env->model.scale = 1;
+	env->model.scale = MODEL_SCALE;
 	return (ERR_NONE);
 }

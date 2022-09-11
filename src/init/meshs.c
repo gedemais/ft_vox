@@ -92,31 +92,7 @@ static void				gl_textures(t_env *env)
 	load_skybox(env);
 }
 
-static void				gl_options(void)
-{
-	//  DEPTH BUFFER
-	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS);
-
-	// CULLING : we only draw front face in clock-wise order
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_FRONT);
-	//glFrontFace(GL_CW);
-
-	// GAMA CORRECTION
-	// glEnable(GL_FRAMEBUFFER_SRGB);
-
-	// ANTI ALIASING
-	glEnable(GL_MULTISAMPLE);
-	glEnable(GL_LINE_SMOOTH);
-
-	// BLENDING => for water cube WIP
-	// glEnable(GL_BLEND);
-	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
-}
-
-static unsigned char	set_uniforms(t_mesh *mesh, bool skybox)
+static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 {
 	glUseProgram(mesh->gl.shader_program);
 	mesh->gl.uniform.model = glGetUniformLocation(mesh->gl.shader_program, "model");
@@ -135,10 +111,15 @@ static unsigned char	set_uniforms(t_mesh *mesh, bool skybox)
 		int	samplersLD[TEXTURE_MAX / 2] = { 8, 9, 10, 11, 12, 13, 14, 15 };
 		glUniform1iv(mesh->gl.uniform.texturesHD, TEXTURE_MAX / 2, samplersHD);
 		glUniform1iv(mesh->gl.uniform.texturesLD, TEXTURE_MAX / 2, samplersLD);
+		light_uniforms(mesh, light);
 	}
 	return (ERR_NONE);
 }
 
+/*
+	we set a shader program / mesh
+	=> all mesh got his own buffers and shader program
+*/
 unsigned char			init_meshs(t_env *env)
 {
 	// Paths array to shaders source files
@@ -149,24 +130,27 @@ unsigned char			init_meshs(t_env *env)
 		[SHADER_SB_FRAGMENT]	= "src/shaders/skybox_fragment.glsl"
 	};
 	unsigned char	code;
+	int				i;
 	t_mesh			*mesh;
 
+	// we mount the textures we will use
 	gl_textures(env);
 	// Initializes buffers, shaders and data structures for rendering
+	// last mesh is all time the skybox
 	// MODEL
-	mesh = dyacc(&env->model.meshs, 0);
-	if ((code = mount_shaders(mesh, shaders_path[SHADER_VERTEX], shaders_path[SHADER_FRAGMENT])) != ERR_NONE
-			|| (code = gl_buffers(mesh, false)) != ERR_NONE)
-		return (code);
-	set_uniforms(mesh, false);
+	i = -1;
+	while (++i < env->model.meshs.nb_cells - 1) {
+		mesh = dyacc(&env->model.meshs, i);
+		if ((code = mount_shaders(mesh, shaders_path[SHADER_VERTEX], shaders_path[SHADER_FRAGMENT])) != ERR_NONE
+				|| (code = gl_buffers(mesh, false)) != ERR_NONE
+				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE)
+			return (code);
+	}
 	// SKYBOX
-	mesh = dyacc(&env->model.meshs, 1);
+	mesh = dyacc(&env->model.meshs, i);
 	if ((code = mount_shaders(mesh, shaders_path[SHADER_SB_VERTEX], shaders_path[SHADER_SB_FRAGMENT])) != ERR_NONE
-			|| (code = gl_buffers(mesh, true)) != ERR_NONE)
+			|| (code = gl_buffers(mesh, true)) != ERR_NONE
+			|| (code = set_uniforms(mesh, &env->light, true)) != ERR_NONE)
 		return (code);
-	set_uniforms(mesh, true);
-
-	light_uniforms(env);
-	gl_options();
 	return (ERR_NONE);
 }

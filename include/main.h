@@ -33,6 +33,7 @@
 # include "keys.h"
 # include "gen.h"
 
+# define DEFAULT_COLOR		(vec3){ 0.5f, 0.8f, 1.0f } //light blue
 # define CHUNK_SIZE			64 // Size of chunk blocks in cubes
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
@@ -93,6 +94,7 @@ typedef struct		s_window
 typedef struct		s_fps
 {
 	unsigned int	frames, value;
+	double			delta, lastframe;
 	double			time, current_seconds, elapsed_seconds;
 }					t_fps;
 
@@ -121,7 +123,7 @@ typedef struct		s_env
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
 void				light(t_env *env);
-unsigned char		light_uniforms(t_env *env);
+unsigned char		light_uniforms(t_mesh *mesh, t_light *light);
 unsigned char		model(t_env *env);
 
 // OpenGL
@@ -143,6 +145,7 @@ void				free_env(t_env *env);
 void				exit_vox(t_env *env, int key);
 void				move_cam(t_env *env, int key);
 void				events_mouse(t_env *env, float xpos, float ypos);
+void 				glfw_init_callbacks(t_env *env);
 
 void				event_light(t_env *env, int key);
 

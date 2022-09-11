@@ -13,16 +13,21 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 
 	glUseProgram(mesh->gl.shader_program);
 	if (skybox == true) {
+		// skybox's rotation around the player
 		mat4_multiply(env->model.model, m);
 	} else {
-		// update campos in shaders
+		// update campos and viewdir in shaders
 		glUniform3fv(mesh->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
 
 		// update lightpos in shaders
+		// LIGHT PLAYER
 		env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
-		env->light.sources[LIGHT_SOURCE_PLAYER].dir = vec_fmult(env->camera.zaxis, -1);
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
+		// LIGHT
+		tmp = (vec3){ env->camera.zaxis.x, env->camera.zaxis.y, env->camera.zaxis.z };
+		env->light.sources[LIGHT_SOURCE_PLAYER].dir = tmp;
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
+		// sunlight follow the sun's texture
 		tmp = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].pos);
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&tmp);
 	}
@@ -44,6 +49,7 @@ static void				draw_mesh(t_env *env)
 		if (mesh == NULL)
 			continue ;
 
+		// skybox is all time the last mesh
 		set_uniforms(env, mesh, i == env->model.meshs.nb_cells - 1);
 
 		glBindVertexArray(mesh->gl.vao);
@@ -77,7 +83,6 @@ static void				mat4_mvp(t_env *env)
 
 static unsigned char	render_scene(t_env *env)
 {
-	env->camera.sprint = glfwGetKey(env->window.ptr, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
 	fps(&env->fps, true);
 	mat4_mvp(env);
 	draw_mesh(env);
@@ -88,7 +93,7 @@ unsigned char			display_loop(t_env *env)
 {
 	unsigned char	code;
 
-	glClearColor(0.5f, 0.8f, 1.0f, 1);
+	glClearColor(DEFAULT_COLOR.x, DEFAULT_COLOR.y, DEFAULT_COLOR.z, 1);
 	while (!glfwWindowShouldClose(env->window.ptr))
 	{
 		processInput(env->window.ptr);

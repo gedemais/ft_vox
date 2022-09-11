@@ -35,19 +35,21 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 
 	color			*= source.color;
 
-	light_dir		= normalize(source.dir);
+	light_dir		= normalize(source.pos - vPosition);
 	half_dir		= normalize(light_dir + view_dir);
 
-	attenuation		= 1 / length(source.pos - vPosition);
-	attenuation		*= source.intensity;
+	e				= distance(source.pos, vPosition);
+	attenuation		= (1 / e) * source.intensity;
 
-	source.ambient	= color * source.ambient * attenuation;
-	e				= max(dot(normalize(vNormal), light_dir), 0);
-	source.diffuse	= color * source.diffuse * e * attenuation;
-	e				= pow(max(dot(view_dir, half_dir), 0), 32);
-	source.specular	= color * source.specular * e * attenuation;
+	source.ambient	= color * source.ambient;
+	e				= max(dot(vNormal, light_dir), 0);
+	source.diffuse	= color * source.diffuse * e;
+	e				= pow(max(dot(view_dir, half_dir), 0), 8);
+	source.specular	= color * source.specular * e;
 
-	return (vec4(source.ambient + source.diffuse + source.specular, 1));
+	color = source.ambient + source.diffuse + source.specular;
+	color *= attenuation;
+	return (vec4(color, 1));
 }
 
 void	model(int index)

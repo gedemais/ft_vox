@@ -8,6 +8,8 @@ void		move_cam(t_env *env, int key)
 
 	camera = &env->camera;
 	speed = camera->sprint ? camera->tspeed : camera->speed;
+	speed *= env->fps.delta;
+
 	if (key == GLFW_KEY_D)
 		camera->pos = vec_add(camera->pos, vec_fmult(vec_cross(camera->zaxis, camera->yaxis), speed));
 	if (key == GLFW_KEY_A)
@@ -37,8 +39,8 @@ static void	wrap_angles(t_camera *camera)
 		camera->yaw = camera->yaw > 45 ? 45 : camera->yaw;
 		camera->yaw = camera->yaw < -45 ? -45 : camera->yaw;
 	} else {
-		camera->yaw = camera->yaw > 90 ? 90 : camera->yaw;
-		camera->yaw = camera->yaw < -90 ? -90 : camera->yaw;
+		camera->yaw = camera->yaw > 89 ? 89 : camera->yaw;
+		camera->yaw = camera->yaw < -89 ? -89 : camera->yaw;
 	}
 }
 

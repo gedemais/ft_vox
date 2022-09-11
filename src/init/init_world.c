@@ -1,52 +1,6 @@
 # include "main.h"
 
 
-const char	*textures_paths[TEXTURE_SB_MAX] = {
-	// TEXTURES HD
-	[TEXTURE_HD_WATER]		= "./resources/HD/gravel.png",
-	[TEXTURE_HD_SAND]		= "./resources/HD/sand.png",
-	[TEXTURE_HD_GRASS]		= "./resources/HD/grass.png",
-	[TEXTURE_HD_GROUND]		= "./resources/HD/ground.png",
-	[TEXTURE_HD_STONE]		= "./resources/HD/stone.png",
-	[TEXTURE_HD_SNOW]		= "./resources/HD/snow.png",
-	[TEXTURE_HD_GRASS_SIDE]	= "./resources/HD/grass_side.png",
-	[TEXTURE_HD_STONE_SIDE]	= "./resources/HD/stone_side.png",
-	// TEXTURES LD
-	[TEXTURE_LD_WATER]		= "./resources/LD/gravel.png",
-	[TEXTURE_LD_SAND]		= "./resources/LD/sand.png",
-	[TEXTURE_LD_GRASS]		= "./resources/LD/grass.png",
-	[TEXTURE_LD_GROUND]		= "./resources/LD/ground.png",
-	[TEXTURE_LD_STONE]		= "./resources/LD/stone.png",
-	[TEXTURE_LD_SNOW]		= "./resources/LD/snow.png",
-	[TEXTURE_LD_GRASS_SIDE]	= "./resources/LD/grass_side.png",
-	[TEXTURE_LD_STONE_SIDE]	= "./resources/LD/stone_side.png",
-	// TEXTURES SKYBOX
-	[TEXTURE_SB_PX]			= "./resources/skybox/px.png",
-	[TEXTURE_SB_PY]			= "./resources/skybox/py.png",
-	[TEXTURE_SB_PZ]			= "./resources/skybox/pz.png",
-	[TEXTURE_SB_NX]			= "./resources/skybox/nx.png",
-	[TEXTURE_SB_NY]			= "./resources/skybox/ny.png",
-	[TEXTURE_SB_NZ]			= "./resources/skybox/nz.png"
-};
-
-static unsigned char	load_textures(t_env *env)
-{
-	t_texture		*txt;
-	unsigned int	err;
-	int				i;
-
-	i = -1;
-	while (++i < TEXTURE_SB_MAX) {
-		txt = &env->model.textures[i];
-		err = lodepng_decode32_file(&txt->ptr, &txt->w, &txt->h, textures_paths[i]);
-		if (err) {
-			ft_putendl_fd(lodepng_error_text(err), 2);
-			return (ERR_TEXTURE_LOADING_FAILED);
-		}
-	}
-	return (ERR_NONE);
-}
-
 static unsigned char	read_seed(int argc, char **argv)
 {
 	long long int	seed;
@@ -98,14 +52,14 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 
 	if ((argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
 		|| (code = init_biomes(env)) != ERR_NONE
-		|| (code = init_map(env)) != ERR_NONE
-		|| (code = load_textures(env)) != ERR_NONE)
+		|| (code = init_map(env)) != ERR_NONE)
 		return (code);
 
 	printf("seed : %d\n", *map_seed());
 	if ((code = model(env)) != ERR_NONE)
 		return (code);
-	light(env); // light after model because we set the sun's light pos with the model center
+
+	light(env);
 
 	return (ERR_NONE);
 }

@@ -5,6 +5,8 @@
 # include "main.h"
 # include "gen.h"
 
+# define MODEL_SCALE	1
+
 enum			e_texture
 {
 	TEXTURE_HD_WATER,
