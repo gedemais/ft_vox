@@ -6,7 +6,7 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 	vec3	tmp;
 	float	e;
 
-	e = (glfwGetTime() * SUN_SPEED) / 100;
+	e = (glfwGetTime() * SB_ROT_SPEED) / 100;
 	mat4_identity(m);
 	mat4_yrotation(m, e);
 	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
@@ -24,8 +24,7 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 		env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
 		// LIGHT
-		tmp = (vec3){ env->camera.zaxis.x, env->camera.zaxis.y, env->camera.zaxis.z };
-		env->light.sources[LIGHT_SOURCE_PLAYER].dir = tmp;
+		env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
 		// sunlight follow the sun's texture
 		tmp = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].pos);

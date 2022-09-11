@@ -38,7 +38,6 @@
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
 # define SQUARE_SIZE		2 // Size of visible chunks matrix for the player (max_limit)
-# define SUN_SPEED			10 // sun's rotation speed
 
 // Settings instances
 enum				e_settings
@@ -191,7 +190,7 @@ void				print_faces(t_dynarray *faces);
 // fps
 void				fps(t_fps *fps, bool print);
 // shaders
-unsigned char		mount_shaders(t_mesh *mesh, char *svertex_path, char *sfragment_path);
+unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path);
 
 
 #endif

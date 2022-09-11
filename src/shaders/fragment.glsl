@@ -30,13 +30,13 @@ out vec4				FragColor;
 
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 {
-	vec3	light_dir, half_dir;
-	float	attenuation, e;
+	vec3	light_dir, reflect_dir;
+	float	attenuation, e, theta;
 
 	color			*= source.color;
 
-	light_dir		= normalize(source.pos - vPosition);
-	half_dir		= normalize(light_dir + view_dir);
+	light_dir		= normalize(-source.dir);
+	reflect_dir		= reflect(light_dir, vNormal);
 
 	e				= distance(source.pos, vPosition);
 	attenuation		= (1 / e) * source.intensity;
@@ -44,7 +44,7 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 	source.ambient	= color * source.ambient;
 	e				= max(dot(vNormal, light_dir), 0);
 	source.diffuse	= color * source.diffuse * e;
-	e				= pow(max(dot(view_dir, half_dir), 0), 8);
+	e				= pow(max(dot(view_dir, reflect_dir), 0), 8);
 	source.specular	= color * source.specular * e;
 
 	color = source.ambient + source.diffuse + source.specular;

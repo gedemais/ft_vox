@@ -6,6 +6,8 @@
 # include "gen.h"
 
 # define MODEL_SCALE	1
+# define SB_SIZE		500 // skybox size
+# define SB_ROT_SPEED	40 // sun's rotation speed
 
 enum			e_texture
 {

@@ -96,7 +96,7 @@ static unsigned char	link_shader_program(t_mesh *mesh)
 	return (ERR_NONE);
 }
 
-unsigned char		mount_shaders(t_mesh *mesh, char *svertex_path, char *sfragment_path)
+unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path)
 {
 	unsigned char	code;
 

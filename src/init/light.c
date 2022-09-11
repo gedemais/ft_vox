@@ -75,9 +75,10 @@ static void				init_player(t_light_source *source)
 
 static void				init_sun(t_light_source *source)
 {
-	// sunpos : 420 360 -500
-	source->pos			= (vec3){ 420, 0, -500 };
-	source->dir			= (vec3){ 1, 1, 1 };
+	//0.85f 0.7f 1
+	source->pos			= (vec3){ 0.85f, 0, -1 };
+	source->pos			= vec_fmult(source->pos, SB_SIZE);
+	source->dir			= (vec3){ -1, -1, -1 };
 	source->color		= (vec3){ 1, 1, 1 };
 	source->ambient		= (vec3){ 0.66f, 0.66f, 0.66f };
 	source->diffuse		= (vec3){ 0.66f, 0.66f, 0.66f };

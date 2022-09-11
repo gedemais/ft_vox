@@ -43,10 +43,15 @@ vec3	get_normal(int n)
 
 void	main()
 {
-	vNormal		= get_normal(int(aNormal));
-	vPosition	= aPosition;
+	vNormal		= mat3(transpose(inverse(model))) * get_normal(int(aNormal));
+	//vNormal		= get_normal(int(aNormal));
+
+	vec4	pos	= vec4(aPosition, 1);
+	vPosition	= vec3(pos * model);
+	//vPosition	= aPosition;
+
 	vTextCoord	= aTextCoord;
 	vType		= aType;
 
-	gl_Position	= vec4(aPosition, 1) * model * view * projection;
+	gl_Position	= pos * model * view * projection;
 }

@@ -3,7 +3,7 @@ window_width = 1280
 gamma = 1.5
 player_speed = 8.0
 player_light_intensity = 20.0
-sunlight_intensity = 500.0
+sunlight_intensity = 600.0
 mouse_sensitivity = 8.0
 
 exit = escape
