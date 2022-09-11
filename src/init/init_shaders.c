@@ -103,10 +103,10 @@ static void				set_layouts()
 	// id ptr, size, GL_type, GL_FALSE, totalsize, start pos
 
 	// vec3 : position
-	glVertexAttribPointer(0, 1, GL_INT, GL_FALSE, 0, (void *)0);
+	glVertexAttribPointer(0, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride), (void *)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 1, GL_INT, GL_FALSE, 0, (void *)4);
+	glVertexAttribPointer(1, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(t_stride), (void *)sizeof(unsigned int));
 	glEnableVertexAttribArray(1);
 }
 

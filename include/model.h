@@ -61,6 +61,7 @@ typedef struct __attribute__((__packed__)) s_stride
 	uint8_t	fs : 6; // fall_size
 	uint8_t	n : 3;
 	uint8_t	bt : 3;
+	uint8_t	pad : 1;
 }				t_stride;
 
 

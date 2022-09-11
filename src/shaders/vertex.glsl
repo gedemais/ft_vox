@@ -1,7 +1,7 @@
 #version 400 core
 
-layout (location = 0) in int	data1;
-layout (location = 1) in int	data2;
+layout (location = 0) in uint	data1;
+layout (location = 1) in uint	data2;
 
 uniform mat4 					model;
 uniform mat4 					view;
@@ -66,7 +66,7 @@ vec2	get_uv(int n, float fall_size)
 	return (uv);
 }
 
-int	get_int_from_bits(int data1, int data2, int start, int size)
+int	get_int_from_bits(uint data1, uint data2, int start, int size)
 {
 	int			bound = start + size;
 	int			ret = 0;

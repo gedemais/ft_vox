@@ -69,7 +69,7 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
 		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
 		vertex = (t_stride){(int)plane[i].x, (int)plane[i].y, (int)plane[i].z,
-			(uint8_t)i, (uint8_t)((int)fall_size), (uint8_t)normal, (uint8_t)block_type};
+			(uint8_t)i, (uint8_t)((int)fall_size), (uint8_t)normal, (uint8_t)block_type, (uint8_t)0};
 
 	//	printf("------ DATA ------\n");
 	//	printf("x : %f\ny : %f\nz : %f\nuv_id : %d\nfall_size : %f\nnormal : %d\nblock_type : %f\n",
@@ -91,7 +91,16 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 //		printf("uv_id : %c%c%c\nfall_size : %c%c%c%c%c", BYTE_TO_BINARY(*(char*)&vertex + 6));
 //		printf("%c%c\nnormal : %c%c%c\nblock_type : %c%c%c\n", BYTE_TO_BINARY(*(char*)&vertex + 7));
 //		printf("sizeof t_stride : %zu\n", sizeof(t_stride));
-//		exit(0);
+		long int	v;
+		int32_t		a;
+		int32_t		b;
+
+		memcpy(&v, &vertex, sizeof(t_stride));
+		a = (uint32_t)v;
+		b = (uint32_t)(v >> 32);
+
+		if (chunk->stride.nb_cells < 10)
+			printf("%u %u\n", a, b);
 
 		// Insertion of the vertex in the stride
 		if (dynarray_push(&chunk->stride, &vertex, false))
