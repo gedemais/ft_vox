@@ -12,7 +12,7 @@ static void	init_camera(t_env *env)
 	camera->ratio = (float)env->settings.w_wdt / (float)env->settings.w_hgt;
 	// Far and near plane definitions
 	camera->near = 0.1f;
-	camera->far = 420.0f;
+	camera->far = 1000.0f;
 	// FOV
 	camera->fov = 45.0f;
 	// Camera starting position and orientation

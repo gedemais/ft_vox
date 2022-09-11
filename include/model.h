@@ -13,7 +13,7 @@ enum			e_texture
 	TEXTURE_HD_STONE,
 	TEXTURE_HD_SNOW,
 	TEXTURE_HD_GRASS_SIDE,
-	TEXTURE_HD_STONE_SIDE,
+	TEXTURE_HD_SNOW_SIDE,
 	TEXTURE_LD_WATER,
 	TEXTURE_LD_SAND,
 	TEXTURE_LD_GRASS,
@@ -21,7 +21,7 @@ enum			e_texture
 	TEXTURE_LD_STONE,
 	TEXTURE_LD_SNOW,
 	TEXTURE_LD_GRASS_SIDE,
-	TEXTURE_LD_STONE_SIDE,
+	TEXTURE_LD_SNOW_SIDE,
 	TEXTURE_MAX
 };
 
@@ -52,13 +52,17 @@ typedef	struct	s_vertex_texture
 	float	u, v;
 }				t_vt;
 
-typedef struct	s_stride
+typedef struct __attribute__((__packed__)) s_stride
 {
-	vec3	v;
-	t_vt	t;
-	int		n;
-	float	id;
+	short	x : 16;
+	short	y : 16;
+	short	z : 16;
+	uint8_t	uv : 3;
+	uint8_t	fs : 6; // fall_size
+	uint8_t	n : 3;
+	uint8_t	bt : 3;
 }				t_stride;
+
 
 typedef struct	s_texture
 {

@@ -10,7 +10,7 @@ const char	*textures_paths[TEXTURE_SB_MAX] = {
 	[TEXTURE_HD_STONE]		= "./resources/HD/stone.png",
 	[TEXTURE_HD_SNOW]		= "./resources/HD/snow.png",
 	[TEXTURE_HD_GRASS_SIDE]	= "./resources/HD/grass_side.png",
-	[TEXTURE_HD_STONE_SIDE]	= "./resources/HD/stone_side.png",
+	[TEXTURE_HD_SNOW_SIDE]	= "./resources/HD/stone_side.png",
 	// TEXTURES LD
 	[TEXTURE_LD_WATER]		= "./resources/HD/gravel.png",
 	[TEXTURE_LD_SAND]		= "./resources/LD/sand.png",
@@ -19,7 +19,7 @@ const char	*textures_paths[TEXTURE_SB_MAX] = {
 	[TEXTURE_LD_STONE]		= "./resources/LD/stone.png",
 	[TEXTURE_LD_SNOW]		= "./resources/LD/snow.png",
 	[TEXTURE_LD_GRASS_SIDE]	= "./resources/LD/grass_side.png",
-	[TEXTURE_LD_STONE_SIDE]	= "./resources/LD/stone_side.png",
+	[TEXTURE_LD_SNOW_SIDE]	= "./resources/LD/stone_side.png",
 	// TEXTURES SKYBOX
 	[TEXTURE_SB_PX]			= "./resources/skybox/px.png",
 	[TEXTURE_SB_PY]			= "./resources/skybox/py.png",

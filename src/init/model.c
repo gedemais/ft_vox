@@ -1,6 +1,6 @@
-#include "../../include/main.h"
+#include "main.h"
 
-
+/*
 static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid, bool skybox)
 {
 	int			i;
@@ -59,7 +59,7 @@ static unsigned char	cube(t_dynarray *vertices, vec3 o, unsigned int tid, bool s
 			return (ERR_MALLOC_FAILED);
 	}
 	return (ERR_NONE);
-}
+}*/
 
 unsigned char	push_world(t_env *env)
 {
@@ -87,7 +87,7 @@ unsigned char	push_world(t_env *env)
 		return (ERR_MALLOC_FAILED);
 	return (ERR_NONE);
 }
-
+/*
 unsigned char	push_skybox(t_env *env)
 {
 	unsigned char	code;
@@ -104,7 +104,7 @@ unsigned char	push_skybox(t_env *env)
 	if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 		return (ERR_MALLOC_FAILED);
 	return (ERR_NONE);
-}
+}*/
 
 unsigned char			model(t_env *env)
 {

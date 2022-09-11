@@ -38,13 +38,13 @@ void		printfv(t_dynarray *vertices)
 
 	for (i = 0; i < vertices->nb_cells; i++) {
 		elt = dyacc(vertices, i);
-
+/*
 		v	= elt->v;
 		t	= elt->t;
 
 		printf("v: [%.1f, %.1f, %.1f]	t: [%.1f, %.1f]\n",
 			v.x, v.y, v.z,
 			(float)t.u, (float)t.v
-		);
+		);*/
 	}
 }
