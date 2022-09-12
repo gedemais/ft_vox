@@ -57,12 +57,12 @@ typedef struct __attribute__((__packed__)) s_stride
 	short	x : 16;
 	short	y : 16;
 	short	z : 16;
-	uint8_t	uv : 3;
-	uint8_t	fs : 6; // fall_size
-	uint8_t	n : 3;
-	uint8_t	bt : 3;
-	uint8_t	pad : 1;
-}				t_stride;
+	int		uv : 3;
+	int		fs : 6; // fall_size
+	int		n : 3;
+	int		bt : 3;
+	int		pad : 1;
+}				__attribute__((__packed__)) t_stride;
 
 
 typedef struct	s_texture

@@ -40,10 +40,11 @@ void printBits(size_t size, void *ptr)
             byte = (b[i] >> j) & 1;
             printf("%u", byte);
         }
-		printf("\n");
     }
 	printf("\n");
 }
+
+
 
 static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side)
 {
@@ -68,6 +69,7 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 		block_type = (float)switch_block_type(y);
 		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
 		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
+
 		vertex = (t_stride){(int)plane[i].x, (int)plane[i].y, (int)plane[i].z,
 			(uint8_t)i, (uint8_t)((int)fall_size), (uint8_t)normal, (uint8_t)block_type, (uint8_t)0};
 
@@ -77,10 +79,6 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 	//		i, fall_size, normal, block_type);
 
 
-	//	printf("------ STRIDE ------\n");
-	//	printf("x : %d\ny : %d\nz : %d\nuv_id : %d\nfall_size : %d\nnormal : %d\nblock_type : %d\n",
-	//			(short)plane[i].x, (short)plane[i].y, (short)plane[i].z,
-	//		(uint8_t)i, (uint8_t)((int)fall_size), (uint8_t)normal, (uint8_t)block_type);
 
 	//	printf("------ BITFIELD ------\n");
 	//	printBits(sizeof(t_stride), &vertex);
@@ -92,15 +90,24 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 //		printf("%c%c\nnormal : %c%c%c\nblock_type : %c%c%c\n", BYTE_TO_BINARY(*(char*)&vertex + 7));
 //		printf("sizeof t_stride : %zu\n", sizeof(t_stride));
 		long int	v;
-		int32_t		a;
-		int32_t		b;
+		uint32_t	a;
+		uint32_t	b;
 
 		memcpy(&v, &vertex, sizeof(t_stride));
 		a = (uint32_t)v;
 		b = (uint32_t)(v >> 32);
 
 		if (chunk->stride.nb_cells < 10)
-			printf("%u %u\n", a, b);
+		{
+			printf("UNSIGNED INTS : %u %u\n", a, b);
+
+			printf("------ BITFIELD ------\n");
+			printBits(sizeof(t_stride), &vertex);
+			printf("------ STRIDE ------\n");
+			printf("x : %d\ny : %d\nz : %d\nuv_id : %d\nfall_size : %d\nnormal : %d\nblock_type : %d\n",
+				(short)plane[i].x, (short)plane[i].y, (short)plane[i].z,
+			(uint8_t)i, (uint8_t)((int)fall_size), (uint8_t)normal, (uint8_t)block_type);
+		}
 
 		// Insertion of the vertex in the stride
 		if (dynarray_push(&chunk->stride, &vertex, false))

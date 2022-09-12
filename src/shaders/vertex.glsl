@@ -72,7 +72,7 @@ int	get_int_from_bits(uint data1, uint data2, int start, int size)
 	int			ret = 0;
 	int			pow = 1;
 
-	for (int i = bound - 1; i >= start; i--)
+	for (int i = start; i < bound; i++)
 	{
 		if (bool(((i < 32 ? data1 : data2) >> i) & 1))
 			ret += pow;
@@ -90,16 +90,13 @@ void	main()
 	float		fall_size;
 	int			block_type;
 
-	//pos.x = float(int(data1 >> 16));
-	//pos.y = float(int(data1 & 0xffff));
-
 	pos.x = float(get_int_from_bits(data1, data2, 0, 16));
     pos.y = float(get_int_from_bits(data1, data2, 16, 16));
     pos.z = float(get_int_from_bits(data1, data2, 32, 16));
-	uv_id = get_int_from_bits(data1, data2, 48, 3);
-	fall_size = float(get_int_from_bits(data1, data2, 51, 6));
-	normal_id = get_int_from_bits(data1, data2, 57, 3);
-	block_type = get_int_from_bits(data1, data2, 60, 3);
+	uv_id = get_int_from_bits(data1, data2, 32, 3);
+	fall_size = float(get_int_from_bits(data1, data2, 35, 6));
+	normal_id = get_int_from_bits(data1, data2, 41, 3);
+	block_type = get_int_from_bits(data1, data2, 44, 3);
 
 	vPosition	= pos;
 	vNormal		= get_normal(normal_id);
