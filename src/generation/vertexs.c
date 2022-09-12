@@ -13,16 +13,20 @@ const float		block_size = 1.0f;
 
 static int	switch_block_type(unsigned int z)
 {
-	if (z < 20)
-		return (BT_STONE);
-	else if (z >= 20 && z < 40)
+	if (z < 10 || z > 40)
 		return (BT_SAND);
-	else if (z >= 40 && z < 60)
-		return (BT_GROUND);
-	else if (z >= 60 && z < 80)
-		return (BT_GRASS);
 	else
-		return (BT_SNOW);
+		return (BT_WATER);
+	// else if (z < 15)
+	// 	return (BT_SAND);
+	// else if (z >= 15 && z < 30)
+	// 	return (BT_GROUND);
+	// else if (z >= 30 && z < 40)
+	// 	return (BT_GRASS);
+	// else if (z >= 40 && z < 60)
+	// 	return (BT_STONE);
+	// else
+	// 	return (BT_SNOW);
 }
 
 static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int z, float fall_size)
@@ -75,7 +79,7 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z,
 	top_plane[4] = b;
 	top_plane[5] = d;
 
-	return (push_plane(chunk, top_plane, N_UP, z, 1.0f));
+	return (push_plane(chunk, top_plane, N_UP, y, 1.0f));
 }
 
 static unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth)
@@ -140,8 +144,8 @@ unsigned char	generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned 
 		a = top_plane[fall_planes[i][0]];
 		b = top_plane[fall_planes[i][1]];
 
-		if ((offset == 1 && (code = generate_fall(chunk, a, b, i, z, 1.0f)))
-			|| (code = generate_deep_fall(chunk, a, b, i, offset, z)))
+		if ((offset == 1 && (code = generate_fall(chunk, a, b, i, y, 1.0f)))
+			|| (code = generate_deep_fall(chunk, a, b, i, offset, y)))
 			return (code);
 	}
 	return (ERR_NONE);

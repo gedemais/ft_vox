@@ -72,6 +72,7 @@ typedef struct	s_texture
 
 typedef struct	s_uniform
 {
+	GLint	time;
 	GLint	texturesHD, texturesLD;
 	GLint	skybox, campos;
 	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];

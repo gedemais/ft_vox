@@ -8,6 +8,7 @@ layout (location = 3) in float	aType;
 uniform mat4 					model;
 uniform mat4 					view;
 uniform mat4 					projection;
+uniform float 					u_time;
 
 out vec3						vNormal;
 out vec3						vPosition;
@@ -43,10 +44,19 @@ vec3	get_normal(int n)
 
 void	main()
 {
+	vec4	pos	= vec4(aPosition, 1);
+
+	if (int(aType) == 0) {
+		float	time, wavelength;
+
+		time		= u_time * 0.05f;
+		wavelength	= 0.1f;
+		pos.y		+= (sin(pos.x * time) * cos(pos.y * time)) * wavelength;
+	}
+
 	vNormal		= mat3(transpose(inverse(model))) * get_normal(int(aNormal));
 	//vNormal		= get_normal(int(aNormal));
 
-	vec4	pos	= vec4(aPosition, 1);
 	vPosition	= vec3(pos * model);
 	//vPosition	= aPosition;
 

@@ -1,9 +1,9 @@
-#include "main.h"
+#include "../../include/main.h"
 
 
 const char				*textures_paths[TEXTURE_SB_MAX] = {
 	// TEXTURES HD
-	[TEXTURE_HD_WATER]		= "./resources/HD/gravel.png",
+	[TEXTURE_HD_WATER]		= "./resources/HD/water.png",
 	[TEXTURE_HD_SAND]		= "./resources/HD/sand.png",
 	[TEXTURE_HD_GRASS]		= "./resources/HD/grass.png",
 	[TEXTURE_HD_GROUND]		= "./resources/HD/ground.png",
@@ -12,7 +12,7 @@ const char				*textures_paths[TEXTURE_SB_MAX] = {
 	[TEXTURE_HD_GRASS_SIDE]	= "./resources/HD/grass_side.png",
 	[TEXTURE_HD_STONE_SIDE]	= "./resources/HD/stone_side.png",
 	// TEXTURES LD
-	[TEXTURE_LD_WATER]		= "./resources/LD/gravel.png",
+	[TEXTURE_LD_WATER]		= "./resources/LD/water.png",
 	[TEXTURE_LD_SAND]		= "./resources/LD/sand.png",
 	[TEXTURE_LD_GRASS]		= "./resources/LD/grass.png",
 	[TEXTURE_LD_GROUND]		= "./resources/LD/ground.png",
@@ -86,8 +86,8 @@ static void				gl_options(void)
 	glEnable(GL_LINE_SMOOTH);
 
 	// BLENDING => for water cube WIP
-	// glEnable(GL_BLEND);
-	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 }
 
 unsigned char			init(t_env *env, int argc, char **argv)

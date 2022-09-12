@@ -1,14 +1,12 @@
-#include "main.h"
+#include "../include/main.h"
 
 static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 {
 	mat4	m;
 	vec3	tmp;
-	float	e;
 
-	e = (glfwGetTime() * SB_ROT_SPEED) / 100;
 	mat4_identity(m);
-	mat4_yrotation(m, e);
+	mat4_yrotation(m, (env->fps.current_seconds * SB_ROT_SPEED) / 100);
 	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
 
 	glUseProgram(mesh->gl.shader_program);
@@ -16,10 +14,11 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 		// skybox's rotation around the player
 		mat4_multiply(env->model.model, m);
 	} else {
-		// update campos and viewdir in shaders
+		// update time
+		glUniform1f(mesh->gl.uniform.time, env->fps.current_seconds);
+		// update campos
 		glUniform3fv(mesh->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
-
-		// update lightpos in shaders
+		// update lightpos
 		// LIGHT PLAYER
 		env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);

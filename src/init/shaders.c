@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../../include/main.h"
 
 
 static unsigned char	load_shader_source(const char *path, const GLchar **ptr, size_t *file_size)

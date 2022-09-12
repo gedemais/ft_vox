@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../../include/main.h"
 
 
 static void				set_layouts(bool skybox)
@@ -103,6 +103,7 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 		mesh->gl.uniform.skybox = glGetUniformLocation(mesh->gl.shader_program, "vSkybox");
 		glUniform1i(mesh->gl.uniform.skybox, 0);
 	} else {
+		mesh->gl.uniform.time = glGetUniformLocation(mesh->gl.shader_program, "u_time");
 		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.shader_program, "campos");
 
 		mesh->gl.uniform.texturesHD = glGetUniformLocation(mesh->gl.shader_program, "vTexturesHD");

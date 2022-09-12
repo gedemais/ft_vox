@@ -1,4 +1,4 @@
-# include "main.h"
+#include "../../include/main.h"
 
 
 static unsigned char	read_seed(int argc, char **argv)

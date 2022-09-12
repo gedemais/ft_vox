@@ -20,6 +20,7 @@ in vec2					vTextCoord;
 flat in float			vType;
 
 uniform vec3			campos;
+uniform float			u_time;
 
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
@@ -72,11 +73,14 @@ void	model(int index)
 	} else {
 		FragColor = vec4(color, 1);
 	}
+
+	if (index == 0)
+		FragColor.a = 0.5f;
 }
 
 void	main()
 {
-	int		index = int(vType);
+	int		index	= int(vType);
 
 	model(index);
 
