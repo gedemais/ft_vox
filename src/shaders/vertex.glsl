@@ -69,12 +69,14 @@ vec2	get_uv(int n, float fall_size)
 int	get_int_from_bits(uint data1, uint data2, int start, int size)
 {
 	int			bound = start + size;
+	int			shift = 0;
 	int			ret = 0;
 	int			pow = 1;
 
 	for (int i = start; i < bound; i++)
 	{
-		if (bool(((i < 32 ? data1 : data2) >> i) & 1))
+		shift = (i < 32) ? i : i - 32;
+		if (bool(((i < 32 ? data1 : data2) >> shift) & 1))
 			ret += pow;
 
 		pow *= 2;
@@ -85,22 +87,22 @@ int	get_int_from_bits(uint data1, uint data2, int start, int size)
 void	main()
 {
 	vec3		pos;
-	int			normal_id;
-	int			uv_id;
+	uint			normal_id;
+	uint			uv_id;
 	float		fall_size;
-	int			block_type;
+	uint			block_type;
 
-	pos.x = float(get_int_from_bits(data1, data2, 0, 16));
-    pos.y = float(get_int_from_bits(data1, data2, 16, 16));
-    pos.z = float(get_int_from_bits(data1, data2, 32, 16));
-	uv_id = get_int_from_bits(data1, data2, 32, 3);
-	fall_size = float(get_int_from_bits(data1, data2, 35, 6));
-	normal_id = get_int_from_bits(data1, data2, 41, 3);
-	block_type = get_int_from_bits(data1, data2, 44, 3);
+	pos.x = float(data1 & 0xFFFFu);
+    pos.y = float((data1 & 0xFFFFFFFFu) >> 16u);
+    pos.z = float(data2 & 0xFFFFu);
+	uv_id = int((data2 & 0x70000u) >> 16u);
+	fall_size = float((data2 & 0x1F80000u >> 19u));
+	normal_id = (data2 & 0xE000000u >> 25u);
+	block_type = (data2 & 0x70000000u >> 29u);
 
 	vPosition	= pos;
-	vNormal		= get_normal(normal_id);
-	vTextCoord	= get_uv(uv_id, fall_size);
+	vNormal		= get_normal(int(normal_id));
+	vTextCoord	= get_uv(int(uv_id), fall_size);
 	vType		= block_type;
 
 	gl_Position	= vec4(pos, 1) * model * view * projection;
