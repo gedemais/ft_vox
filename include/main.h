@@ -115,12 +115,15 @@ typedef struct		s_env
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;
 
-// Initializes scop
+// Initializes
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
 void				light(t_env *env);
 unsigned char		light_uniforms(t_mesh *mesh, t_light *light);
 unsigned char		model(t_env *env);
+void				mount_textures(t_env *env);
+void				mount_shadows(t_env *env);
+unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path);
 
 // OpenGL
 unsigned char   	init_display(t_env *env);
@@ -187,8 +190,6 @@ static const char	*settings_keys[SET_MAX] = {
 // UTILS
 // fps
 void				fps(t_fps *fps, bool print);
-// shaders
-unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path);
 
 
 #endif

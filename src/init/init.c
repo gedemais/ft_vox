@@ -70,13 +70,9 @@ static void				gl_options(void)
 {
 	//  DEPTH BUFFER
 	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS);
 
-	// CULLING : we only draw front face in clock-wise order
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_FRONT);
-	//glFrontFace(GL_CW);
+	// CULLING
+	// glEnable(GL_CULL_FACE);
 
 	// GAMA CORRECTION
 	// glEnable(GL_FRAMEBUFFER_SRGB);
@@ -85,7 +81,7 @@ static void				gl_options(void)
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_LINE_SMOOTH);
 
-	// BLENDING => for water cube WIP
+	// BLENDING
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 }
@@ -96,8 +92,8 @@ unsigned char			init(t_env *env, int argc, char **argv)
 
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
 		|| (code = load_textures(env)) != ERR_NONE
-		|| (code = init_world(env, argc, argv)) != ERR_NONE
 		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
+		|| (code = init_world(env, argc, argv)) != ERR_NONE
 		|| (code = init_meshs(env)) != ERR_NONE)  // init shaders after model because we need to buffer each mesh
 		return (code);
 

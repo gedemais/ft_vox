@@ -46,7 +46,7 @@ static void			set_mesh_center(t_mesh *mesh)
 	}
 }
 
-unsigned char	push_world(t_env *env)
+static unsigned char	push_world(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			*mesh;
@@ -71,7 +71,7 @@ unsigned char	push_world(t_env *env)
 	return (ERR_NONE);
 }
 
-unsigned char	push_skybox(t_env *env)
+static unsigned char	push_skybox(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			*mesh;
@@ -101,6 +101,10 @@ unsigned char			model(t_env *env)
 	if ((code = push_world(env)) != ERR_NONE
 		|| (code = push_skybox(env)) != ERR_NONE)
 		return (code);
+
+	// we mount the textures we will use
+	mount_textures(env);
+	mount_shadows(env);
 
 	env->model.scale = MODEL_SCALE;
 	return (ERR_NONE);

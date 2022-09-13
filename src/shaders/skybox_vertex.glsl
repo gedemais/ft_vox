@@ -10,7 +10,9 @@ out vec3						vPosition;
 
 void	main()
 {
+	vec4	pos	= vec4(aPosition, 1) * model * view * projection;
+
 	vPosition	= aPosition;
 
-	gl_Position	= vec4(aPosition, 1) * model * view * projection;
+	gl_Position	= pos.xyww;
 }

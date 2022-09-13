@@ -35,20 +35,36 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 	glUniformMatrix4fv(mesh->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
 }
 
+static void				gl_options(bool skybox)
+{
+	if (skybox) {
+		// glCullFace(GL_FRONT);
+    	glDepthFunc(GL_LEQUAL);
+	} else {
+		// glCullFace(GL_BACK);
+		// glFrontFace(GL_CW);
+		// Accept fragment if it closer to the camera than the former one
+		glDepthFunc(GL_LESS);
+	}
+}
+
 static void				draw_mesh(t_env *env)
 {
 	t_mesh		*mesh;
 	GLsizeiptr	size;
 	int			i, j;
+	bool		skybox;
 
 	i = -1;
 	while (++i < env->model.meshs.nb_cells) {
 		mesh = dyacc(&env->model.meshs, i);
 		if (mesh == NULL)
 			continue ;
+		skybox = i == env->model.meshs.nb_cells - 1;
 
-		// skybox is all time the last mesh
-		set_uniforms(env, mesh, i == env->model.meshs.nb_cells - 1);
+		gl_options(skybox);
+
+		set_uniforms(env, mesh, skybox);
 
 		glBindVertexArray(mesh->gl.vao);
 
@@ -81,9 +97,30 @@ static void				mat4_mvp(t_env *env)
 
 static unsigned char	render_scene(t_env *env)
 {
+	// reset viewport
+	// glViewport(0, 0, env->window.w, env->window.h);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	fps(&env->fps, true);
 	mat4_mvp(env);
 	draw_mesh(env);
+	return (ERR_NONE);
+}
+
+static unsigned char	render_depth(t_env *env)
+{
+	t_shadows	*shadows = &env->model.shadows;
+
+	// glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, shadows->fbo);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, env->model.shadows.depthmap);
+	// renderScene(simpleDepthShader);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	return (ERR_NONE);
 }
 
@@ -94,10 +131,22 @@ unsigned char			display_loop(t_env *env)
 	glClearColor(DEFAULT_COLOR.x, DEFAULT_COLOR.y, DEFAULT_COLOR.z, 1);
 	while (!glfwWindowShouldClose(env->window.ptr))
 	{
+		// input
+		// -----
 		processInput(env->window.ptr);
+		// render
+		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// 1. render depth of scene to texture
+		// -----------------------------------
+		if ((code = render_depth(env)) != ERR_NONE)
+			return (code);
+		// 2. render scene using the generated depth/shadow map  
+		// ----------------------------------------------------
 		if ((code = render_scene(env)) != ERR_NONE)
 			return (code);
+		// 3. glfw: swap buffers and poll IO events
+		// ----------------------------------------
 		glfwSwapBuffers(env->window.ptr);
 		glfwPollEvents();
 	}

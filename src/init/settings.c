@@ -49,9 +49,11 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 	// Numerical values
 		case SET_WIN_HEIGHT:
 			env->settings.w_hgt = (uint16_t)n;
+			env->window.h = (uint16_t)n;
 			break;
 		case SET_WIN_WIDTH:
 			env->settings.w_wdt = (uint16_t)n;
+			env->window.w = (uint16_t)n;
 			break;
 	// Floating point values
 		case SET_FOV:
