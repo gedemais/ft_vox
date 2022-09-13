@@ -54,7 +54,7 @@ static void				load_chunk_params(t_env *env, int x_start, int z_start, unsigned 
 	(void)delta_sup;
 }
 
-static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_start, int z_start, unsigned int size)
+static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_start, int z_start, unsigned int size, bool stride)
 {
 	unsigned char	code;
 	t_biome_params	params;
@@ -67,11 +67,16 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 	chunk->x_start = x_start;
 	chunk->z_start = z_start;
 	if (!(chunk->surface_hmap = generate_height_map(params, x_start, z_start, size))
-		|| !(chunk->sub_hmap = generate_height_map(params, x_start, z_start, size))
-		|| dynarray_init(&chunk->stride, sizeof(t_stride), size * size * 6 * 2))
+		|| !(chunk->sub_hmap = generate_height_map(params, x_start, z_start, size)))
 		return (ERR_MALLOC_FAILED);
 
-	return (generate_vertexs(chunk, x_start, z_start, size));
+	if (stride && dynarray_init(&chunk->stride, sizeof(t_stride), size * size * 6 * 2))
+		return (ERR_MALLOC_FAILED);
+
+	if (stride && (code = generate_vertexs(chunk, x_start, z_start, size)) != ERR_NONE)
+		return (code);
+
+	return (ERR_NONE);
 }
 
 // This function will be used to generate new chunks of terrain with different noise algorithms
@@ -83,11 +88,11 @@ size_t	*stride_bytesize(void)
 	return (&bytesize);
 }
 
-unsigned char			gen_chunk(t_env *env, t_chunk *chunk, int x_start, int z_start, unsigned int size)
+unsigned char			gen_chunk(t_env *env, t_chunk *chunk, int x_start, int z_start, unsigned int size, bool stride)
 {
 	unsigned char	code;
 
-	if ((code = generate_chunk_content(env, chunk, x_start, z_start, size)) != ERR_NONE)
+	if ((code = generate_chunk_content(env, chunk, x_start, z_start, size, stride)) != ERR_NONE)
 		return (code);
 
 	*stride_bytesize() += sizeof(t_stride) * chunk->stride.nb_cells;

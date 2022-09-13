@@ -40,8 +40,11 @@ static unsigned char	init_map(t_env *env)
 
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int y = 0; y < SQUARE_SIZE; y++)
-			if ((code = gen_chunk(env, &env->model.chunks[x][y], x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE)))
+		{
+			if ((code = gen_chunk(env, &env->model.chunks[x][y], x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE, true)))
 				return (code);
+			// water
+		}
 
 	if ((code = borders(env)))
 		return (code);
@@ -59,6 +62,7 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 
 	if ((argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
 		|| (code = init_biomes(env)) != ERR_NONE
+		|| (code = init_caches(env)) != ERR_NONE
 		|| (code = init_map(env)) != ERR_NONE)
 		return (code);
 

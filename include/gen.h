@@ -5,6 +5,7 @@
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
 # define SQUARE_SIZE		4 // Size of visible chunks matrix for the player (max_limit)
+# define WORLD_SIZE			256 // Size of chunks matrix available in the absolute world
 
 enum	e_side_orientation
 {

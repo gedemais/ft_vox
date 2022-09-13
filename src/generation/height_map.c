@@ -35,6 +35,5 @@ uint8_t	**generate_height_map(t_biome_params params, int x_start, int z_start, u
 			height = (uint8_t)(perlin2d_a((float)x, (float)z, params.frequency, params.depth) * size);
 			hmap[x - x_start][z - z_start] = height;
 		}
-
 	return (hmap);
 }
