@@ -84,6 +84,7 @@ static unsigned char	init_map(t_env *env)
 {
 	unsigned char	code;
 
+
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int y = 0; y < SQUARE_SIZE; y++)
 			if ((code = gen_chunk(env, &env->model.chunks[x][y], x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE)))
@@ -92,6 +93,7 @@ static unsigned char	init_map(t_env *env)
 	if ((code = borders(env)))
 		return (code);
 
+	printf("%zu bytes per chunk | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
 	return (ERR_NONE);
 }
 

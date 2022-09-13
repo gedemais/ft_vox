@@ -58,7 +58,7 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 
 	// Load parameters for the current chunk
 	load_chunk_params(env, x_start, z_start, size, &params);
-	printf("frequency : %f | depth : %f\n", params.frequency, params.depth);
+	//printf("frequency : %f | depth : %f\n", params.frequency, params.depth);
 	// Generate height maps for surface and cave
 	// Topography type should be a parameter which would affect perlin noise generation
 	chunk->x_start = x_start;
@@ -88,7 +88,5 @@ unsigned char			gen_chunk(t_env *env, t_chunk *chunk, int x_start, int z_start, 
 		return (code);
 
 	*stride_bytesize() += sizeof(t_stride) * chunk->stride.nb_cells;
-	printf("%d vertexs | %zu bytes per chunk | %.2f Mo\n", chunk->stride.nb_cells, sizeof(t_stride), *stride_bytesize() / 1000000.0f);
-
 	return (ERR_NONE);
 }
