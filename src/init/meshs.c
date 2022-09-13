@@ -52,12 +52,9 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 		mesh->gl.uniform.time = glGetUniformLocation(mesh->gl.shader_program, "u_time");
 		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.shader_program, "campos");
 
-		mesh->gl.uniform.texturesHD = glGetUniformLocation(mesh->gl.shader_program, "vTexturesHD");
-		mesh->gl.uniform.texturesLD = glGetUniformLocation(mesh->gl.shader_program, "vTexturesLD");
-		int	samplersHD[TEXTURE_MAX / 2] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-		int	samplersLD[TEXTURE_MAX / 2] = { 8, 9, 10, 11, 12, 13, 14, 15 };
-		glUniform1iv(mesh->gl.uniform.texturesHD, TEXTURE_MAX / 2, samplersHD);
-		glUniform1iv(mesh->gl.uniform.texturesLD, TEXTURE_MAX / 2, samplersLD);
+		mesh->gl.uniform.textures = glGetUniformLocation(mesh->gl.shader_program, "vTextures");
+		int	samplers[TEXTURE_MAX] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+		glUniform1iv(mesh->gl.uniform.textures, TEXTURE_MAX, samplers);
 		light_uniforms(mesh, light);
 	}
 	return (ERR_NONE);

@@ -24,8 +24,7 @@ uniform float			u_time;
 
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
-uniform sampler2D		vTexturesHD[TEXTURE_MAX];
-uniform sampler2D		vTexturesLD[TEXTURE_MAX];
+uniform sampler2D		vTextures[TEXTURE_MAX];
 
 out vec4				FragColor;
 
@@ -57,11 +56,7 @@ void	model(int index)
 {
 	vec3	color;
 
-	if (distance(campos, vPosition) > 100) {
-		color = texture(vTexturesLD[index], vTextCoord).rgb;
-	}
-	else
-		color = texture(vTexturesHD[index], vTextCoord).rgb;
+	color = texture(vTextures[index], vTextCoord).rgb;
 
 	if (light.is_active == true) {
 		vec3		view_dir	= normalize(campos - vPosition);
@@ -82,8 +77,8 @@ void	main()
 	model(index);
 
 	// water transparency
-	if (index == 0)
-		FragColor.a = 0.5f;
+	// if (index == 0)
+	// 	FragColor.a = 0.5f;
 	// gamma correction
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 }

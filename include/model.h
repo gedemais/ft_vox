@@ -11,22 +11,14 @@
 
 enum			e_texture
 {
-	TEXTURE_HD_WATER,
-	TEXTURE_HD_SAND,
-	TEXTURE_HD_GRASS,
-	TEXTURE_HD_GROUND,
-	TEXTURE_HD_STONE,
-	TEXTURE_HD_SNOW,
-	TEXTURE_HD_GRASS_SIDE,
-	TEXTURE_HD_SNOW_SIDE,
-	TEXTURE_LD_WATER,
-	TEXTURE_LD_SAND,
-	TEXTURE_LD_GRASS,
-	TEXTURE_LD_GROUND,
-	TEXTURE_LD_STONE,
-	TEXTURE_LD_SNOW,
-	TEXTURE_LD_GRASS_SIDE,
-	TEXTURE_LD_SNOW_SIDE,
+	TEXTURE_WATER,
+	TEXTURE_SAND,
+	TEXTURE_GRASS,
+	TEXTURE_GROUND,
+	TEXTURE_STONE,
+	TEXTURE_SNOW,
+	TEXTURE_GRASS_SIDE,
+	TEXTURE_SNOW_SIDE,
 	TEXTURE_MAX
 };
 
@@ -85,7 +77,7 @@ typedef struct	s_shadows
 typedef struct	s_uniform
 {
 	GLint	time;
-	GLint	texturesHD, texturesLD;
+	GLint	textures;
 	GLint	skybox, campos;
 	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
 	GLint	model, view, projection;

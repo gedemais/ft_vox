@@ -109,12 +109,12 @@ static unsigned char	render_scene(t_env *env)
 
 static unsigned char	render_depth(t_env *env)
 {
+	return (ERR_NONE);
 	t_shadows	*shadows = &env->model.shadows;
 
-	// glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
 	glBindFramebuffer(GL_FRAMEBUFFER, shadows->fbo);
+	// glViewport(0, 0, env->window.w, env->window.h);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, env->model.shadows.depthmap);

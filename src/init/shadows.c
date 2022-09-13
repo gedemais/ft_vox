@@ -23,9 +23,10 @@ void		mount_shadows(t_env *env)
 
     glGenFramebuffers(1, &shadows->fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadows->fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadows->depthmap, 0);
 
-	// glDrawBuffer(GL_NONE);
-	// glReadBuffer(GL_NONE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadows->depthmap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

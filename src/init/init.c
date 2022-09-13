@@ -3,23 +3,14 @@
 
 const char				*textures_paths[TEXTURE_SB_MAX] = {
 	// TEXTURES HD
-	[TEXTURE_HD_WATER]		= "./resources/HD/water.png",
-	[TEXTURE_HD_SAND]		= "./resources/HD/sand.png",
-	[TEXTURE_HD_GRASS]		= "./resources/HD/grass.png",
-	[TEXTURE_HD_GROUND]		= "./resources/HD/ground.png",
-	[TEXTURE_HD_STONE]		= "./resources/HD/stone.png",
-	[TEXTURE_HD_SNOW]		= "./resources/HD/snow.png",
-	[TEXTURE_HD_GRASS_SIDE]	= "./resources/HD/grass_side.png",
-	[TEXTURE_HD_SNOW_SIDE]	= "./resources/HD/stone_side.png",
-	// TEXTURES LD
-	[TEXTURE_LD_WATER]		= "./resources/LD/water.png",
-	[TEXTURE_LD_SAND]		= "./resources/LD/sand.png",
-	[TEXTURE_LD_GRASS]		= "./resources/LD/grass.png",
-	[TEXTURE_LD_GROUND]		= "./resources/LD/ground.png",
-	[TEXTURE_LD_STONE]		= "./resources/LD/stone.png",
-	[TEXTURE_LD_SNOW]		= "./resources/LD/snow.png",
-	[TEXTURE_LD_GRASS_SIDE]	= "./resources/LD/grass_side.png",
-	[TEXTURE_LD_SNOW_SIDE]	= "./resources/LD/stone_side.png",
+	[TEXTURE_WATER]			= "./resources/textures/water.png",
+	[TEXTURE_SAND]			= "./resources/textures/sand.png",
+	[TEXTURE_GRASS]			= "./resources/textures/grass.png",
+	[TEXTURE_GROUND]		= "./resources/textures/ground.png",
+	[TEXTURE_STONE]			= "./resources/textures/stone.png",
+	[TEXTURE_SNOW]			= "./resources/textures/snow.png",
+	[TEXTURE_GRASS_SIDE]	= "./resources/textures/grass_side.png",
+	[TEXTURE_SNOW_SIDE]		= "./resources/textures/stone_side.png",
 	// TEXTURES SKYBOX
 	[TEXTURE_SB_PX]			= "./resources/skybox/px.png",
 	[TEXTURE_SB_PY]			= "./resources/skybox/py.png",
