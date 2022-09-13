@@ -1,11 +1,12 @@
 #ifndef GEN_H
 # define GEN_H
 
-# define CHUNK_SIZE			64 // Size of chunk blocks in cubes
-# define MAP_SIZE			256 // Size of map chunk matrix in chunks
-# define BIOME_SIZE			2 // Size of individual biome matrix in chunks
-# define SQUARE_SIZE		4 // Size of visible chunks matrix for the player (max_limit)
-# define CACHE_SIZE			64 // Size of chunks matrix available in the absolute world
+# define CHUNK_SIZE			 64 // Size of chunk blocks in cubes
+# define MAP_SIZE			 256 // Size of map chunk matrix in chunks
+# define BIOME_SIZE			 2 // Size of individual biome matrix in chunks
+# define SQUARE_SIZE		 10 // Size of visible chunks matrix for the player (max_limit)
+# define SQUARE_TRIGGER_SIZE 2 // Size of visible chunks matrix for the player (max_limit)
+# define CACHE_SIZE			 32 // Size of chunks matrix available in the absolute world at startup
 
 enum	e_side_orientation
 {
@@ -45,24 +46,13 @@ typedef struct	s_biome_params
 	float		bound; // 0-1 value used to LERP the biomes params
 }				t_biome_params;
 
-typedef struct	s_block
-{
-	uint8_t		type : 3;
-}				t_block;
-
-typedef	struct	s_group_unit
-{
-	unsigned char	x;
-	unsigned char	y;
-	unsigned char	z;
-}				t_group_unit;
-
 typedef struct	s_chunk
 {
 	t_dynarray		stride;
 	uint8_t			**surface_hmap;
 	uint8_t			**sub_hmap;
 	int				x_start, z_start;
+	int				x, y;
 }				t_chunk;
 
 // Biomes Generation Parameters

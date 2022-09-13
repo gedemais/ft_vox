@@ -36,12 +36,16 @@ static unsigned char	init_biomes(t_env *env)
 static unsigned char	init_map(t_env *env)
 {
 	unsigned char	code;
+	int				x_start, z_start;
 
-
+	env->model.square_x = (MAP_SIZE - SQUARE_SIZE) / 2;
+	env->model.square_y = (MAP_SIZE - SQUARE_SIZE) / 2;
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int y = 0; y < SQUARE_SIZE; y++)
 		{
-			if ((code = gen_chunk(env, &env->model.chunks[x][y], x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE, true)))
+			x_start = (env->model.square_x + x) * CHUNK_SIZE;
+			z_start = (env->model.square_y + y) * CHUNK_SIZE;
+			if ((code = gen_chunk(env, &env->model.chunks[x][y], x_start, z_start, true)))
 				return (code);
 			// water
 		}

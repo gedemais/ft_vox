@@ -49,25 +49,25 @@ static void			set_mesh_center(t_mesh *mesh)
 unsigned char	push_world(t_env *env)
 {
 	unsigned char	code;
-	t_mesh			*mesh;
+	t_mesh			mesh;
 	t_chunk			*chunk;
 
-	mesh = dyacc(&env->model.meshs, 0);
-
-	if (dynarray_init(&mesh->vertices, sizeof(t_stride), CHUNK_SIZE *  6 * sizeof(t_stride)) < 0)
-		return (ERR_MALLOC_FAILED);
 
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int y = 0; y < SQUARE_SIZE; y++)
 		{
-				chunk = &env->model.chunks[x][y];
-				for (int i = 0; i < chunk->stride.nb_cells; i++)
-					if (dynarray_push(&mesh->vertices, dyacc(&chunk->stride, i), false))
-						return (ERR_MALLOC_FAILED);
+			if (dynarray_init(&mesh.vertices, sizeof(t_stride), CHUNK_SIZE *  6 * sizeof(t_stride)) < 0)
+				return (ERR_MALLOC_FAILED);
+
+			chunk = &env->model.chunks[x][y];
+			for (int i = 0; i < chunk->stride.nb_cells; i++)
+				if (dynarray_push(&mesh.vertices, dyacc(&chunk->stride, i), false))
+					return (ERR_MALLOC_FAILED);
+
+			if (dynarray_push(&env->model.meshs, &mesh, true) < 0)
+				return (ERR_MALLOC_FAILED);
 		}
 
-	if (dynarray_push(&env->model.meshs, mesh, true) < 0)
-		return (ERR_MALLOC_FAILED);
 	return (ERR_NONE);
 }
 
@@ -95,7 +95,7 @@ unsigned char			model(t_env *env)
 {
 	unsigned char	code;
 
-	if (dynarray_init(&env->model.meshs, sizeof(t_mesh), 2) < 0)
+	if (dynarray_init(&env->model.meshs, sizeof(t_mesh), SQUARE_SIZE * SQUARE_SIZE) < 0)
 		return (ERR_MALLOC_FAILED);
 
 	if ((code = push_world(env)) != ERR_NONE

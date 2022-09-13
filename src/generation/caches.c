@@ -1,5 +1,17 @@
 #include "main.h"
 
+unsigned char	init_chunk(t_env *env, int x, int z)
+{
+	unsigned char	code = ERR_NONE;
+	t_chunk			*chunk;
+	t_dynarray		*line;
+
+	line = dyacc(&env->model.chunks_cache, x);
+	chunk = dyacc(line, z);
+
+	return (generate_vertexs(chunk, x * CHUNK_SIZE, z * CHUNK_SIZE));
+}
+
 unsigned char	init_caches(t_env *env)
 {
 	t_chunk			chunk;
@@ -17,15 +29,14 @@ unsigned char	init_caches(t_env *env)
 			|| dynarray_push(&env->model.chunks_cache, &arr, false))
 			return (ERR_MALLOC_FAILED);
 
-		for (int y = 0; y < CACHE_SIZE; y++)
+		for (int z = 0; z < CACHE_SIZE; z++)
 		{
 			ft_memset(&chunk, 0, sizeof(t_chunk));
-			if ((code = gen_chunk(env, &chunk, x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE, false))
+			if ((code = gen_chunk(env, &chunk, x * CHUNK_SIZE, z * CHUNK_SIZE, false))
 				|| (dynarray_push(&arr, &chunk, false) && (code = ERR_MALLOC_FAILED)))
 				return (code);
 			// water
 		}
 	}
-	exit(0);
 	return (ERR_NONE);
 }

@@ -4,7 +4,7 @@
 static void	init_camera(t_env *env)
 {
 	t_camera	*camera;
-	const float	cam_offset = CHUNK_SIZE * SQUARE_SIZE / 2.0f;
+	const float	cam_offset = (CHUNK_SIZE * MAP_SIZE + 1) / 2.0f;
 
 	camera = &env->camera;
 	camera->ground_fixed = false;

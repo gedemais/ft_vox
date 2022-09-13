@@ -1,6 +1,5 @@
 #include "../../include/main.h"
 
-
 static void				set_layouts(bool skybox)
 {
 	// Specifies the disposition of components in vertexs
@@ -15,7 +14,6 @@ static void				set_layouts(bool skybox)
 		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void *)sizeof(float));
 		glEnableVertexAttribArray(1);
 	}
-
 }
 
 static unsigned char	gl_buffers(t_mesh *mesh, bool skybox)

@@ -152,7 +152,7 @@ int					*map_seed(void);
 
 // Generation functions
 unsigned char		init_world(t_env *env, int argc, char **argv);
-unsigned char		gen_chunk(t_env *env, t_chunk *chunk, int x_start, int z_start, unsigned int size, bool stride);
+unsigned char		gen_chunk(t_env *env, t_chunk *chunk, int x_start, int z_start, bool stride);
 uint8_t				**generate_height_map(t_biome_params params, int x_start, int y_start, unsigned int size);
 unsigned char		generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6]);
 unsigned char		generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned int size, vec3 top_plane[6]);
@@ -162,6 +162,8 @@ unsigned char		borders(t_env *env);
 unsigned char		generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth);
 unsigned char		init_caches(t_env *env);
 float				perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
+unsigned char		generate_vertexs(t_chunk *chunk, int x_start, int z_start);
+unsigned char		update_world(t_env *env);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {

@@ -81,6 +81,10 @@ static void				mat4_mvp(t_env *env)
 
 static unsigned char	render_scene(t_env *env)
 {
+	unsigned char	code;
+
+	if ((code = update_world(env)) != ERR_NONE)
+		return (code);
 	fps(&env->fps, true);
 	mat4_mvp(env);
 	draw_mesh(env);
