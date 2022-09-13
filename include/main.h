@@ -76,8 +76,7 @@ enum				e_keys
 // Settings data storing structure
 typedef struct		s_settings
 {
-	uint16_t	w_wdt;
-	uint16_t	w_hgt;
+	uint16_t	w_wdt, w_hgt;
 	uint8_t		keys[KEY_MAX];
 	char		pad[3];
 }					t_settings;
@@ -99,8 +98,7 @@ typedef struct		s_fps
 typedef struct		s_mouse
 {
 	vec3	pos;
-	float	base_sensitivity;
-	float	sensitivity;
+	float	base_sensitivity, sensitivity;
 }					t_mouse;
 
 // Main environment structure
@@ -162,7 +160,7 @@ size_t				*stride_bytesize(void);
 unsigned char		borders(t_env *env);
 unsigned char		generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth);
 
-float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
+float				perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {
@@ -187,9 +185,6 @@ static const char	*settings_keys[SET_MAX] = {
 };
 
 // UTILS
-// functions
-void				print_fv(t_dynarray *vertices);
-void				print_faces(t_dynarray *faces);
 // fps
 void				fps(t_fps *fps, bool print);
 // shaders

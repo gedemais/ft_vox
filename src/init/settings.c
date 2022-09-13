@@ -65,10 +65,14 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 			env->light.gamma = f;
 			break;
 		case SET_FAR_PLANE:
-			env->camera.far = fabs(f);
+			if (f < 1.0f)
+				f = 1.0f;
+			env->camera.far = f;
 			break;
 		case SET_NEAR_PLANE:
-			env->camera.near = fabs(f);
+			if (f < 0.05f)
+				f = 0.05f;
+			env->camera.near = f;
 			break;
 		case SET_PLAYER_SPEED:
 			env->camera.speed = fabs(f);
@@ -79,10 +83,10 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 			env->mouse.sensitivity = env->mouse.base_sensitivity;
 			break;
 		case SET_PLAYER_LIGHT_INTENSITY:
-			env->light.sources[LIGHT_SOURCE_PLAYER].intensity = fabs(f);
+			env->light.sources[LIGHT_SOURCE_PLAYER].intensity = f;
 			break;
 		case SET_SUNLIGHT_INTENSITY:
-			env->light.sources[LIGHT_SOURCE_SUN].intensity = fabs(f);
+			env->light.sources[LIGHT_SOURCE_SUN].intensity = f;
 			break;
 	// Key Bindings
 		case SET_KEY_EXIT:

@@ -4,7 +4,8 @@
 
 # include "main.h"
 # include "gen.h"
-# define MODEL_SCALE 1
+
+# define MODEL_SCALE	1
 # define SB_ROT_SPEED	10 // sun's rotation speed
 
 enum			e_texture

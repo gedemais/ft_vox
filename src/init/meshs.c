@@ -5,15 +5,11 @@ static void				set_layouts(bool skybox)
 {
 	// Specifies the disposition of components in vertexs
 	// id ptr, size, GL_type, GL_FALSE, totalsize, start pos
-
-	// vec3 : positin
-	if (skybox)
-	{
+	if (skybox) {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void *)0);
 		glEnableVertexAttribArray(0);
 	}
-	else
-	{
+	else {
 		glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void *)0);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(t_stride), (void *)sizeof(float));
@@ -30,8 +26,13 @@ static unsigned char	gl_buffers(t_mesh *mesh, bool skybox)
 	// VBO -- Create a Vertex Buffer Object and copy the vertex data to it
 	glGenBuffers(1, &mesh->gl.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->gl.vbo);
-	glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)sizeof(t_stride) * mesh->vertices.nb_cells,
-		mesh->vertices.arr, GL_STATIC_DRAW);
+	if (skybox) {
+		glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)sizeof(vec3) * mesh->vertices.nb_cells,
+			mesh->vertices.arr, GL_STATIC_DRAW);
+	} else {
+		glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)sizeof(t_stride) * mesh->vertices.nb_cells,
+			mesh->vertices.arr, GL_STATIC_DRAW);
+	}
 	set_layouts(skybox);
 	glBindVertexArray(0);
 	return (ERR_NONE);

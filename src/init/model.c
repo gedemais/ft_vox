@@ -66,8 +66,6 @@ unsigned char	push_world(t_env *env)
 						return (ERR_MALLOC_FAILED);
 		}
 
-	//print_fv(&mesh->vertices);
-
 	if (dynarray_push(&env->model.meshs, mesh, true) < 0)
 		return (ERR_MALLOC_FAILED);
 	return (ERR_NONE);
@@ -87,8 +85,6 @@ unsigned char	push_skybox(t_env *env)
 		return (code);
 
 	set_mesh_center(mesh);
-
-	// print_fv(&mesh->vertices);
 
 	if (dynarray_push(&env->model.meshs, mesh, false) < 0)
 		return (ERR_MALLOC_FAILED);

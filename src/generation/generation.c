@@ -49,6 +49,9 @@ static void				load_chunk_params(t_env *env, int x_start, int z_start, unsigned 
 	//if (params->frequency > 0.3f)
 	//	printf("factor : %f | lower bound : %f | upper bound : %f | delta_inf : %f | delta_sup : %f\n",
 	//			biome_factor, bgp[i].bound, bgp[i + 1].bound, delta_inf, delta_sup);
+	(void)delta;
+	(void)delta_inf;
+	(void)delta_sup;
 }
 
 static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_start, int z_start, unsigned int size)

@@ -70,10 +70,8 @@ vec2	get_uv(int n, float fall_size)
 void	main()
 {
 	vec4		pos;
-	uint		normal_id;
-	uint		uv_id;
+	uint		normal_id, uv_id, block_type;
 	float		fall_size;
-	uint		block_type;
 
 	//////// Bitfield unpacking ///////////
 	pos.x = float(data1 & 0xFFFF);
@@ -81,10 +79,10 @@ void	main()
 	pos.z = float(data2 & 0xFFFF);
 	pos.w = 1.0f;
 
-	uv_id = ((data2 & 0x70000u) >> 16u);
-	fall_size = float((data2 & 0x1F80000u) >> 19u);
-	normal_id = ((data2 & 0xE000000u) >> 25u);
-	block_type = ((data2 & 0x70000000u) >> 29u);
+	uv_id		= ((uint(data2) & 0x70000u) >> 16u);
+	fall_size	= float((uint(data2) & 0x1F80000u) >> 19u);
+	normal_id	= ((uint(data2) & 0xE000000u) >> 25u);
+	block_type	= ((uint(data2) & 0x70000000u) >> 29u);
 	//////////////////////////////////////
 
 	// Water ripples
@@ -92,8 +90,8 @@ void	main()
 	if (vType == 0) {
 		float	time, wavelength;
 
-		time		= u_time * 0.05f;
-		wavelength	= 0.1f;
+		time		= u_time * 0.025f;
+		wavelength	= 0.05f;
 		pos.y		+= (sin(pos.x * time) * cos(pos.y * time)) * wavelength + 0.5f;
 	}
 
@@ -101,7 +99,7 @@ void	main()
 	vTextCoord	= get_uv(int(uv_id), fall_size);
 
 	vNormal		= mat3(transpose(inverse(model))) * get_normal(int(normal_id));
-	//vNormal		= get_normal(int(normal_id));
+	//vNormal	= get_normal(int(normal_id));
 
 	vPosition	= vec3(pos * model);
 	//vPosition	= pos;
