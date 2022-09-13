@@ -1,0 +1,10 @@
+MANDATORY
+gestion des caches
+caves
+eau (post generation)
+OPTIONAL
+biomes (interpoler avec une granularite plus faible)
+ombres
+TO FIX
+#include ../../*
+rm const float block_size
