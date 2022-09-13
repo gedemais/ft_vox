@@ -44,6 +44,7 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 	mesh->gl.uniform.model = glGetUniformLocation(mesh->gl.shader_program, "model");
 	mesh->gl.uniform.view = glGetUniformLocation(mesh->gl.shader_program, "view");
 	mesh->gl.uniform.projection = glGetUniformLocation(mesh->gl.shader_program, "projection");
+	mesh->gl.uniform.depth_mvp = glGetUniformLocation(mesh->gl.shader_program, "depth_mvp");
 
 	if (skybox == true) {
 		mesh->gl.uniform.skybox = glGetUniformLocation(mesh->gl.shader_program, "vSkybox");
@@ -55,6 +56,8 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 		mesh->gl.uniform.textures = glGetUniformLocation(mesh->gl.shader_program, "vTextures");
 		int	samplers[TEXTURE_MAX] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 		glUniform1iv(mesh->gl.uniform.textures, TEXTURE_MAX, samplers);
+		mesh->gl.uniform.depthmap = glGetUniformLocation(mesh->gl.shader_program, "depthmap");
+		glUniform1i(mesh->gl.uniform.depthmap, TEXTURE_SB_MAX);
 		light_uniforms(mesh, light);
 	}
 	return (ERR_NONE);

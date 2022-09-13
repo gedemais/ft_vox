@@ -122,7 +122,7 @@ void				light(t_env *env);
 unsigned char		light_uniforms(t_mesh *mesh, t_light *light);
 unsigned char		model(t_env *env);
 void				mount_textures(t_env *env);
-void				mount_shadows(t_env *env);
+unsigned char		mount_shadows(t_env *env);
 unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path);
 
 // OpenGL

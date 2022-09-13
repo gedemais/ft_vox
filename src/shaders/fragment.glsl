@@ -17,6 +17,7 @@ struct	Light {
 in vec3					vNormal;
 in vec3					vPosition;
 in vec2					vTextCoord;
+in vec4					vShadCoord;
 flat in float			vType;
 
 uniform vec3			campos;
@@ -25,6 +26,7 @@ uniform float			u_time;
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
 uniform sampler2D		vTextures[TEXTURE_MAX];
+uniform sampler2D		depthmap;
 
 out vec4				FragColor;
 
@@ -49,6 +51,13 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 
 	color = source.ambient + source.diffuse + source.specular;
 	color *= attenuation;
+	// shadows
+	float	visibility = 1.0f;
+
+	if (texture(depthmap, vShadCoord.xy).z < vShadCoord.z)
+    	visibility = 0.5f;
+	color *= visibility;
+
 	return (vec4(color, 1));
 }
 
@@ -77,8 +86,8 @@ void	main()
 	model(index);
 
 	// water transparency
-	// if (index == 0)
-	// 	FragColor.a = 0.5f;
+	if (index == 0)
+		FragColor.a = 0.5f;
 	// gamma correction
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 }

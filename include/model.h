@@ -4,7 +4,7 @@
 
 # include "main.h"
 # include "gen.h"
-# include "camera.h"
+# include "shadows.h"
 
 # define MODEL_SCALE	1
 # define SB_ROT_SPEED	10 // sun's rotation speed
@@ -67,20 +67,13 @@ typedef struct	s_texture
 	unsigned int	w, h;
 }				t_texture;
 
-typedef struct	s_shadows
-{
-	GLuint		depthmap;
-	GLuint		fbo;
-	t_camera	camera;
-}				t_shadows;
-
 typedef struct	s_uniform
 {
 	GLint	time;
-	GLint	textures;
+	GLint	textures, depthmap;
 	GLint	skybox, campos;
 	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
-	GLint	model, view, projection;
+	GLint	model, view, projection, depth_mvp;
 }				t_uniform;
 
 typedef struct	s_gltools
@@ -103,7 +96,6 @@ typedef struct	s_model
 	float		**biomes;
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
 	mat4		model;
-	mat4		mvp;
 	float		scale;
 	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
 	GLuint		gl_tskybox;					// gl's texture for skybox

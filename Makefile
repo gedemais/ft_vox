@@ -67,6 +67,7 @@ INC_NAME=main.h\
 	light.h\
 	model.h\
 	shaders.h\
+	shadows.h\
 	gen.h
 
 INC=$(addprefix $(INC_PATH), $(INC_NAME))

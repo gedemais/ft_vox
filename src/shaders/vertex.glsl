@@ -6,11 +6,13 @@ layout (location = 1) in int	data2;
 uniform mat4 					model;
 uniform mat4 					view;
 uniform mat4 					projection;
+uniform mat4 					depth_mvp;
 uniform float 					u_time;
 
 out vec3						vNormal;
 out vec3						vPosition;
 out vec2						vTextCoord;
+out vec4						vShadCoord;
 flat out float					vType;
 
 vec3	get_normal(int n)
@@ -99,6 +101,7 @@ void	main()
 	vTextCoord	= get_uv(int(uv_id), fall_size);
 	vNormal		= get_normal(int(normal_id));
 	vPosition	= vec3(pos);
+	vShadCoord	= pos * depth_mvp;
 
 	gl_Position	= pos * model * view * projection;
 }

@@ -16,18 +16,23 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 	} else {
 		// update time
 		glUniform1f(mesh->gl.uniform.time, env->fps.current_seconds);
+
 		// update campos
 		glUniform3fv(mesh->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
+
 		// update lightpos
 		// LIGHT PLAYER
 		env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
-		// LIGHT
+		// SUNLIGHT
 		env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
 		// sunlight follow the sun's texture
 		tmp = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].pos);
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&tmp);
+
+		// update depth matrices
+		glUniformMatrix4fv(mesh->gl.uniform.depth_mvp, 1, GL_FALSE, env->model.shadows.view);
 	}
 	// update matrices in shaders
 	glUniformMatrix4fv(mesh->gl.uniform.model, 1, GL_FALSE, env->model.model);
@@ -88,11 +93,46 @@ static void				mat4_model(t_model *model)
 	mat4_scale(model->model, model->scale);
 }
 
-static void				mat4_mvp(t_env *env)
+static void				update_matrices(t_env *env)
 {
+	// MODEL
 	mat4_model(&env->model);
 	mat4_view(&env->camera);
 	mat4_projection(env->camera.projection, env->camera.fov, env->camera.near, env->camera.far, env->camera.ratio);
+	// SHADOWS
+	t_shadows	*shadows	= &env->model.shadows;
+	vec3		light_pos, light_dir, tmp;
+
+	// mat4	bias;
+
+	// bias[0] = 0.5f;
+	// bias[1] = 0;
+	// bias[2] = 0;
+	// bias[3] = 0;
+	// bias[4] = 0;
+	// bias[5] = 0.5f;
+	// bias[6] = 0;
+	// bias[7] = 0;
+	// bias[8] = 0;
+	// bias[9] = 0;
+	// bias[10] = 0.5f;
+	// bias[11] = 0;
+	// bias[12] = 0.5f;
+	// bias[13] = 0.5f;
+	// bias[14] = 0.5f;
+	// bias[15] = 0.5f;
+
+	light_pos = env->light.sources[LIGHT_SOURCE_PLAYER].pos;
+	light_dir = env->light.sources[LIGHT_SOURCE_PLAYER].dir;
+	// mat4_lookat(shadows->view, light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
+	(void)light_dir;
+	mat4_lookat(shadows->view, light_pos, (vec3){ 0, 0, 0 }, (vec3){ 0, 1, 0 });
+	mat4_inverse(shadows->view);
+	// mat4_identity(shadows->mvp);
+	// mat4_multiply(shadows->mvp, env->camera.projection);
+	// mat4_multiply(shadows->mvp, env->model.model);
+	// mat4_multiply(shadows->mvp, shadows->view);
+	// mat4_multiply(shadows->mvp, bias);
 }
 
 static unsigned char	render_scene(t_env *env)
@@ -102,7 +142,6 @@ static unsigned char	render_scene(t_env *env)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	fps(&env->fps, true);
-	mat4_mvp(env);
 	draw_mesh(env);
 	return (ERR_NONE);
 }
@@ -116,7 +155,7 @@ static unsigned char	render_depth(t_env *env)
 	// glViewport(0, 0, env->window.w, env->window.h);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0 + TEXTURE_MAX);
 	glBindTexture(GL_TEXTURE_2D, env->model.shadows.depthmap);
 	// renderScene(simpleDepthShader);
 
@@ -137,6 +176,9 @@ unsigned char			display_loop(t_env *env)
 		// render
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// update matrices
+		// ---------------
+		update_matrices(env);
 		// 1. render depth of scene to texture
 		// -----------------------------------
 		if ((code = render_depth(env)) != ERR_NONE)
