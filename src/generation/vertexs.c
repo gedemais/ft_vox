@@ -93,12 +93,13 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 		uint32_t	a;
 		uint32_t	b;
 
-		memcpy(&v, &vertex, sizeof(t_stride));
-		a = (uint32_t)v;
-		b = (uint32_t)(v >> 32);
 
 		if (chunk->stride.nb_cells < 10)
 		{
+			memcpy(&v, &vertex, sizeof(t_stride));
+			a = (uint32_t)v;
+			b = (uint32_t)(v >> 32);
+
 			printf("UNSIGNED INTS : %u %u\n", a, b);
 
 			printf("------ BITFIELD ------\n");
