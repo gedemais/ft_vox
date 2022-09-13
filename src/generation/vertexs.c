@@ -49,7 +49,7 @@ void printBits(size_t size, void *ptr)
 static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side)
 {
 	t_stride		vertex;
-	float			block_type;
+	uint8_t			block_type;
 	const t_vt	vts[6] = {
 							(t_vt){1, fall_size}, // A
 							(t_vt){1, 0}, // B
@@ -66,12 +66,18 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 		ft_memset(&vertex, 0, sizeof(t_stride));
 		// Constuction of the vertex
 		//printf("%f %f %f | %f %f | %d | %d\n", plane[i].x, plane[i].y, plane[i].z, vts[i].u, vts[i].v, normal, (uint8_t)switch_block_type(z));
-		block_type = (float)switch_block_type(y);
+		block_type = switch_block_type(y);
 		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
 		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
 
-		vertex = (t_stride){(int)plane[i].x, (int)plane[i].y, (int)plane[i].z,
-			(uint8_t)i, (uint8_t)((int)fall_size), (uint8_t)normal, (uint8_t)block_type, (uint8_t)0};
+		vertex = (t_stride){(short)plane[i].x, 
+							(short)plane[i].y,
+							(short)plane[i].z,
+							(uint8_t)i,
+							(uint8_t)((int)fall_size),
+							(uint8_t)normal,
+							(uint8_t)block_type,
+							(uint8_t)0};
 
 		// Insertion of the vertex in the stride
 		if (dynarray_push(&chunk->stride, &vertex, false))
@@ -127,13 +133,17 @@ static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned
 
 	while (n < offset)
 	{
-		fall_size = 0;
-		prev_bt = switch_block_type(y + n);
-		while (n < offset && prev_bt == switch_block_type(y + n))
+		fall_size = 0.0f;
+		prev_bt = switch_block_type(y - n);
+		while (n < offset && prev_bt == switch_block_type(y - n))
 		{
 			fall_size += 1.0f;
 			n++;
 		}
+
+		if (n < offset)
+			fall_size += 1.0f;
+
 		if ((code = generate_fall(chunk, a, b, index, y, fall_size)))
 			return (code);
 	}

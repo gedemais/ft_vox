@@ -111,8 +111,11 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 		return (code);
 
 	printf("seed : %d\n", *map_seed());
-	model(env);
-	light(env); // light after model because we set the sun's light pos with the model center
+
+	if ((code = model(env)) != ERR_NONE)
+		return (code);
+
+	light(env); // Light after model because we set the sun's light pos with the model center
 
 	return (ERR_NONE);
 }
