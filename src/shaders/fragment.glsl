@@ -1,6 +1,6 @@
 #version 400 core
 
-#define LIGHT_SOURCE_MAX	1
+#define LIGHT_SOURCE_MAX	2
 #define TEXTURE_MAX			8
 
 struct	LightSources {
@@ -20,43 +20,44 @@ in vec2					vTextCoord;
 flat in float			vType;
 
 uniform vec3			campos;
+uniform float			u_time;
 
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
 uniform sampler2D		vTexturesHD[TEXTURE_MAX];
 uniform sampler2D		vTexturesLD[TEXTURE_MAX];
-uniform samplerCube		vSkybox;
 
 out vec4				FragColor;
 
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 {
-	vec3	light_dir, half_dir;
-	float	attenuation, e;
+	vec3	light_dir, reflect_dir;
+	float	attenuation, e, theta;
 
 	color			*= source.color;
 
-	light_dir		= normalize(source.dir);
-	half_dir		= normalize(light_dir + view_dir);
+	light_dir		= normalize(-source.dir);
+	reflect_dir		= reflect(light_dir, vNormal);
 
-	attenuation		= 1 / length(source.pos - vPosition);
-	attenuation		*= source.intensity;
+	e				= distance(source.pos, vPosition);
+	attenuation		= (1 / e) * source.intensity;
 
-	source.ambient	= color * source.ambient * attenuation;
+	source.ambient	= color * source.ambient;
 	e				= max(dot(vNormal, light_dir), 0);
-	source.diffuse	= color * source.diffuse * e * attenuation;
-	e				= pow(max(dot(view_dir, half_dir), 0), 32);
-	source.specular	= color * source.specular * e * attenuation;
+	source.diffuse	= color * source.diffuse * e;
+	e				= pow(max(dot(view_dir, reflect_dir), 0), 8);
+	source.specular	= color * source.specular * e;
 
-	return (vec4(source.ambient + source.diffuse + source.specular, 1));
+	color = source.ambient + source.diffuse + source.specular;
+	color *= attenuation;
+	return (vec4(color, 1));
 }
 
-void	main()
+void	model(int index)
 {
-	int		index = int(vType);
 	vec3	color;
 
-	if (distance(campos, vPosition) < 100) {
+	if (distance(campos, vPosition) > 100) {
 		color = texture(vTexturesLD[index], vTextCoord).rgb;
 	}
 	else
@@ -72,9 +73,17 @@ void	main()
 	} else {
 		FragColor = vec4(color, 1);
 	}
+}
 
-	//FragColor = texture(vSkybox, vPosition);
+void	main()
+{
+	int		index	= int(vType);
 
+	model(index);
+
+	// water transparency
+	if (index == 0)
+		FragColor.a = 0.5f;
 	// gamma correction
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 }

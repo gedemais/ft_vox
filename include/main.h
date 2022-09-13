@@ -33,17 +33,22 @@
 # include "keys.h"
 # include "gen.h"
 
+# define DEFAULT_COLOR		(vec3){ 0.5f, 0.8f, 1.0f } //light blue
+
 // Settings instances
 enum				e_settings
 {
 	SET_WIN_HEIGHT,
-	SET_WIN_WIDTH,
+	SET_WIN_WIDTH, // Must remain before float values
+	SET_FOV,
 	SET_GAMMA,
+	SET_FAR_PLANE,
+	SET_NEAR_PLANE,
 	SET_PLAYER_SPEED,
+	SET_MOUSE_SENSITIVITY,
 	SET_PLAYER_LIGHT_INTENSITY,
 	SET_SUNLIGHT_INTENSITY,
-	SET_MOUSE_SENSITIVITY,
-	SET_KEY_EXIT, // Must remain after numeric values and before key assignments
+	SET_KEY_EXIT, // Must remain after numeric values
 	SET_KEY_MOVE_CAM_FORWARD,
 	SET_KEY_MOVE_CAM_BACKWARD,
 	SET_KEY_MOVE_CAM_UP,
@@ -84,26 +89,10 @@ typedef struct		s_window
 	GLFWwindow		*ptr;
 }					t_window;
 
-typedef struct	s_uniform
-{
-	GLint	texturesHD, texturesLD;
-	GLint	skybox, campos;
-	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
-	GLint	model, view, projection;
-}				t_uniform;
-
-typedef struct	s_gltools
-{
-	GLuint			shader_program;
-	GLuint			shader_vertex, shader_fragment;
-	const GLchar	*shader_vertex_text, *shader_fragment_text;
-	t_window		window;
-	t_uniform		uniform;
-}				t_gltools;
-
 typedef struct		s_fps
 {
 	unsigned int	frames, value;
+	double			delta, lastframe;
 	double			time, current_seconds, elapsed_seconds;
 }					t_fps;
 
@@ -117,8 +106,8 @@ typedef struct		s_mouse
 // Main environment structure
 typedef struct		s_env
 {
+	t_window	window;
 	t_settings	settings;
-	t_gltools	gl;
 	t_camera	camera;
 	t_fps		fps;
 	t_mouse		mouse;
@@ -132,12 +121,12 @@ typedef struct		s_env
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
 void				light(t_env *env);
-unsigned char		light_uniforms(t_env *env);
+unsigned char		light_uniforms(t_mesh *mesh, t_light *light);
 unsigned char		model(t_env *env);
 
 // OpenGL
 unsigned char   	init_display(t_env *env);
-unsigned char		init_shaders(t_env *env);
+unsigned char		init_meshs(t_env *env);
 unsigned char   	display_loop(t_env *env);
 void				processInput(GLFWwindow *window);
 
@@ -154,6 +143,7 @@ void				free_env(t_env *env);
 void				exit_vox(t_env *env, int key);
 void				move_cam(t_env *env, int key);
 void				events_mouse(t_env *env, float xpos, float ypos);
+void 				glfw_init_callbacks(t_env *env);
 
 void				event_light(t_env *env, int key);
 
@@ -178,11 +168,14 @@ float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 static const char	*settings_keys[SET_MAX] = {
 	"window_height", // integers
 	"window_width",
-	"gamma", // floating points
+	"fov",  // floating points
+	"gamma",
+	"far_plane",
+	"near_plane",
 	"player_speed",
+	"mouse_sensitivity",
 	"player_light_intensity",
 	"sunlight_intensity",
-	"mouse_sensitivity",
 	"exit", // Keybinds
 	"move_cam_forward",
 	"move_cam_backward",
@@ -199,6 +192,8 @@ void				print_fv(t_dynarray *vertices);
 void				print_faces(t_dynarray *faces);
 // fps
 void				fps(t_fps *fps, bool print);
+// shaders
+unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path);
 
 
 #endif

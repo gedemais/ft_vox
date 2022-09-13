@@ -1,5 +1,6 @@
 #ifndef GEN_H
 # define GEN_H
+
 # define CHUNK_SIZE			64 // Size of chunk blocks in cubes
 # define MAP_SIZE			256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			2 // Size of individual biome matrix in chunks
@@ -22,8 +23,7 @@ enum	e_bloc_types
 	BT_GROUND,
 	BT_STONE,
 	BT_SNOW,
-	BT_GRASS_SIDE,
-	BT_SNOW_SIDE,
+	BT_SKYBOX,
 	BT_MAX
 };
 

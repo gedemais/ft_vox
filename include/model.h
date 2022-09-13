@@ -2,7 +2,10 @@
 # define MODEL_H
 
 
+# include "main.h"
 # include "gen.h"
+# define MODEL_SCALE 1
+# define SB_ROT_SPEED	10 // sun's rotation speed
 
 enum			e_texture
 {
@@ -64,17 +67,33 @@ typedef struct __attribute__((__packed__)) s_stride
 	int		pad : 1;
 }				__attribute__((__packed__)) t_stride;
 
-
 typedef struct	s_texture
 {
 	unsigned char	*ptr;
 	unsigned int	w, h;
 }				t_texture;
 
+typedef struct	s_uniform
+{
+	GLint	time;
+	GLint	texturesHD, texturesLD;
+	GLint	skybox, campos;
+	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
+	GLint	model, view, projection;
+}				t_uniform;
+
+typedef struct	s_gltools
+{
+	GLuint		vao, vbo;
+	GLuint		shader_program;
+	GLuint		shader_vertex, shader_fragment;
+	t_uniform	uniform;
+}				t_gltools;
+
 typedef struct	s_mesh
 {
 	t_dynarray	vertices;
-	GLuint		vao, vbo;
+	t_gltools	gl;
 }				t_mesh;
 
 typedef struct	s_model

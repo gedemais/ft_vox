@@ -27,7 +27,7 @@ typedef struct	s_light_source
 {
 	vec3	pos, dir, color;
 	vec3	ambient, diffuse, specular;
-	float	intensity;
+	float	intensity, cutoff;
 }				t_light_source;
 
 typedef struct	s_light

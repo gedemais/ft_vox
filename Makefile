@@ -35,24 +35,26 @@ SRC_NAME=main.c\
 	free.c\
 	render.c\
 	singletons.c\
-	actions/toggles.c\
+	actions/events.c\
 	actions/live.c\
-	generation/noise.c\
+	actions/toggles.c\
 	generation/generation.c\
 	generation/height_map.c\
+	generation/noise.c\
 	generation/vertexs.c\
 	generation/borders.c\
 	init/camera.c\
-	init/settings.c\
 	init/init.c\
-	init/light.c\
-	init/model.c\
 	init/init_opengl.c\
-	init/init_shaders.c\
 	init/init_utils.c\
-	utils/functions.c\
 	init/init_world.c\
-	utils/fps.c
+	init/light.c\
+	init/meshs.c\
+	init/model.c\
+	init/shaders.c\
+	init/settings.c\
+	utils/fps.c\
+	utils/functions.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
 

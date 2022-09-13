@@ -1,6 +1,6 @@
 #include "main.h"
 
-int	*map_seed(void)
+int		*map_seed(void)
 {
 	static int seed = -1;
 

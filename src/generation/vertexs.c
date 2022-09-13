@@ -15,15 +15,17 @@ const float		block_size = 1.0f;
 
 static int	switch_block_type(unsigned int z)
 {
-	if (z < 10)
-		return (BT_SAND); //Water
-	else if (z >= 10 && z < 20)
+	if (z < 1)
+		return (BT_SAND);
+	else if (z < 15)
+		return (BT_WATER);
+	else if (z < 20)
 		return (BT_SAND);
 	else if (z >= 20 && z < 30)
 		return (BT_GROUND);
 	else if (z >= 30 && z < 40)
 		return (BT_GRASS);
-	else if (z >= 40 && z < 50)
+	else if (z >= 40 && z < 60)
 		return (BT_STONE);
 	else
 		return (BT_SNOW);
@@ -49,8 +51,9 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 		ft_memset(&vertex, 0, sizeof(t_stride));
 
 		block_type = switch_block_type(y);
-		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
-		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
+		(void)side;
+		//block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
+		//block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
 
 		// Constuction of the vertex
 		vertex = (t_stride){(short)plane[i].x, 
