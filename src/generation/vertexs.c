@@ -29,47 +29,30 @@ static int	switch_block_type(unsigned int z)
 		return (BT_SNOW);
 }
 
-void printBits(size_t size, void *ptr)
-{
-    unsigned char *b = (unsigned char*) ptr;
-    unsigned char byte;
-    size_t i, j;
-    
-    for (i = 0; i < size; i++) {
-        for (j = 0; j < 8; j++) {
-            byte = (b[i] >> j) & 1;
-            printf("%u", byte);
-        }
-    }
-	printf("\n");
-}
-
-
-
 static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side)
 {
 	t_stride		vertex;
 	uint8_t			block_type;
 	const t_vt	vts[6] = {
-							(t_vt){1, fall_size}, // A
-							(t_vt){1, 0}, // B
-							(t_vt){0, 0}, // C
+						(t_vt){1, fall_size}, // A
+						(t_vt){1, 0}, // B
+						(t_vt){0, 0}, // C
 
-							(t_vt){1, fall_size}, // D
-							(t_vt){0, 0}, // E
-							(t_vt){0, fall_size}, // F
+						(t_vt){1, fall_size}, // D
+						(t_vt){0, 0}, // E
+						(t_vt){0, fall_size}, // F
 						};
 
 	// Addition of 6 vertexs plane to the mesh's data stride
 	for (unsigned int i = 0; i < 6; i++)
 	{
 		ft_memset(&vertex, 0, sizeof(t_stride));
-		// Constuction of the vertex
-		//printf("%f %f %f | %f %f | %d | %d\n", plane[i].x, plane[i].y, plane[i].z, vts[i].u, vts[i].v, normal, (uint8_t)switch_block_type(z));
+
 		block_type = switch_block_type(y);
 		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
 		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
 
+		// Constuction of the vertex
 		vertex = (t_stride){(short)plane[i].x, 
 							(short)plane[i].y,
 							(short)plane[i].z,
@@ -83,7 +66,6 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 		if (dynarray_push(&chunk->stride, &vertex, false))
 			return (ERR_MALLOC_FAILED);
 	}
-	//printf("-----------------------\n");
 	return (ERR_NONE);
 }
 
@@ -142,7 +124,7 @@ static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned
 		}
 
 		if (n < offset)
-			fall_size += 1.0f;
+			fall_size += (float)(offset - n);
 
 		if ((code = generate_fall(chunk, a, b, index, y, fall_size)))
 			return (code);
