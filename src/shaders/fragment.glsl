@@ -73,9 +73,6 @@ void	model(int index)
 	} else {
 		FragColor = vec4(color, 1);
 	}
-
-	if (index == 0)
-		FragColor.a = 0.5f;
 }
 
 void	main()
@@ -84,6 +81,9 @@ void	main()
 
 	model(index);
 
+	// water transparency
+	if (index == 0)
+		FragColor.a = 0.5f;
 	// gamma correction
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / light.gamma));
 }

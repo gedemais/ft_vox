@@ -80,11 +80,13 @@ unsigned char	push_skybox(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			*mesh;
+	float			size_skybox;
 
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells);
 	if (dynarray_init(&mesh->vertices, sizeof(vec3), 36) < 0)
 		return (ERR_MALLOC_FAILED);
-	if ((code = cube(&mesh->vertices, (vec3){ SB_SIZE, SB_SIZE, SB_SIZE })) != ERR_NONE)
+	size_skybox = env->camera.far / 2.0f;
+	if ((code = cube(&mesh->vertices, (vec3){ size_skybox, size_skybox, size_skybox })) != ERR_NONE)
 		return (code);
 
 	set_mesh_center(mesh);

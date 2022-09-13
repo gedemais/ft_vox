@@ -9,11 +9,6 @@ static void	init_camera(t_env *env)
 	camera->ground_fixed = false;
 	// RATIO
 	camera->ratio = (float)env->settings.w_wdt / (float)env->settings.w_hgt;
-	// Far and near plane definitions
-	camera->near = 0.1f;
-	camera->far = 1000.0f;
-	// FOV
-	camera->fov = 45.0f;
 	// Camera starting position and orientation
 	camera->pos = (vec3){ 0, 20, -1};
 	camera->yaxis = (vec3){ 0, 1, 0};

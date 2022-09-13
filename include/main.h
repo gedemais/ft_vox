@@ -43,13 +43,16 @@
 enum				e_settings
 {
 	SET_WIN_HEIGHT,
-	SET_WIN_WIDTH,
+	SET_WIN_WIDTH, // Must remain before float values
+	SET_FOV,
 	SET_GAMMA,
+	SET_FAR_PLANE,
+	SET_NEAR_PLANE,
 	SET_PLAYER_SPEED,
+	SET_MOUSE_SENSITIVITY,
 	SET_PLAYER_LIGHT_INTENSITY,
 	SET_SUNLIGHT_INTENSITY,
-	SET_MOUSE_SENSITIVITY,
-	SET_KEY_EXIT, // Must remain after numeric values and before key assignments
+	SET_KEY_EXIT, // Must remain after numeric values
 	SET_KEY_MOVE_CAM_FORWARD,
 	SET_KEY_MOVE_CAM_BACKWARD,
 	SET_KEY_MOVE_CAM_UP,
@@ -168,11 +171,14 @@ float perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 static const char	*settings_keys[SET_MAX] = {
 	"window_height", // integers
 	"window_width",
-	"gamma", // floating points
+	"fov",  // floating points
+	"gamma",
+	"far_plane",
+	"near_plane",
 	"player_speed",
+	"mouse_sensitivity",
 	"player_light_intensity",
 	"sunlight_intensity",
-	"mouse_sensitivity",
 	"exit", // Keybinds
 	"move_cam_forward",
 	"move_cam_backward",
