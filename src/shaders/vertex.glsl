@@ -97,12 +97,8 @@ void	main()
 
 	// Output assignations
 	vTextCoord	= get_uv(int(uv_id), fall_size);
-
-	vNormal		= mat3(transpose(inverse(model))) * get_normal(int(normal_id));
-	//vNormal	= get_normal(int(normal_id));
-
-	vPosition	= vec3(pos * model);
-	//vPosition	= pos;
+	vNormal		= get_normal(int(normal_id));
+	vPosition	= vec3(pos);
 
 	gl_Position	= pos * model * view * projection;
 }
