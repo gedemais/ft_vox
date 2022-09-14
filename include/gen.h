@@ -52,7 +52,6 @@ typedef struct	s_chunk
 	uint8_t			**surface_hmap;
 	uint8_t			**sub_hmap;
 	int				x_start, z_start;
-	int				x, y;
 }				t_chunk;
 
 // Biomes Generation Parameters

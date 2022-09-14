@@ -52,7 +52,6 @@ unsigned char	push_world(t_env *env)
 	t_mesh			mesh;
 	t_chunk			*chunk;
 
-
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int y = 0; y < SQUARE_SIZE; y++)
 		{
