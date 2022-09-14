@@ -30,6 +30,22 @@ uniform sampler2D		depthmap;
 
 out vec4				FragColor;
 
+float	compute_shadows()
+{
+	// perform perspective divide
+	vec3 projCoords = vShadCoord.xyz / vShadCoord.w;
+	// transform to [0,1] range
+	projCoords = projCoords * 0.5f + 0.5f;
+	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+	float closestDepth = texture(depthmap, projCoords.xy).r; 
+	// get depth of current fragment from light's perspective
+	float currentDepth = projCoords.z;
+	// check whether current frag pos is in shadow
+	float shadow = currentDepth > closestDepth  ? 1.0f : 0.0f;
+
+    return (shadow);
+}
+
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 {
 	vec3	light_dir, reflect_dir;
@@ -40,24 +56,26 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 	light_dir		= normalize(-source.dir);
 	reflect_dir		= reflect(light_dir, vNormal);
 
-	e				= distance(source.pos, vPosition);
-	attenuation		= (1 / e) * source.intensity;
-
 	source.ambient	= color * source.ambient;
 	e				= max(dot(vNormal, light_dir), 0);
 	source.diffuse	= color * source.diffuse * e;
 	e				= pow(max(dot(view_dir, reflect_dir), 0), 8);
 	source.specular	= color * source.specular * e;
 
-	color = source.ambient + source.diffuse + source.specular;
+	// color = source.ambient + source.diffuse + source.specular;
+
+	// calculate shadow
+	float shadow	= 0;
+	
+	shadow			= compute_shadows();
+
+	color 			= source.ambient + (1.0f - shadow) * (source.diffuse + source.specular);
+
+	// light attenuation
+	e				= distance(source.pos, vPosition);
+	attenuation		= (1 / e) * source.intensity;
+
 	color *= attenuation;
-	// shadows
-	float	visibility = 1.0f;
-
-	if (texture(depthmap, vShadCoord.xy).z < vShadCoord.z)
-    	visibility = 0.5f;
-	color *= visibility;
-
 	return (vec4(color, 1));
 }
 
@@ -74,6 +92,13 @@ void	model(int index)
 		FragColor = vec4(0);
 		while (++i < LIGHT_SOURCE_MAX)
 			FragColor += compute_light_sources(light_sources[i], color, view_dir);
+
+		// // shadows
+		// float	visibility = 1.0f;
+
+		// if (texture(depthmap, vShadCoord.xy).z < vShadCoord.z)
+		// 	visibility = 0.5f;
+		// FragColor *= visibility;
 	} else {
 		FragColor = vec4(color, 1);
 	}

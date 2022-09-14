@@ -56,6 +56,7 @@ void		mat4_print(mat4 m);
 void		mat4_translate(mat4 m, float x, float y, float z);
 
 void		mat4_projection(mat4 m, float fov, float near, float far, float ratio);
+void		mat4_orthogonal(mat4 m, float top, float right, float bottom, float left, float near, float far);
 void		mat4_lookat(mat4 m, vec3 from, vec3 to, vec3 world_up);
 
 

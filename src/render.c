@@ -32,7 +32,7 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 		glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&tmp);
 
 		// update depth matrices
-		glUniformMatrix4fv(mesh->gl.uniform.depth_mvp, 1, GL_FALSE, env->model.shadows.view);
+		glUniformMatrix4fv(mesh->gl.uniform.depth_mvp, 1, GL_FALSE, env->model.shadows.projection);
 	}
 	// update matrices in shaders
 	glUniformMatrix4fv(mesh->gl.uniform.model, 1, GL_FALSE, env->model.model);
@@ -128,10 +128,13 @@ static void				update_matrices(t_env *env)
 	(void)light_dir;
 	mat4_lookat(shadows->view, light_pos, (vec3){ 0, 0, 0 }, (vec3){ 0, 1, 0 });
 	mat4_inverse(shadows->view);
+
+	mat4_orthogonal(shadows->projection, 10, 10, -10, -10, env->camera.near, env->camera.far);
 	// mat4_identity(shadows->mvp);
 	// mat4_multiply(shadows->mvp, env->camera.projection);
-	// mat4_multiply(shadows->mvp, env->model.model);
-	// mat4_multiply(shadows->mvp, shadows->view);
+
+	mat4_multiply(shadows->projection, shadows->view);
+
 	// mat4_multiply(shadows->mvp, bias);
 }
 

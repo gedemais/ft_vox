@@ -57,7 +57,7 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 		int	samplers[TEXTURE_MAX] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 		glUniform1iv(mesh->gl.uniform.textures, TEXTURE_MAX, samplers);
 		mesh->gl.uniform.depthmap = glGetUniformLocation(mesh->gl.shader_program, "depthmap");
-		glUniform1i(mesh->gl.uniform.depthmap, TEXTURE_SB_MAX);
+		glUniform1i(mesh->gl.uniform.depthmap, TEXTURE_MAX);
 		light_uniforms(mesh, light);
 	}
 	return (ERR_NONE);
