@@ -1,7 +1,7 @@
 #version 400 core
 
 #define LIGHT_SOURCE_MAX	2
-#define TEXTURE_MAX			8
+#define TEXTURE_MAX			9
 
 struct	LightSources {
 	vec3	pos, dir, color;
@@ -17,7 +17,7 @@ struct	Light {
 in vec3					vNormal;
 in vec3					vPosition;
 in vec2					vTextCoord;
-in vec4					vShadCoord;
+// in vec4					vShadCoord;
 flat in float			vType;
 
 uniform vec3			campos;
@@ -26,30 +26,30 @@ uniform float			u_time;
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
 uniform sampler2D		vTextures[TEXTURE_MAX];
-uniform sampler2D		depthmap;
 
 out vec4				FragColor;
 
-float	compute_shadows()
-{
-	// perform perspective divide
-	vec3 projCoords = vShadCoord.xyz / vShadCoord.w;
-	// transform to [0,1] range
-	projCoords = projCoords * 0.5f + 0.5f;
-	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-	float closestDepth = texture(depthmap, projCoords.xy).r; 
-	// get depth of current fragment from light's perspective
-	float currentDepth = projCoords.z;
-	// check whether current frag pos is in shadow
-	float shadow = currentDepth > closestDepth  ? 1.0f : 0.0f;
+// float	compute_shadows()
+// {
+// 	float	closest, current;
+// 	vec3	proj_coords;
 
-    return (shadow);
-}
+// 	// perform perspective divide
+// 	proj_coords	= vShadCoord.xyz / vShadCoord.w;
+// 	// transform to [0,1] range
+// 	proj_coords	= proj_coords * 0.5f + 0.5f;
+// 	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+// 	closest		= texture(depthmap, proj_coords.xy).r; 
+// 	// get depth of current fragment from light's perspective
+// 	current		= proj_coords.z;
+// 	// check whether current frag pos is in shadow
+//     return (current > closest  ? 1.0f : 0.0f);
+// }
 
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 {
 	vec3	light_dir, reflect_dir;
-	float	attenuation, e, theta;
+	float	attenuation, e, shadow;
 
 	color			*= source.color;
 
@@ -62,20 +62,16 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 	e				= pow(max(dot(view_dir, reflect_dir), 0), 8);
 	source.specular	= color * source.specular * e;
 
-	// color = source.ambient + source.diffuse + source.specular;
-
 	// calculate shadow
-	float shadow	= 0;
-	
-	shadow			= compute_shadows();
-
+	shadow			= 0;
+	// shadow			= compute_shadows();
 	color 			= source.ambient + (1.0f - shadow) * (source.diffuse + source.specular);
 
 	// light attenuation
 	e				= distance(source.pos, vPosition);
 	attenuation		= (1 / e) * source.intensity;
+	color			*= attenuation;
 
-	color *= attenuation;
 	return (vec4(color, 1));
 }
 
@@ -92,13 +88,6 @@ void	model(int index)
 		FragColor = vec4(0);
 		while (++i < LIGHT_SOURCE_MAX)
 			FragColor += compute_light_sources(light_sources[i], color, view_dir);
-
-		// // shadows
-		// float	visibility = 1.0f;
-
-		// if (texture(depthmap, vShadCoord.xy).z < vShadCoord.z)
-		// 	visibility = 0.5f;
-		// FragColor *= visibility;
 	} else {
 		FragColor = vec4(color, 1);
 	}

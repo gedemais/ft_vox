@@ -37,7 +37,6 @@ unsigned char			light_uniforms(t_mesh *mesh, t_light *light)
 	unsigned char	code;
 	int				i;
 
-	glUseProgram(mesh->gl.shader_program);
 	// get uniforms
 	mesh->gl.uniform.light_active = glGetUniformLocation(mesh->gl.shader_program, "light.is_active");
 	mesh->gl.uniform.light_gamma = glGetUniformLocation(mesh->gl.shader_program, "light.gamma");

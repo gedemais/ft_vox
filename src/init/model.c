@@ -102,10 +102,6 @@ unsigned char			model(t_env *env)
 		|| (code = push_skybox(env)) != ERR_NONE)
 		return (code);
 
-	// we mount the textures we will use
-	mount_textures(env);
-	mount_shadows(env);
-
 	env->model.scale = MODEL_SCALE;
 	return (ERR_NONE);
 }

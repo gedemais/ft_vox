@@ -1,7 +1,7 @@
 #include "main.h"
 
 
-static void		load_skybox(t_env *env)
+static void			load_skybox(t_env *env)
 {
 	t_texture	*texture;
 	int			i;
@@ -23,7 +23,7 @@ static void		load_skybox(t_env *env)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-void			mount_textures(t_env *env)
+static void			load_textures(t_env *env)
 {
 	t_texture	*texture;
 	int			i;
@@ -32,19 +32,47 @@ void			mount_textures(t_env *env)
 	glGenTextures(TEXTURE_MAX, env->model.gl_textures);
 	i = -1;
 	while (++i < TEXTURE_MAX) {
-		glActiveTexture(GL_TEXTURE0 + i);
+		glActiveTexture(GL_TEXTURE0 + i + 1);
 		glBindTexture(GL_TEXTURE_2D, env->model.gl_textures[i]);
+
+		texture = &env->model.textures[i];
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+			texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		texture = &env->model.textures[i];
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-			texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-	// skybox's texture
-	load_skybox(env);
+}
+
+static void			load_depthmap(t_env *env)
+{
+	glGenTextures(1, &env->model.depthmap);
+	glActiveTexture(GL_TEXTURE0 + TEXTURE_MAX);
+	glBindTexture(GL_TEXTURE_2D, env->model.depthmap);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		env->window.w, env->window.h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+unsigned char		mount_textures(t_env *env, char type)
+{
+	switch (type) {
+		case (0):		// model + depthmap
+			load_textures(env);
+			load_depthmap(env);
+			break ;
+		case (1):		// skybox
+			load_skybox(env);
+			break ;
+	}
+	return (ERR_NONE);
 }

@@ -98,9 +98,9 @@ void	main()
 	}
 
 	// Output assignations
-	vTextCoord	= get_uv(int(uv_id), fall_size);
 	vNormal		= get_normal(int(normal_id));
 	vPosition	= vec3(pos);
+	vTextCoord	= get_uv(int(uv_id), fall_size);
 	vShadCoord	= pos * depth_mvp;
 
 	gl_Position	= pos * model * view * projection;

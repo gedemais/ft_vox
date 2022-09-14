@@ -4,7 +4,6 @@
 
 # include "main.h"
 # include "gen.h"
-# include "shadows.h"
 
 # define MODEL_SCALE	1
 # define SB_ROT_SPEED	10 // sun's rotation speed
@@ -87,6 +86,7 @@ typedef struct	s_gltools
 typedef struct	s_mesh
 {
 	t_dynarray	vertices;
+	t_shadows	shadows;
 	t_gltools	gl;
 }				t_mesh;
 
@@ -95,12 +95,12 @@ typedef struct	s_model
 	t_dynarray	meshs;
 	float		**biomes;
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
-	mat4		model;
+	mat4		model, depthproj, depthview;
 	float		scale;
 	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
 	GLuint		gl_tskybox;					// gl's texture for skybox
 	t_texture	textures[TEXTURE_SB_MAX];	// textures' ptr
-	t_shadows	shadows;
+	GLuint		depthmap;					// gl's texture for shadows
 }				t_model;
 
 #endif
