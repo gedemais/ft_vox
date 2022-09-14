@@ -101,7 +101,7 @@ typedef struct	s_model
 {
 	t_dynarray	meshs;
 	float		**biomes;
-	int			square_x, square_y;
+	int			square_x, square_z;
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
 	t_dynarray	chunks_cache; // 2D dynarray of chunks
 	mat4		model;

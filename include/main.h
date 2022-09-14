@@ -164,6 +164,7 @@ unsigned char		init_caches(t_env *env);
 float				perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 unsigned char		generate_vertexs(t_chunk *chunk, int x_start, int z_start);
 unsigned char		update_world(t_env *env);
+void				print_square(t_env *env);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {

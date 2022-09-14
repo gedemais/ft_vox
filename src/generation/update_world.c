@@ -8,44 +8,81 @@ enum	e_trigger_ids
 	TRIGGER_EAST,
 	TRIGGER_MAX
 };
-/*
-static unsigned char	cache_chunk(t_chunk *chunk)
+
+void				print_square(t_env *env)
+{
+	for (int x = 0; x < SQUARE_SIZE; x++)
+	{
+		for (int z = 0; z < SQUARE_SIZE; z++)
+			printf("[%d %d] ", env->model.chunks[z][x].x_start, env->model.chunks[z][x].z_start);
+		printf("\n");
+	}
+	printf("\n");
+}
+
+static unsigned char	free_chunk_stride(t_chunk *chunk)
 {
 	dynarray_free(&chunk->stride);
-	for (unsigned int i = 0; i < CHUNK_SIZE; i++)
+	return (ERR_NONE);
+}
+
+static t_chunk			*get_cached_chunk(t_env *env, int x, int z)
+{
+	t_chunk		*chunk;
+	int			x_chunk, z_chunk;
+
+	x_chunk = env->model.square_x + x;
+	z_chunk = env->model.square_z + z;
+	if (!(chunk = dyacc(dyacc(&env->model.chunks_cache, x_chunk), z_chunk))
+		|| !chunk->surface_hmap || !chunk->sub_hmap)
+		return (NULL);
+
+	return (chunk);
+}
+
+static unsigned char	move_square_on_z(t_env *env, int trigger_id)
+{
+	unsigned char	code;
+	bool			north = trigger_id == TRIGGER_NORTH;
+	t_chunk			*new;
+	t_chunk			*cached;
+	int				new_z;
+
+	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		free(chunk->surface_hmap[i]);
-		free(chunk->sub_hmap[i]);
+		if (north && !free_chunk_stride(&env->model.chunks[i][SQUARE_SIZE - 1]))
+			for (int j = SQUARE_SIZE - 1; j > 0; j--)
+				env->model.chunks[i][j] = env->model.chunks[i][j - 1];
+
+		else if (!free_chunk_stride(&env->model.chunks[i][0]))
+			for (int j = 0; j < SQUARE_SIZE - 1; j++)
+				env->model.chunks[i][j] = env->model.chunks[i][j + 1];
+	}
+
+	print_square(env);
+	printf("-------------------\n");
+	new_z = north ? 0 : SQUARE_SIZE - 1;
+	env->model.square_z += north ? 1 : -1;
+	for (int i = 0; i < SQUARE_SIZE; i++)
+	{
+		new = &env->model.chunks[i][new_z];
+		cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
+		printf("%d %d\n", (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE);
+		if (!cached && (code = gen_chunk(env, new, (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true)) != ERR_NONE)
+			return (code);
+		else if (cached)
+		{
+			memcpy(new, cached, sizeof(t_chunk));
+			if ((code = gen_chunk(env, new, new->x_start, new->z_start, true)))
+				return (code);
+		}
 	}
 	return (ERR_NONE);
 }
 
-static unsigned char	move_square_on_z(t_env *env, int trigger_id, int x, int z)
-{
-	bool	north = trigger_id == TRIGGER_NORTH;
-
-	for (int x = 0; x < SQUARE_SIZE; x++)
-	{
-		if (north && !cache_chunk(&env->model.chunks[x][0]))
-			for (int z = SQUARE_SIZE - 1; z > 0; z--)
-				env->model.chunks[x][z - 1] = env->model.chunks[x][z]
-
-		else if (!cache_chunk(&env->model.chunks[x][SQUARE_SIZE - 1]))
-			for (int z = 0; z < SQUARE_SIZE - 1; z++)
-				env->model.chunks[x][z] = env->model.chunks[x][z + 1]
-	}
-	
-	if (north)
-		for (int x = 0; x < SQUARE_SIZE; x++)
-			if ((code = gen_chunk(env, )))
-			env->model.chunks[x][north ? 0 : SQUARE_SIZE - 1]
-			
-
-}*/
-
 //static unsigned char	move_square_on_x(t_env *env, int trigger_id, int x, int z)
 
-static unsigned char	move_square(t_env *env, int trigger_id, int x, int z)
+static unsigned char	move_square(t_env *env, int trigger_id)
 {
 	char	*strs[TRIGGER_MAX] = {
 		"north",
@@ -54,15 +91,20 @@ static unsigned char	move_square(t_env *env, int trigger_id, int x, int z)
 		"east"};
 
 	printf("%s\n", strs[trigger_id]);
-	(void)env;
-	(void)x;
-	(void)z;
-/*
+
+	print_square(env);
+	printf("-------------------\n");
 	if (trigger_id == TRIGGER_NORTH || trigger_id == TRIGGER_SOUTH)
-		return (move_square_on_z(env, trigger_id, x, z));
-	else
-		return (move_square_on_x(env, trigger_id, x, z));
-*/
+	{
+		move_square_on_z(env, trigger_id);
+	print_square(env);
+	printf("-------------------\n");
+	exit(0);
+		return (ERR_NONE);
+	}
+	//else
+	//	return (move_square_on_x(env, trigger_id, x, z));
+
 	return (ERR_NONE);
 }
 
@@ -100,7 +142,7 @@ unsigned char			update_world(t_env *env)
 		{
 			if (check_player_presence(env->camera.pos, env->model.chunks[x][z])
 				&& check_trigger(x, z, &trigger_id)
-				&& (code = move_square(env, trigger_id, x, z)))
+				&& (code = move_square(env, trigger_id)))
 				return (code);
 		}
 	return (ERR_NONE);
