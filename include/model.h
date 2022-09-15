@@ -77,7 +77,7 @@ typedef struct	s_uniform
 
 typedef struct	s_gltools
 {
-	GLuint		vao, vbo;
+	GLuint		vao, vbo, fbo;
 	GLuint		shader_program;
 	GLuint		shader_vertex, shader_fragment;
 	t_uniform	uniform;
@@ -86,7 +86,6 @@ typedef struct	s_gltools
 typedef struct	s_mesh
 {
 	t_dynarray	vertices;
-	t_shadows	shadows;
 	t_gltools	gl;
 }				t_mesh;
 
@@ -97,10 +96,9 @@ typedef struct	s_model
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
 	mat4		model, depthproj, depthview;
 	float		scale;
-	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
-	GLuint		gl_tskybox;					// gl's texture for skybox
-	t_texture	textures[TEXTURE_SB_MAX];	// textures' ptr
-	GLuint		depthmap;					// gl's texture for shadows
+	GLuint		gl_textures[TEXTURE_MAX + 1];	// gl's textures' id :: +1 for depthmap at the end
+	GLuint		gl_tskybox;						// gl's texture for skybox
+	t_texture	textures[TEXTURE_SB_MAX];		// textures' ptr
 }				t_model;
 
 #endif

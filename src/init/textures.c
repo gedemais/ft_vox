@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../../include/main.h"
 
 
 static void			load_skybox(t_env *env)
@@ -29,10 +29,10 @@ static void			load_textures(t_env *env)
 	int			i;
 
 	// model's textures
-	glGenTextures(TEXTURE_MAX, env->model.gl_textures);
+	glGenTextures(TEXTURE_MAX + 1, env->model.gl_textures);
 	i = -1;
 	while (++i < TEXTURE_MAX) {
-		glActiveTexture(GL_TEXTURE0 + i + 1);
+		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, env->model.gl_textures[i]);
 
 		texture = &env->model.textures[i];
@@ -50,9 +50,8 @@ static void			load_textures(t_env *env)
 
 static void			load_depthmap(t_env *env)
 {
-	glGenTextures(1, &env->model.depthmap);
 	glActiveTexture(GL_TEXTURE0 + TEXTURE_MAX);
-	glBindTexture(GL_TEXTURE_2D, env->model.depthmap);
+	glBindTexture(GL_TEXTURE_2D, env->model.gl_textures[TEXTURE_MAX]);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
 		env->window.w, env->window.h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);

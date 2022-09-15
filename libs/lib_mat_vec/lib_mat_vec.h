@@ -50,6 +50,7 @@ void		mat4_zrotation(mat4 m, float z);
 void		mat4_rotate(mat4 m, float x, float y, float z);
 
 void		mat4_identity(mat4 m);
+void		mat4_bias(mat4 m, float e);
 void		mat4_scale(mat4 m, float scale);
 void		mat4_inverse(mat4 m);
 void		mat4_print(mat4 m);

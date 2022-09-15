@@ -52,8 +52,8 @@ SRC_NAME=main.c\
 	init/meshs.c\
 	init/model.c\
 	init/shaders.c\
-	init/settings.c\
 	init/shadows.c\
+	init/settings.c\
 	init/textures.c\
 	utils/fps.c
 
@@ -67,7 +67,6 @@ INC_NAME=main.h\
 	light.h\
 	model.h\
 	shaders.h\
-	shadows.h\
 	gen.h
 
 INC=$(addprefix $(INC_PATH), $(INC_NAME))

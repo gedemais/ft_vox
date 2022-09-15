@@ -1,12 +1,12 @@
-#include "main.h"
+#include "../../include/main.h"
 
 
 unsigned char	mount_shadows(t_env *env, t_mesh *mesh)
 {
-    glGenFramebuffers(1, &mesh->depthfbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, mesh->depthfbo);
+    glGenFramebuffers(1, &mesh->gl.fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, env->model.depthmap, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, env->model.gl_textures[TEXTURE_MAX], 0);
 	
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);

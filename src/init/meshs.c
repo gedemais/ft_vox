@@ -29,14 +29,11 @@ static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 	glGenBuffers(1, &mesh->gl.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->gl.vbo);
 
-	if ((code = mount_shadows(env, mesh)) != ERR_NONE)
-		return (code);
-
 	size = (GLsizeiptr)(skybox ? sizeof(vec3) : sizeof(t_stride));
 	glBufferData(GL_ARRAY_BUFFER, size * mesh->vertices.nb_cells, mesh->vertices.arr, GL_STATIC_DRAW);
 	// Specifies the disposition of components in vertexs
 	set_layouts(skybox);
-	// we mount the textures we will use
+	// load the textures this buffer will use
 	if ((code = mount_textures(env, skybox ? 1 : 0)) != ERR_NONE)
 		return (code);
 	glBindVertexArray(0);
@@ -94,7 +91,8 @@ unsigned char			init_meshs(t_env *env)
 		mesh = dyacc(&env->model.meshs, i);
 		if ((code = mount_shaders(mesh, shaders_path[SHADER_VERTEX], shaders_path[SHADER_FRAGMENT])) != ERR_NONE
 				|| (code = gl_buffers(env, mesh, false)) != ERR_NONE
-				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE)
+				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE
+				|| (code = mount_shadows(env, mesh)) != ERR_NONE)
 			return (code);
 	}
 	// SKYBOX
