@@ -20,7 +20,7 @@ void				print_square(t_env *env)
 }
 
 // Shall we return an error if the chunk to remove is not found ?
-static unsigned char	remove_chunk(t_env *env, t_chunk *chunk)
+static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk)
 {
 	bool	found = false;
 	t_mesh	*m;
@@ -55,6 +55,22 @@ static t_chunk			*get_cached_chunk(t_env *env, int x, int z)
 	return (chunk);
 }
 
+static void	cache_chunk(t_env *env, t_chunk *chunk)
+{
+	t_chunk			*cached;
+	int				x, z;
+
+	x = chunk->x_start / CHUNK_SIZE;
+	z = chunk->z_start / CHUNK_SIZE;
+
+	cached = dyacc(dyacc(&env->model.chunks_cache, x), z);
+
+	cached->surface_hmap = chunk->surface_hmap;
+	cached->sub_hmap = chunk->sub_hmap;
+	cached->x_start = chunk->x_start;
+	cached->z_start = chunk->z_start;
+}
+
 static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 {
 	unsigned char	code;
@@ -65,20 +81,23 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 	int				new_z;
 
 	new_z = south ? SQUARE_SIZE - 1 : 0;
+	env->model.square_z += south ? 1 : -1;
 	//printf("remove line\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		if (south && !remove_chunk(env, &env->model.chunks[i][0]))
+		cache_chunk(env, &env->model.chunks[i][0]);
+		if (south && !remove_chunk_mesh(env, &env->model.chunks[i][0]))
+		{
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[i][j] = env->model.chunks[i][j + 1];
+		}
 
-		else if (!remove_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]))
+		else if (!remove_chunk_mesh(env, &env->model.chunks[i][SQUARE_SIZE - 1]))
 			for (int j = SQUARE_SIZE - 1; j >= 0; j--)
 				env->model.chunks[i][j] = env->model.chunks[i][j - 1];
 	}
 
 	//printf("add new chunks\n");
-	env->model.square_z += south ? 1 : -1;
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
 		news[i] = &env->model.chunks[i][new_z];
@@ -97,8 +116,7 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-
-		fix_chunk_borders(env, (env->model.square_x + i), (env->model.square_x + new_z));
+		fix_chunk_borders(env, (env->model.square_x + i), (env->model.square_z + new_z));
 
 		ft_memset(&mesh, 0, sizeof(t_mesh));
 		mesh.vertices = news[i]->stride;
