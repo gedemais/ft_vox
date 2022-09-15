@@ -165,6 +165,7 @@ float				perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 unsigned char		generate_vertexs(t_chunk *chunk, int x_start, int z_start);
 unsigned char		update_world(t_env *env);
 void				print_square(t_env *env);
+unsigned char		init_mesh(t_env *env, t_mesh *m);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {

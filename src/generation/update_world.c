@@ -17,7 +17,6 @@ void				print_square(t_env *env)
 			printf("[%d %d] ", env->model.chunks[z][x].x_start, env->model.chunks[z][x].z_start);
 		printf("\n");
 	}
-	printf("\n");
 }
 
 static unsigned char	free_chunk_stride(t_chunk *chunk)
@@ -43,31 +42,30 @@ static t_chunk			*get_cached_chunk(t_env *env, int x, int z)
 static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 {
 	unsigned char	code;
-	bool			north = trigger_id == TRIGGER_NORTH;
+	bool			south = trigger_id == TRIGGER_NORTH;
+	t_mesh			mesh;
 	t_chunk			*new;
 	t_chunk			*cached;
 	int				new_z;
 
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		if (north && !free_chunk_stride(&env->model.chunks[i][SQUARE_SIZE - 1]))
-			for (int j = SQUARE_SIZE - 1; j > 0; j--)
-				env->model.chunks[i][j] = env->model.chunks[i][j - 1];
-
-		else if (!free_chunk_stride(&env->model.chunks[i][0]))
+		if (south && !free_chunk_stride(&env->model.chunks[i][SQUARE_SIZE - 1]))
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[i][j] = env->model.chunks[i][j + 1];
+
+		else if (!free_chunk_stride(&env->model.chunks[i][0]))
+			for (int j = SQUARE_SIZE - 1; j >= 0; j--)
+				env->model.chunks[i][j] = env->model.chunks[i][j - 1];
 	}
 
-	print_square(env);
-	printf("-------------------\n");
-	new_z = north ? 0 : SQUARE_SIZE - 1;
-	env->model.square_z += north ? 1 : -1;
+	new_z = south ? SQUARE_SIZE - 1 : 0;
+	env->model.square_z += south ? 1 : -1;
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
 		new = &env->model.chunks[i][new_z];
+		memset(new, 0, sizeof(t_chunk));
 		cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
-		printf("%d %d\n", (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE);
 		if (!cached && (code = gen_chunk(env, new, (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true)) != ERR_NONE)
 			return (code);
 		else if (cached)
@@ -76,6 +74,18 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 			if ((code = gen_chunk(env, new, new->x_start, new->z_start, true)))
 				return (code);
 		}
+		ft_memset(&mesh, 0, sizeof(t_mesh));
+
+		if (dynarray_init(&mesh.vertices, sizeof(t_stride), CHUNK_SIZE *  6 * sizeof(t_stride)) < 0)
+			return (ERR_MALLOC_FAILED);
+
+		for (int i = 0; i < new->stride.nb_cells; i++)
+			if (dynarray_push(&mesh.vertices, dyacc(&new->stride, i), false))
+				return (ERR_MALLOC_FAILED);
+
+		init_mesh(env, &mesh);
+		if (dynarray_push(&env->model.meshs, &mesh, true) < 0)
+			return (ERR_MALLOC_FAILED);
 	}
 	return (ERR_NONE);
 }
@@ -91,19 +101,17 @@ static unsigned char	move_square(t_env *env, int trigger_id)
 		"east"};
 
 	printf("%s\n", strs[trigger_id]);
+	(void)env;
 
-	print_square(env);
-	printf("-------------------\n");
 	if (trigger_id == TRIGGER_NORTH || trigger_id == TRIGGER_SOUTH)
 	{
 		move_square_on_z(env, trigger_id);
 	print_square(env);
 	printf("-------------------\n");
-	exit(0);
 		return (ERR_NONE);
 	}
 	//else
-	//	return (move_square_on_x(env, trigger_id, x, z));
+	//	return (move_square_on_x(env, trigger_id, x, z));*/
 
 	return (ERR_NONE);
 }

@@ -1,6 +1,5 @@
 #include "../../include/main.h"
 
-
 static GLFWwindow*		create_window(const char *title, int width, int height, bool fullscreen)
 {
 	GLFWmonitor		 	*monitor;

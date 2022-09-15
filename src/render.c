@@ -85,6 +85,7 @@ static unsigned char	render_scene(t_env *env)
 
 	if ((code = update_world(env)) != ERR_NONE)
 		return (code);
+	//printf("player_pos : %f %f %f\n", env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
 	fps(&env->fps, true);
 	mat4_mvp(env);
 	draw_mesh(env);

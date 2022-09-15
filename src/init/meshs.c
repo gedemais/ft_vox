@@ -1,5 +1,14 @@
 #include "../../include/main.h"
 
+
+// Paths array to shaders source files
+static const char		*shaders_path[SHADER_MAX] = {
+		[SHADER_VERTEX]			= "src/shaders/vertex.glsl",
+		[SHADER_FRAGMENT]		= "src/shaders/fragment.glsl",
+		[SHADER_SB_VERTEX]		= "src/shaders/skybox_vertex.glsl",
+		[SHADER_SB_FRAGMENT]	= "src/shaders/skybox_fragment.glsl"
+};
+
 static void				set_layouts(bool skybox)
 {
 	// Specifies the disposition of components in vertexs
@@ -109,21 +118,25 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 	return (ERR_NONE);
 }
 
+unsigned char	init_mesh(t_env *env, t_mesh *mesh)
+{
+	unsigned char	code;
+
+	if ((code = mount_shaders(mesh, shaders_path[SHADER_VERTEX], shaders_path[SHADER_FRAGMENT])) != ERR_NONE
+		|| (code = gl_buffers(mesh, false)) != ERR_NONE
+		|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE)
+		return (code);
+
+	return (ERR_NONE);
+}
+
 /*
 	we set a shader program / mesh
 	=> all mesh got his own buffers and shader program
 */
 unsigned char			init_meshs(t_env *env)
 {
-	// Paths array to shaders source files
-	const char		*shaders_path[SHADER_MAX] = {
-		[SHADER_VERTEX]			= "src/shaders/vertex.glsl",
-		[SHADER_FRAGMENT]		= "src/shaders/fragment.glsl",
-		[SHADER_SB_VERTEX]		= "src/shaders/skybox_vertex.glsl",
-		[SHADER_SB_FRAGMENT]	= "src/shaders/skybox_fragment.glsl"
-	};
 	unsigned char	code;
-	int				i;
 	t_mesh			*mesh;
 
 	// we mount the textures we will use
@@ -131,16 +144,13 @@ unsigned char			init_meshs(t_env *env)
 	// Initializes buffers, shaders and data structures for rendering
 	// last mesh is all time the skybox
 	// MODEL
-	i = -1;
-	while (++i < env->model.meshs.nb_cells - 1) {
-		mesh = dyacc(&env->model.meshs, i);
-		if ((code = mount_shaders(mesh, shaders_path[SHADER_VERTEX], shaders_path[SHADER_FRAGMENT])) != ERR_NONE
-				|| (code = gl_buffers(mesh, false)) != ERR_NONE
-				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE)
+	for (int i = 0; i < env->model.meshs.nb_cells - 1; i++)
+		if (!((mesh = dyacc(&env->model.meshs, i)) && (code = ERR_MALLOC_FAILED))
+			|| (code = init_mesh(env, mesh)))
 			return (code);
-	}
+
 	// SKYBOX
-	mesh = dyacc(&env->model.meshs, i);
+	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells - 1);
 	if ((code = mount_shaders(mesh, shaders_path[SHADER_SB_VERTEX], shaders_path[SHADER_SB_FRAGMENT])) != ERR_NONE
 			|| (code = gl_buffers(mesh, true)) != ERR_NONE
 			|| (code = set_uniforms(mesh, &env->light, true)) != ERR_NONE)
