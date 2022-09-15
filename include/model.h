@@ -95,6 +95,7 @@ typedef struct	s_mesh
 {
 	t_dynarray	vertices;
 	t_gltools	gl;
+	int			x_start, z_start;
 }				t_mesh;
 
 typedef struct	s_model

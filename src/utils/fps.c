@@ -10,7 +10,8 @@ void		fps(t_fps *fps, bool print)
 		fps->value = (double)fps->frames / fps->elapsed_seconds;
 		fps->frames = 0;
 	
-		print ? printf("fps: %d\n", fps->value) : 0;
+		(void)print;
+//		print ? printf("fps: %d\n", fps->value) : 0;
 	}
 
 	fps->delta = fps->current_seconds - fps->lastframe;

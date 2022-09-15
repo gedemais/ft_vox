@@ -64,6 +64,9 @@ unsigned char	push_world(t_env *env)
 				if (dynarray_push(&mesh.vertices, dyacc(&chunk->stride, i), false))
 					return (ERR_MALLOC_FAILED);
 
+			mesh.x_start = chunk->x_start;
+			mesh.z_start = chunk->z_start;
+
 			if (dynarray_push(&env->model.meshs, &mesh, true) < 0)
 				return (ERR_MALLOC_FAILED);
 		}

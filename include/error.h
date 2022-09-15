@@ -31,6 +31,7 @@ enum	e_error_id
 	ERR_INVALID_FOV_VALUE,
 	ERR_INVALID_GAMMA_VALUE,
 	ERR_TEXTURE_LOADING_FAILED,
+	ERR_CHUNK_NOT_FOUND,
 	ERR_MAX
 };
 
@@ -63,9 +64,8 @@ static const t_error	errors[ERR_MAX] = {
 	[ERR_PRIMARY_MONITOR_NOT_FOUND] = {"OpenGL : Failed to find primary monitor", false},
 	[ERR_INVALID_FOV_VALUE] = {"Invalid fov value", false},
 	[ERR_INVALID_GAMMA_VALUE] = {"Invalid gamma value", false},
-	[ERR_TEXTURE_LOADING_FAILED] = {"lodepng : Failed to load texture file", false}
-	//[] = {"", false}
-	//[] = {"", false}
+	[ERR_TEXTURE_LOADING_FAILED] = {"lodepng : Failed to load texture file", false},
+	[ERR_CHUNK_NOT_FOUND] = {"Could not delete unused chunk", false}
 	//[] = {"", false}
 };
 
