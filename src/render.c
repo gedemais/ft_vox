@@ -31,9 +31,10 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 	mat4	m;
 
 	mat4_identity(m);
-	mat4_yrotation(m, (env->fps.current_seconds * SB_ROT_SPEED) / 100);
+	mat4_yrotation(m, (env->fps.current_seconds * SB_ROT_SPEED) / 100.0f);
 	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
 
+	// use shader program before set the uniforms
 	glUseProgram(mesh->gl.shader_program);
 
 	if (skybox == true) {
@@ -78,7 +79,7 @@ static void				render_depth(t_env *env, t_mesh *mesh, bool skybox)
 		return ;
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mesh->gl.fbo);
 
-	glClear(GL_DEPTH_BUFFER_BIT);
+	// glClear(GL_DEPTH_BUFFER_BIT);
 
 	render_mesh(mesh);
 

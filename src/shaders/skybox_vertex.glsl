@@ -14,5 +14,6 @@ void	main()
 
 	vPosition	= aPosition;
 
+	// z is useless for the skybox
 	gl_Position	= pos.xyww;
 }
