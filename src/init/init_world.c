@@ -50,10 +50,12 @@ static unsigned char	init_map(t_env *env)
 			// water
 		}
 
-	print_square(env);
+	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
+		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
+			if ((code = fix_chunk_borders(env, x, z)) != ERR_NONE)
+				return (code);
 
-	if ((code = borders(env)))
-		return (code);
+	print_square(env);
 
 	printf("%zu bytes per chunk | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
 	return (ERR_NONE);

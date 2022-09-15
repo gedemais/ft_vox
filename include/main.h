@@ -166,6 +166,7 @@ unsigned char		generate_vertexs(t_chunk *chunk, int x_start, int z_start);
 unsigned char		update_world(t_env *env);
 void				print_square(t_env *env);
 unsigned char		init_mesh(t_env *env, t_mesh *m);
+unsigned char		fix_chunk_borders(t_env *env, int x, int y);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {
