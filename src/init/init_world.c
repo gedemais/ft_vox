@@ -55,8 +55,6 @@ static unsigned char	init_map(t_env *env)
 			if ((code = fix_chunk_borders(env, x, z)) != ERR_NONE)
 				return (code);
 
-	print_square(env);
-
 	printf("%zu bytes per chunk | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
 	return (ERR_NONE);
 }

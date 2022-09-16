@@ -24,6 +24,7 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk)
 {
 	bool	found = false;
 	t_mesh	*m;
+
 	dynarray_free(&chunk->stride);
 
 	for (int i = 0; i < env->model.meshs.nb_cells; i++)
@@ -36,18 +37,24 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk)
 			break ;
 		}
 	}
-	if (!found)
-		printf("NOT FOUND (%d %d)\n", chunk->x_start, chunk->z_start);
-	return (found ? ERR_NONE : ERR_CHUNK_NOT_FOUND);
-}
 
+	if (!found)
+	{
+		printf("Not found (%d %d)\n", chunk->x_start, chunk->z_start);
+		print_square(env);
+	}
+
+	return (ERR_NONE);
+}
+/*
 static t_chunk			*get_cached_chunk(t_env *env, int x, int z)
 {
 	t_chunk		*chunk;
 	int			x_chunk, z_chunk;
 
-	x_chunk = env->model.square_x + x;
-	z_chunk = env->model.square_z + z;
+	x_chunk = (env->model.square_x + x) / 2;
+	z_chunk = (env->model.square_z + z) / 2;
+	//printf("looking for %d %d\n", x_chunk, z_chunk);
 	if (!(chunk = dyacc(dyacc(&env->model.chunks_cache, x_chunk), z_chunk))
 		|| !chunk->surface_hmap || !chunk->sub_hmap)
 		return (NULL);
@@ -63,13 +70,14 @@ static void	cache_chunk(t_env *env, t_chunk *chunk)
 	x = chunk->x_start / CHUNK_SIZE;
 	z = chunk->z_start / CHUNK_SIZE;
 
+	//printf("%d %d cached\n", x, z);
 	cached = dyacc(dyacc(&env->model.chunks_cache, x), z);
 
 	cached->surface_hmap = chunk->surface_hmap;
 	cached->sub_hmap = chunk->sub_hmap;
 	cached->x_start = chunk->x_start;
 	cached->z_start = chunk->z_start;
-}
+}*/
 
 static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 {
@@ -77,41 +85,44 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 	bool			south = trigger_id == TRIGGER_NORTH;
 	t_mesh			mesh;
 	t_chunk			*news[SQUARE_SIZE];
-	t_chunk			*cached;
 	int				new_z;
 
 	new_z = south ? SQUARE_SIZE - 1 : 0;
-	env->model.square_z += south ? 1 : -1;
 	//printf("remove line\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		cache_chunk(env, &env->model.chunks[i][0]);
 		if (south && !remove_chunk_mesh(env, &env->model.chunks[i][0]))
 		{
+			//cache_chunk(env, &env->model.chunks[i][0]);
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[i][j] = env->model.chunks[i][j + 1];
 		}
 
 		else if (!remove_chunk_mesh(env, &env->model.chunks[i][SQUARE_SIZE - 1]))
+		{
+			//cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
 			for (int j = SQUARE_SIZE - 1; j >= 0; j--)
 				env->model.chunks[i][j] = env->model.chunks[i][j - 1];
+		}
 	}
 
+	env->model.square_z += south ? 1 : -1;
 	//printf("add new chunks\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
 		news[i] = &env->model.chunks[i][new_z];
 		memset(news[i], 0, sizeof(t_chunk));
 
-		cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
-		if (!cached && (code = gen_chunk(env, news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true)) != ERR_NONE)
+		//cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
+		if ((code = gen_chunk(env, news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true)) != ERR_NONE)
 			return (code);
-		else if (cached)
+		/*else if (cached)
 		{
+			printf("cached found !\n");
 			memcpy(news[i], cached, sizeof(t_chunk));
 			if ((code = gen_chunk(env, news[i], news[i]->x_start, news[i]->z_start, true)))
 				return (code);
-		}
+		}*/
 	}
 
 	for (int i = 0; i < SQUARE_SIZE; i++)
@@ -120,17 +131,85 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 
 		ft_memset(&mesh, 0, sizeof(t_mesh));
 		mesh.vertices = news[i]->stride;
+		mesh.x_start = news[i]->x_start;
+		mesh.z_start = news[i]->z_start;
 
 		if (init_mesh(env, &mesh) || dynarray_push(&env->model.meshs, &mesh, true) < 0)
 			return (ERR_MALLOC_FAILED);
 	}
+
+	//printf("%d meshs\nsquare_x : %d\nsquare_z : %d\npos : %f %f %f\n",
+//		env->model.meshs.nb_cells, env->model.square_x * CHUNK_SIZE, env->model.square_z * CHUNK_SIZE, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
+
+	//exit(0);
 	return (ERR_NONE);
 }
-/*
-static unsigned char	move_square_on_x(t_env *env, int trigger_id, int x, int z)
+
+
+static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 {
-	
-}*/
+	unsigned char	code;
+	bool			east = trigger_id == TRIGGER_WEST;
+	t_mesh			mesh;
+	t_chunk			*news[SQUARE_SIZE];
+	int				new_x;
+
+	new_x = east ? SQUARE_SIZE - 1 : 0;
+	//printf("remove line\n");
+	for (int i = 0; i < SQUARE_SIZE; i++)
+	{
+		if (east && !remove_chunk_mesh(env, &env->model.chunks[0][i]))
+		{
+			//cache_chunk(env, &env->model.chunks[i][0]);
+			for (int j = 0; j < SQUARE_SIZE - 1; j++)
+				env->model.chunks[j][i] = env->model.chunks[j + 1][i];
+		}
+
+		else if (!remove_chunk_mesh(env, &env->model.chunks[SQUARE_SIZE - 1][i]))
+		{
+			//cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
+			for (int j = SQUARE_SIZE - 1; j >= 0; j--)
+				env->model.chunks[j][i] = env->model.chunks[j - 1][i];
+		}
+	}
+
+	env->model.square_x += east ? 1 : -1;
+	//printf("add new chunks\n");
+	for (int i = 0; i < SQUARE_SIZE; i++)
+	{
+		news[i] = &env->model.chunks[new_x][i];
+		memset(news[i], 0, sizeof(t_chunk));
+
+		//cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
+		if ((code = gen_chunk(env, news[i], (env->model.square_x + new_x) * CHUNK_SIZE, (env->model.square_z + i) * CHUNK_SIZE, true)) != ERR_NONE)
+			return (code);
+		/*else if (cached)
+		{
+			printf("cached found !\n");
+			memcpy(news[i], cached, sizeof(t_chunk));
+			if ((code = gen_chunk(env, news[i], news[i]->x_start, news[i]->z_start, true)))
+				return (code);
+		}*/
+	}
+
+	for (int i = 0; i < SQUARE_SIZE; i++)
+	{
+		fix_chunk_borders(env, (env->model.square_x + new_x), (env->model.square_z + i));
+
+		ft_memset(&mesh, 0, sizeof(t_mesh));
+		mesh.vertices = news[i]->stride;
+		mesh.x_start = news[i]->x_start;
+		mesh.z_start = news[i]->z_start;
+
+		if (init_mesh(env, &mesh) || dynarray_push(&env->model.meshs, &mesh, true) < 0)
+			return (ERR_MALLOC_FAILED);
+	}
+
+	//printf("%d meshs\nsquare_x : %d\nsquare_z : %d\npos : %f %f %f\n",
+//		env->model.meshs.nb_cells, env->model.square_x * CHUNK_SIZE, env->model.square_z * CHUNK_SIZE, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
+	//exit(0);
+	return (ERR_NONE);
+}
 
 static unsigned char	move_square(t_env *env, int trigger_id)
 {
@@ -146,10 +225,11 @@ static unsigned char	move_square(t_env *env, int trigger_id)
 
 	if (trigger_id == TRIGGER_NORTH || trigger_id == TRIGGER_SOUTH)
 		move_square_on_z(env, trigger_id);
-	//else
-	//	return (move_square_on_x(env, trigger_id, x, z));*/
+	else
+		return (move_square_on_x(env, trigger_id));
 
 
+	printf("%d meshs in scene\n", env->model.meshs.nb_cells);
 	return (ERR_NONE);
 }
 
@@ -159,6 +239,10 @@ static bool				check_player_presence(vec3 pos, t_chunk chunk)
 
 	x = pos.x > chunk.x_start && pos.x < chunk.x_start + CHUNK_SIZE;
 	z = pos.z > chunk.z_start && pos.z < chunk.z_start + CHUNK_SIZE;
+
+	//if (x && z)
+	//	printf("player in %d %d\n", chunk.x_start, chunk.z_start);
+
 	return (x && z);
 }
 
