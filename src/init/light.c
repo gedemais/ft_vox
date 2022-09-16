@@ -15,19 +15,19 @@ static unsigned char	get_light_uniforms(t_gltools *gl, int i)
 	if ((ai = ft_itoa(i)) == NULL)
 		return (ERR_MALLOC_FAILED);
 	build_target(target, "].pos", ai);
-	gl->uniform.light[i][LIGHT_POSITION] = glGetUniformLocation(gl->shader_program, target);
+	gl->uniform.light[i][LIGHT_POSITION] = glGetUniformLocation(gl->program, target);
 	build_target(target, "].dir", ai);
-	gl->uniform.light[i][LIGHT_DIRECTION] = glGetUniformLocation(gl->shader_program, target);
+	gl->uniform.light[i][LIGHT_DIRECTION] = glGetUniformLocation(gl->program, target);
 	build_target(target, "].color", ai);
-	gl->uniform.light[i][LIGHT_COLOR] = glGetUniformLocation(gl->shader_program, target);
+	gl->uniform.light[i][LIGHT_COLOR] = glGetUniformLocation(gl->program, target);
 	build_target(target, "].ambient", ai);
-	gl->uniform.light[i][LIGHT_AMBIENT] = glGetUniformLocation(gl->shader_program, target);
+	gl->uniform.light[i][LIGHT_AMBIENT] = glGetUniformLocation(gl->program, target);
 	build_target(target, "].diffuse", ai);
-	gl->uniform.light[i][LIGHT_DIFFUSE] = glGetUniformLocation(gl->shader_program, target);
+	gl->uniform.light[i][LIGHT_DIFFUSE] = glGetUniformLocation(gl->program, target);
 	build_target(target, "].specular", ai);
-	gl->uniform.light[i][LIGHT_SPECULAR] = glGetUniformLocation(gl->shader_program, target);
+	gl->uniform.light[i][LIGHT_SPECULAR] = glGetUniformLocation(gl->program, target);
 	build_target(target, "].intensity", ai);
-	gl->uniform.light[i][LIGHT_INTENSITY] = glGetUniformLocation(gl->shader_program, target);
+	gl->uniform.light[i][LIGHT_INTENSITY] = glGetUniformLocation(gl->program, target);
 	ft_strdel(&ai);
 	return (ERR_NONE);
 }
@@ -38,8 +38,8 @@ unsigned char			light_uniforms(t_mesh *mesh, t_light *light)
 	int				i;
 
 	// get uniforms
-	mesh->gl.uniform.light_active = glGetUniformLocation(mesh->gl.shader_program, "light.is_active");
-	mesh->gl.uniform.light_gamma = glGetUniformLocation(mesh->gl.shader_program, "light.gamma");
+	mesh->gl.uniform.light_active = glGetUniformLocation(mesh->gl.program, "light.is_active");
+	mesh->gl.uniform.light_gamma = glGetUniformLocation(mesh->gl.program, "light.gamma");
 	// consume uniforms
 	glUniform1i(mesh->gl.uniform.light_active, light->is_active);
 	glUniform1f(mesh->gl.uniform.light_gamma, light->gamma);

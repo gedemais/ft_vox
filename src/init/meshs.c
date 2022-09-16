@@ -42,27 +42,32 @@ static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 
 static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 {
-	glUseProgram(mesh->gl.shader_program);
+	// use program before set uniforms
+	glUseProgram(mesh->gl.program);
+	// matrices
+	mesh->gl.uniform.model = glGetUniformLocation(mesh->gl.program, "model");
+	mesh->gl.uniform.view = glGetUniformLocation(mesh->gl.program, "view");
+	mesh->gl.uniform.projection = glGetUniformLocation(mesh->gl.program, "projection");
 	if (skybox == true) {
-		mesh->gl.uniform.skybox = glGetUniformLocation(mesh->gl.shader_program, "vSkybox");
+		// skybox's texture
+		mesh->gl.uniform.skybox = glGetUniformLocation(mesh->gl.program, "vSkybox");
 		glUniform1i(mesh->gl.uniform.skybox, 0);
 	} else {
-		mesh->gl.uniform.time = glGetUniformLocation(mesh->gl.shader_program, "u_time");
-
-		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.shader_program, "campos");
-
-		mesh->gl.uniform.textures = glGetUniformLocation(mesh->gl.shader_program, "vTextures");
+		// time
+		mesh->gl.uniform.time = glGetUniformLocation(mesh->gl.program, "u_time");
+		// campos
+		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.program, "campos");
+		// textures
+		mesh->gl.uniform.textures = glGetUniformLocation(mesh->gl.program, "vTextures");
 		// +1 because we set depthmap at last position
 		int	samplers[TEXTURE_MAX + 1] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 		glUniform1iv(mesh->gl.uniform.textures, TEXTURE_MAX + 1, samplers);
-
-		mesh->gl.uniform.depth_mvp = glGetUniformLocation(mesh->gl.shader_program, "depth_mvp");
-
+		// light
 		light_uniforms(mesh, light);
+		// depth matrix
+		mesh->gl.uniform.depth_view = glGetUniformLocation(mesh->gl.program, "depth_view");
+		mesh->gl.uniform.depth_projection = glGetUniformLocation(mesh->gl.program, "depth_projection");
 	}
-	mesh->gl.uniform.model = glGetUniformLocation(mesh->gl.shader_program, "model");
-	mesh->gl.uniform.view = glGetUniformLocation(mesh->gl.shader_program, "view");
-	mesh->gl.uniform.projection = glGetUniformLocation(mesh->gl.shader_program, "projection");
 	return (ERR_NONE);
 }
 
@@ -72,13 +77,6 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 */
 unsigned char			init_meshs(t_env *env)
 {
-	// Paths array to shaders source files
-	const char		*shaders_path[SHADER_MAX] = {
-		[SHADER_VERTEX]			= "src/shaders/vertex.glsl",
-		[SHADER_FRAGMENT]		= "src/shaders/fragment.glsl",
-		[SHADER_SB_VERTEX]		= "src/shaders/skybox_vertex.glsl",
-		[SHADER_SB_FRAGMENT]	= "src/shaders/skybox_fragment.glsl"
-	};
 	unsigned char	code;
 	int				i;
 	t_mesh			*mesh;
@@ -89,7 +87,8 @@ unsigned char			init_meshs(t_env *env)
 	i = -1;
 	while (++i < env->model.meshs.nb_cells - 1) {
 		mesh = dyacc(&env->model.meshs, i);
-		if ((code = mount_shaders(mesh, shaders_path[SHADER_VERTEX], shaders_path[SHADER_FRAGMENT])) != ERR_NONE
+		if ((code = mount_shaders(&mesh->gl.program, env->shaders[SHADER_VERTEX], env->shaders[SHADER_FRAGMENT])) != ERR_NONE
+				|| (code = mount_shaders(&mesh->gl.depth_program, env->shaders[SHADER_DEPTH_VERTEX], env->shaders[SHADER_DEPTH_FRAGMENT])) != ERR_NONE
 				|| (code = gl_buffers(env, mesh, false)) != ERR_NONE
 				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE
 				|| (code = mount_shadows(env, mesh)) != ERR_NONE)
@@ -97,7 +96,7 @@ unsigned char			init_meshs(t_env *env)
 	}
 	// SKYBOX
 	mesh = dyacc(&env->model.meshs, i);
-	if ((code = mount_shaders(mesh, shaders_path[SHADER_SB_VERTEX], shaders_path[SHADER_SB_FRAGMENT])) != ERR_NONE
+	if ((code = mount_shaders(&mesh->gl.program, env->shaders[SHADER_SB_VERTEX], env->shaders[SHADER_SB_FRAGMENT])) != ERR_NONE
 			|| (code = gl_buffers(env, mesh, true)) != ERR_NONE
 			|| (code = set_uniforms(mesh, &env->light, true)) != ERR_NONE)
 		return (code);

@@ -6,7 +6,8 @@ layout (location = 1) in int	data2;
 uniform mat4 					model;
 uniform mat4 					view;
 uniform mat4 					projection;
-uniform mat4 					depth_mvp;
+uniform mat4 					depth_view;
+uniform mat4 					depth_projection;
 uniform float 					u_time;
 
 out vec3						vNormal;
@@ -92,7 +93,7 @@ void	main()
 	if (vType == 0) {
 		float	time, wavelength;
 
-		time		= u_time * 0.025f;
+		time		= u_time * 0.01f;
 		wavelength	= 0.05f;
 		pos.y		+= (sin(pos.x * time) * cos(pos.y * time)) * wavelength + 0.5f;
 	}
@@ -101,7 +102,7 @@ void	main()
 	vNormal		= get_normal(int(normal_id));
 	vPosition	= vec3(pos);
 	vTextCoord	= get_uv(int(uv_id), fall_size);
-	vShadCoord	= pos * depth_mvp;
+	vShadCoord	= pos * depth_view * depth_projection;
 
 	gl_Position	= pos * model * view * projection;
 }

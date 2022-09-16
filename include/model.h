@@ -72,14 +72,14 @@ typedef struct	s_uniform
 	GLint	textures, depthmap;
 	GLint	skybox, campos;
 	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
-	GLint	model, view, projection, depth_mvp;
+	GLint	model, view, projection;
+	GLint	depth_view, depth_projection;
 }				t_uniform;
 
 typedef struct	s_gltools
 {
 	GLuint		vao, vbo, fbo;
-	GLuint		shader_program;
-	GLuint		shader_vertex, shader_fragment;
+	GLuint		program, depth_program;
 	t_uniform	uniform;
 }				t_gltools;
 

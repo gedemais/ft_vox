@@ -111,6 +111,7 @@ typedef struct		s_env
 	t_mouse		mouse;
 	t_model		model;
 	t_light		light;
+	t_shaders	shaders[SHADER_MAX];
 	// Function pointers array linking actions functions with key binds
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;
@@ -123,7 +124,8 @@ unsigned char		light_uniforms(t_mesh *mesh, t_light *light);
 unsigned char		model(t_env *env);
 unsigned char		mount_textures(t_env *env, char buffer_type);
 unsigned char		mount_shadows(t_env *env, t_mesh *mesh);
-unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path);
+unsigned char		load_shaders(t_env *env);
+unsigned char		mount_shaders(GLuint *program, t_shaders vertex, t_shaders fragment);
 
 // OpenGL
 unsigned char   	init_display(t_env *env);
