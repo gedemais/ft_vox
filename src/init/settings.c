@@ -115,6 +115,9 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 		case SET_KEY_LIGHT:
 			env->settings.keys[KEY_LIGHT] = (uint8_t)n;
 			break;
+		case SET_KEY_SHADOW:
+			env->settings.keys[KEY_SHADOW] = (uint8_t)n;
+			break;
 	};
 
 	return (ERR_NONE);

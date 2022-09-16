@@ -8,8 +8,8 @@ unsigned char	mount_shadows(t_env *env, t_mesh *mesh)
 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, env->model.gl_textures[TEXTURE_MAX], 0);
 	
-	// glDrawBuffer(GL_NONE);
-	// glReadBuffer(GL_NONE);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

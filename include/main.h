@@ -56,6 +56,7 @@ enum				e_settings
 	SET_KEY_MOVE_CAM_LEFT,
 	SET_KEY_MOVE_CAM_RIGHT,
 	SET_KEY_LIGHT,
+	SET_KEY_SHADOW,
 	SET_MAX
 };
 
@@ -70,6 +71,7 @@ enum				e_keys
 	KEY_MOVE_CAM_LEFT,
 	KEY_MOVE_CAM_RIGHT,
 	KEY_LIGHT,
+	KEY_SHADOW,
 	KEY_MAX
 };
 
@@ -149,6 +151,7 @@ void				events_mouse(t_env *env, float xpos, float ypos);
 void 				glfw_init_callbacks(t_env *env);
 
 void				event_light(t_env *env, int key);
+void				event_shadow(t_env *env, int key);
 
 // Singletons
 int					*biomes_seed(void);
@@ -187,6 +190,7 @@ static const char	*settings_keys[SET_MAX] = {
 	"move_cam_left",
 	"move_cam_right",
 	"toggle_light",
+	"toggle_shadow",
 };
 
 // UTILS

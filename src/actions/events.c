@@ -5,6 +5,7 @@ enum					e_toggles
 {
 	TOGGLE_EXIT,
 	TOGGLE_LIGHT,
+	TOGGLE_SHADOW,
 	TOGGLE_MAX
 };
 
@@ -18,6 +19,7 @@ static bool				switch_toggles(t_env *env, bool toggles[TOGGLE_MAX], int key, boo
 	int		toggle_ids[TOGGLE_MAX] = {
 		gl_keys_values[env->settings.keys[KEY_EXIT]],
 		gl_keys_values[env->settings.keys[KEY_LIGHT]],
+		gl_keys_values[env->settings.keys[KEY_SHADOW]],
 	};
 
 	for (unsigned int i = 0; i < TOGGLE_MAX; i++)

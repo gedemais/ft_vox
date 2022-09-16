@@ -29,21 +29,21 @@ uniform sampler2D		vTextures[TEXTURE_MAX + 1]; // +1 for depthmap
 
 out vec4				FragColor;
 
-float	compute_shadows()
+float	compute_shadows(vec4 scoord)
 {
-	float	closest, current;
+	float	depth, current;
 	vec3	coords;
 
 	// perform perspective divide
-	coords	= vShadCoord.xyz / vShadCoord.w;
+	coords	= scoord.xyz / scoord.w;
 	// transform to [0,1] range
 	coords	= coords * 0.5f + 0.5f;
 	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-	closest	= texture(vTextures[TEXTURE_MAX], coords.xy).r; 
+	depth	= texture(vTextures[TEXTURE_MAX], coords.xy).r; 
 	// get depth of current fragment from light's perspective
 	current	= coords.z;
 	// check whether current frag pos is in shadow
-    return (current > closest  ? 1.0f : 0.0f);
+    return (depth < (current + 0.00001f) ? 1.0f : 0.0f);
 }
 
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir, float shadows)
@@ -80,7 +80,7 @@ void	model(int index)
 
 	if (light.is_active == true) {
 		vec3		view_dir	= normalize(campos - vPosition);
-		float		shadows		= compute_shadows();
+		float		shadows		= compute_shadows(vShadCoord);
 		int			i			= -1;
 
 		FragColor = vec4(0);

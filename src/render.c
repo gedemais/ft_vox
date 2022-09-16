@@ -68,7 +68,7 @@ static void				render_mesh(t_mesh *mesh)
 
 static void				render_depth(t_env *env, t_mesh *mesh, bool skybox)
 {
-	if (env->light.is_active == false || skybox == true)
+	if (skybox == true || env->light.is_active == false || env->light.shadow == false)
 		return ;
 
 	// update depth matrices
@@ -76,13 +76,13 @@ static void				render_depth(t_env *env, t_mesh *mesh, bool skybox)
 	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "view"), 1, GL_FALSE, env->model.depthview);
 	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "projection"), 1, GL_FALSE, env->model.depthproj);
 
-	// glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
 
-	// glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	render_mesh(mesh);
 
-	// glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 static unsigned char	render_scene(t_env *env)
@@ -145,12 +145,7 @@ static void				update_data(t_env *env)
 	mat4_lookat(env->model.depthview, light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
 	mat4_inverse(env->model.depthview);
 
-	mat4_projection(env->model.depthproj, env->camera.fov, env->camera.near, env->camera.far, env->camera.ratio);
-
-	// mat4		bias;
-
-	// mat4_bias(bias, 0.05f);
-	// mat4_multiply(env->model.depthproj, bias);
+	mat4_projection(env->model.depthproj, env->camera.fov, env->camera.near, 320.0f, env->camera.ratio);
 }
 
 // ====================================================================
