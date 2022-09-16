@@ -167,6 +167,8 @@ unsigned char		update_world(t_env *env);
 void				print_square(t_env *env);
 unsigned char		init_mesh(t_env *env, t_mesh *m);
 unsigned char		fix_chunk_borders(t_env *env, int x, int y);
+unsigned char		fix_east_border(t_chunk *chunk, t_chunk *neighbour);
+unsigned char		fix_south_border(t_chunk *chunk, t_chunk *neighbour);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {

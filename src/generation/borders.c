@@ -1,6 +1,6 @@
 #include "main.h"
 
-static unsigned char	fix_east_border(t_chunk *chunk, t_chunk *neighbour)
+unsigned char	fix_east_border(t_chunk *chunk, t_chunk *neighbour)
 {
 	vec3 a, b;
 	int	delta;
@@ -11,7 +11,6 @@ static unsigned char	fix_east_border(t_chunk *chunk, t_chunk *neighbour)
 		if (delta == 0)
 			continue ;
 
-		printf("THERE\n");
 		if (delta > 0)
 		{
 			a = (vec3){CHUNK_SIZE + chunk->x_start, chunk->surface_hmap[CHUNK_SIZE - 1][z], chunk->z_start + z + 1};
@@ -28,7 +27,7 @@ static unsigned char	fix_east_border(t_chunk *chunk, t_chunk *neighbour)
 	return (ERR_NONE);
 }
 
-static unsigned char	fix_south_border(t_chunk *chunk, t_chunk *neighbour)
+unsigned char	fix_south_border(t_chunk *chunk, t_chunk *neighbour)
 {
 	vec3 a, b;
 	int	delta;
@@ -40,7 +39,6 @@ static unsigned char	fix_south_border(t_chunk *chunk, t_chunk *neighbour)
 		if (delta == 0)
 			continue ;
 
-		printf("THERE\n");
 		if (delta > 0)
 		{
 			a = (vec3){chunk->x_start + x, chunk->surface_hmap[x][CHUNK_SIZE - 1], chunk->z_start + CHUNK_SIZE};
@@ -66,6 +64,8 @@ unsigned char	fix_chunk_borders(t_env *env, int x, int z)
 	chunk = &env->model.chunks[x][z];
 	if (x + 1 < SQUARE_SIZE)
 	{
+		printf("fix east border\n");
+		fflush(stdout);
 		neighbour = &env->model.chunks[x + 1][z];
 		if ((code = fix_east_border(chunk, neighbour)))
 			return (code);
@@ -73,6 +73,8 @@ unsigned char	fix_chunk_borders(t_env *env, int x, int z)
 
 	if (z + 1 < SQUARE_SIZE)
 	{
+		printf("fix south border\n");
+		fflush(stdout);
 		neighbour = &env->model.chunks[x][z + 1];
 		if ((code = fix_south_border(chunk, neighbour)))
 			return (code);

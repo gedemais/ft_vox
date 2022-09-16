@@ -46,7 +46,7 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk)
 
 	return (ERR_NONE);
 }
-
+/*
 static t_chunk			*get_cached_chunk(t_env *env, int x, int z)
 {
 	t_chunk		*chunk;
@@ -77,15 +77,15 @@ static void	cache_chunk(t_env *env, t_chunk *chunk)
 	cached->sub_hmap = chunk->sub_hmap;
 	cached->x_start = chunk->x_start;
 	cached->z_start = chunk->z_start;
-}
+}*/
 
 static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 {
 	unsigned char	code;
-	bool			south = trigger_id == TRIGGER_NORTH;
+	bool			south = (trigger_id == TRIGGER_NORTH);
 	t_mesh			mesh;
 	t_chunk			*news[SQUARE_SIZE];
-	t_chunk			*cached;
+	//t_chunk			*cached;
 	int				new_z;
 
 	new_z = south ? SQUARE_SIZE - 1 : 0;
@@ -94,15 +94,15 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 	{
 		if (south && !remove_chunk_mesh(env, &env->model.chunks[i][0]))
 		{
-			cache_chunk(env, &env->model.chunks[i][0]);
+			//cache_chunk(env, &env->model.chunks[i][0]);
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[i][j] = env->model.chunks[i][j + 1];
 		}
 
 		else if (!remove_chunk_mesh(env, &env->model.chunks[i][SQUARE_SIZE - 1]))
 		{
-			cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
-			for (int j = SQUARE_SIZE - 1; j >= 0; j--)
+			//cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
+			for (int j = SQUARE_SIZE - 1; j > 0; j--)
 				env->model.chunks[i][j] = env->model.chunks[i][j - 1];
 		}
 	}
@@ -114,21 +114,23 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 		news[i] = &env->model.chunks[i][new_z];
 		memset(news[i], 0, sizeof(t_chunk));
 
-		cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
+	//	cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
 		if ((code = gen_chunk(env, news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true)) != ERR_NONE)
 			return (code);
-		else if (cached)
+		/*else if (cached)
 		{
 			printf("cached found !\n");
 			memcpy(news[i], cached, sizeof(t_chunk));
 			if ((code = gen_chunk(env, news[i], news[i]->x_start, news[i]->z_start, true)))
 				return (code);
-		}
+		}*/
 	}
 
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		fix_chunk_borders(env, (env->model.square_x + i), (env->model.square_z + new_z));
+		fix_south_border(&env->model.chunks[i][new_z - (south ? 1 : 0)], &env->model.chunks[i][new_z]);
+		if (i < SQUARE_SIZE - 1)
+			fix_east_border(&env->model.chunks[i][new_z], &env->model.chunks[i + 1][new_z]);
 
 		ft_memset(&mesh, 0, sizeof(t_mesh));
 		mesh.vertices = news[i]->stride;
@@ -153,7 +155,7 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 	bool			west = trigger_id == TRIGGER_WEST;
 	t_mesh			mesh;
 	t_chunk			*news[SQUARE_SIZE];
-	t_chunk			*cached;
+	//t_chunk			*cached;
 	int				new_x;
 
 	new_x = west ? SQUARE_SIZE - 1 : 0;
@@ -162,15 +164,15 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 	{
 		if (west && !remove_chunk_mesh(env, &env->model.chunks[0][i]))
 		{
-			cache_chunk(env, &env->model.chunks[i][0]);
+			//cache_chunk(env, &env->model.chunks[i][0]);
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[j][i] = env->model.chunks[j + 1][i];
 		}
 
 		else if (!remove_chunk_mesh(env, &env->model.chunks[SQUARE_SIZE - 1][i]))
 		{
-			cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
-			for (int j = SQUARE_SIZE - 1; j >= 0; j--)
+			//cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
+			for (int j = SQUARE_SIZE - 1; j > 0; j--)
 				env->model.chunks[j][i] = env->model.chunks[j - 1][i];
 		}
 	}
@@ -182,21 +184,23 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 		news[i] = &env->model.chunks[new_x][i];
 		memset(news[i], 0, sizeof(t_chunk));
 
-		cached = get_cached_chunk(env, env->model.square_x + new_x, env->model.square_z + i);
+//		cached = get_cached_chunk(env, env->model.square_x + new_x, env->model.square_z + i);
 		if ((code = gen_chunk(env, news[i], (env->model.square_x + new_x) * CHUNK_SIZE, (env->model.square_z + i) * CHUNK_SIZE, true)) != ERR_NONE)
 			return (code);
-		else if (cached)
+/*		else if (cached)
 		{
 			printf("cached found !\n");
 			memcpy(news[i], cached, sizeof(t_chunk));
 			if ((code = gen_chunk(env, news[i], news[i]->x_start, news[i]->z_start, true)))
 				return (code);
-		}
+		}*/
 	}
 
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		fix_chunk_borders(env, (env->model.square_x + new_x), (env->model.square_z + i));
+		fix_east_border(&env->model.chunks[new_x][i], &env->model.chunks[new_x - (west ? 1 : 0)][i]);
+		if (i < SQUARE_SIZE - 1)
+			fix_south_border(&env->model.chunks[new_x][i], &env->model.chunks[new_x][i + 1]);
 
 		ft_memset(&mesh, 0, sizeof(t_mesh));
 		mesh.vertices = news[i]->stride;
@@ -229,7 +233,6 @@ static unsigned char	move_square(t_env *env, int trigger_id)
 		move_square_on_z(env, trigger_id);
 	else
 		return (move_square_on_x(env, trigger_id));
-
 
 	printf("%d meshs in scene\n", env->model.meshs.nb_cells);
 	return (ERR_NONE);
@@ -266,7 +269,7 @@ static bool				check_trigger(int x, int z, int *trigger_id)
 unsigned char			update_world(t_env *env)
 {
 	unsigned char	code;
-	int				trigger_id;
+	int				trigger_id = 0;
 
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int z = 0; z < SQUARE_SIZE; z++)
