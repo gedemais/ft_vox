@@ -12,9 +12,11 @@ static void				light_and_shadows_uniforms(t_env *env, t_mesh *mesh, mat4 m)
 	// sunlight follow the sun's texture
 	tmp = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].pos);
 	glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&tmp);
+	tmp = vec_normalize(mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].dir));
+	glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_SUN][LIGHT_DIRECTION], 1, (GLfloat *)&tmp);
 	// SHADOWS :: update depth matrices
-	glUniformMatrix4fv(mesh->gl.uniform.depth_view, 1, GL_FALSE, env->model.depthview);
-	glUniformMatrix4fv(mesh->gl.uniform.depth_projection, 1, GL_FALSE, env->model.depthproj);
+	glUniformMatrix4fv(mesh->gl.uniform.depth_view, 1, GL_FALSE, env->model.depthview[0]);
+	glUniformMatrix4fv(mesh->gl.uniform.depth_projection, 1, GL_FALSE, env->model.depthproj[0]);
 }
 
 static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
@@ -71,10 +73,11 @@ static void				render_depth(t_env *env, t_mesh *mesh, bool skybox)
 	if (skybox == true || env->light.is_active == false || env->light.shadow == false)
 		return ;
 
-	// update depth matrices
+	// use program before set uniforms
 	glUseProgram(mesh->gl.depth_program);
-	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "view"), 1, GL_FALSE, env->model.depthview);
-	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "projection"), 1, GL_FALSE, env->model.depthproj);
+	// update depth matrices
+	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "view"), 1, GL_FALSE, env->model.depthview[0]);
+	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
 
@@ -137,15 +140,17 @@ static void				update_data(t_env *env)
 	env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 
 	// SHADOWS
-	vec3		light_pos, light_dir;
+	vec3	light_pos, light_dir;
+	int		i;
 
-	light_pos = env->light.sources[LIGHT_SOURCE_PLAYER].pos;
-	light_dir = env->light.sources[LIGHT_SOURCE_PLAYER].dir;
-
-	mat4_lookat(env->model.depthview, light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
-	mat4_inverse(env->model.depthview);
-
-	mat4_projection(env->model.depthproj, env->camera.fov, env->camera.near, 320.0f, env->camera.ratio);
+	i = -1;
+	while (++i < LIGHT_SOURCE_MAX) {
+		light_pos = env->light.sources[0].pos;
+		light_dir = env->light.sources[0].dir;
+		mat4_lookat(env->model.depthview[0], light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
+		mat4_inverse(env->model.depthview[0]);
+		mat4_projection(env->model.depthproj[0], 90.0f, env->camera.near, env->camera.far, env->camera.ratio);
+	}
 }
 
 // ====================================================================

@@ -67,6 +67,8 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 	if ((code = model(env)) != ERR_NONE)
 		return (code);
 
+	camera(env); // camera after load settings cause we need ww and wh
+	// camera before light because we need campos
 	light(env);
 
 	return (ERR_NONE);

@@ -29,27 +29,24 @@ uniform sampler2D		vTextures[TEXTURE_MAX + 1]; // +1 for depthmap
 
 out vec4				FragColor;
 
-float	compute_shadows(vec4 scoord)
+float	compute_shadows(vec3 light_dir)
 {
-	float	depth, current;
+	float	depth, bias;
 	vec3	coords;
 
-	// perform perspective divide
-	coords	= scoord.xyz / scoord.w;
-	// transform to [0,1] range
+	coords	= vShadCoord.xyz / vShadCoord.w;
 	coords	= coords * 0.5f + 0.5f;
-	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-	depth	= texture(vTextures[TEXTURE_MAX], coords.xy).r; 
-	// get depth of current fragment from light's perspective
-	current	= coords.z;
-	// check whether current frag pos is in shadow
-    return (depth < (current + 0.00001f) ? 1.0f : 0.0f);
+	if (coords.z > 1.0f)
+		coords.z = 1.0f;
+	depth	= texture(vTextures[TEXTURE_MAX], coords.xy).r;
+	bias	= max(0.005f * dot(vNormal, light_dir), 0.0005f);
+    return (depth - bias > coords.z ? 1.0f : 0.0f);
 }
 
-vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir, float shadows)
+vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 {
 	vec3	light_dir, reflect_dir;
-	float	attenuation, e;
+	float	attenuation, e, shadows;
 
 	color			*= source.color;
 
@@ -62,7 +59,10 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir, float
 	e				= pow(max(dot(view_dir, reflect_dir), 0), 8);
 	source.specular	= color * source.specular * e;
 
-	color 			= source.ambient + (1.0f - shadows) * (source.diffuse + source.specular);
+	// shadows
+	shadows			= compute_shadows(light_dir);
+
+	color 			= source.ambient + shadows * (source.diffuse + source.specular);
 
 	// light attenuation
 	e				= distance(source.pos, vPosition);
@@ -80,12 +80,11 @@ void	model(int index)
 
 	if (light.is_active == true) {
 		vec3		view_dir	= normalize(campos - vPosition);
-		float		shadows		= compute_shadows(vShadCoord);
 		int			i			= -1;
 
 		FragColor = vec4(0);
 		while (++i < LIGHT_SOURCE_MAX)
-			FragColor += compute_light_sources(light_sources[i], color, view_dir, shadows);
+			FragColor += compute_light_sources(light_sources[i], color, view_dir);
 	} else {
 		FragColor = vec4(color, 1);
 	}

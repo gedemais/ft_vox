@@ -4,9 +4,10 @@
 
 # include "main.h"
 # include "gen.h"
+# include "light.h"
 
 # define MODEL_SCALE	1
-# define SB_ROT_SPEED	10 // sun's rotation speed
+# define SB_ROT_SPEED	100 // sun's rotation speed
 
 enum			e_texture
 {
@@ -94,7 +95,7 @@ typedef struct	s_model
 	t_dynarray	meshs;
 	float		**biomes;
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
-	mat4		model, depthproj, depthview;
+	mat4		model, depthproj[LIGHT_SOURCE_MAX], depthview[LIGHT_SOURCE_MAX];
 	float		scale;
 	GLuint		gl_textures[TEXTURE_MAX + 1];	// gl's textures' id :: +1 for depthmap at the end
 	GLuint		gl_tskybox;						// gl's texture for skybox

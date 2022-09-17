@@ -74,14 +74,18 @@ static void				init_player(t_light_source *source)
 
 static void				init_sun(t_env *env, t_light_source *source)
 {
-	//0.85f 0.7f 1
+	float	e;
+
+	e = env->camera.far / 2.0f;
 	source->pos			= (vec3){ 0.85f, 0, -1 };
-	source->pos			= vec_fmult(source->pos, env->camera.far / 2.0f);
-	source->dir			= (vec3){ -1, -1, -1 };
+	source->pos			= (vec3){ source->pos.x * e, 16, source->pos.z * e };
+	source->dir			= vec_normalize(env->camera.pos);
 	source->color		= (vec3){ 1, 1, 1 };
 	source->ambient		= (vec3){ 0.66f, 0.66f, 0.66f };
 	source->diffuse		= (vec3){ 0.66f, 0.66f, 0.66f };
 	source->specular	= (vec3){ 0.33f, 0.25f, 0.33f };
+
+	printf("light dir : %f %f %f\n", source->dir.x , source->dir.y, source->dir.z);
 }
 
 void					light(t_env *env)
