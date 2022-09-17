@@ -224,7 +224,7 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 	return (ERR_NONE);
 }
 
-static unsigned char	move_square(t_env *env, int trigger_id)
+static unsigned char	move_square(t_env *env, int trigger_id, pthread_t *thread_id)
 {
 	char	*strs[TRIGGER_MAX] = {
 		"north",
@@ -237,7 +237,9 @@ static unsigned char	move_square(t_env *env, int trigger_id)
 	//printf("square_x : %d square_y : %d\n", env->model.square_x, env->model.square_z);
 
 	if (trigger_id == TRIGGER_NORTH || trigger_id == TRIGGER_SOUTH)
+	{
 		move_square_on_z(env, trigger_id);
+	}
 	else
 		return (move_square_on_x(env, trigger_id));
 
@@ -251,9 +253,6 @@ static bool				check_player_presence(vec3 pos, t_chunk chunk)
 
 	x = pos.x > chunk.x_start && pos.x < chunk.x_start + CHUNK_SIZE;
 	z = pos.z > chunk.z_start && pos.z < chunk.z_start + CHUNK_SIZE;
-
-	//if (x && z)
-	//	printf("player in %d %d\n", chunk.x_start, chunk.z_start);
 
 	return (x && z);
 }
@@ -275,15 +274,16 @@ static bool				check_trigger(int x, int z, int *trigger_id)
 
 unsigned char			update_world(t_env *env)
 {
-	unsigned char	code;
-	int				trigger_id = 0;
+	//static pthread_t	thread_id = 0;
+	int					trigger_id = 0;
+	unsigned char		code;
 
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int z = 0; z < SQUARE_SIZE; z++)
 		{
 			if (check_player_presence(env->camera.pos, env->model.chunks[x][z])
 				&& check_trigger(x, z, &trigger_id)
-				&& (code = move_square(env, trigger_id)))
+				&& (code = move_square(env, trigger_id, &thread_id)))
 				return (code);
 		}
 	return (ERR_NONE);
