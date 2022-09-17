@@ -82,17 +82,17 @@ static void	cache_chunk(t_env *env, t_chunk *chunk)
 static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 {
 	unsigned char	code;
-	bool			south = (trigger_id == TRIGGER_NORTH);
+	bool			north = (trigger_id == TRIGGER_NORTH);
 	t_mesh			mesh;
 	t_chunk			*news[SQUARE_SIZE];
 	//t_chunk			*cached;
 	int				new_z;
 
-	new_z = south ? SQUARE_SIZE - 1 : 0;
+	new_z = north ? SQUARE_SIZE - 1 : 0;
 	//printf("remove line\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		if (south && !remove_chunk_mesh(env, &env->model.chunks[i][0]))
+		if (north && !remove_chunk_mesh(env, &env->model.chunks[i][0]))
 		{
 			//cache_chunk(env, &env->model.chunks[i][0]);
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
@@ -107,7 +107,7 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 		}
 	}
 
-	env->model.square_z += south ? 1 : -1;
+	env->model.square_z += north ? 1 : -1;
 	//printf("add new chunks\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
@@ -128,7 +128,11 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		fix_south_border(&env->model.chunks[i][new_z - (south ? 1 : 0)], &env->model.chunks[i][new_z]);
+
+		if (north)
+			fix_south_border(&env->model.chunks[i][new_z - 1], &env->model.chunks[i][new_z]);
+		else
+			fix_south_border(&env->model.chunks[i][new_z], &env->model.chunks[i][new_z + 1]);
 		if (i < SQUARE_SIZE - 1)
 			fix_east_border(&env->model.chunks[i][new_z], &env->model.chunks[i + 1][new_z]);
 
@@ -147,7 +151,6 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 	//exit(0);
 	return (ERR_NONE);
 }
-
 
 static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 {
@@ -198,7 +201,11 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		fix_east_border(&env->model.chunks[new_x][i], &env->model.chunks[new_x - (west ? 1 : 0)][i]);
+		if (west)
+			fix_east_border(&env->model.chunks[new_x - 1][i], &env->model.chunks[new_x][i]);
+		else
+			fix_east_border(&env->model.chunks[new_x][i], &env->model.chunks[new_x + 1][i]);
+
 		if (i < SQUARE_SIZE - 1)
 			fix_south_border(&env->model.chunks[new_x][i], &env->model.chunks[new_x][i + 1]);
 
@@ -234,7 +241,7 @@ static unsigned char	move_square(t_env *env, int trigger_id)
 	else
 		return (move_square_on_x(env, trigger_id));
 
-	printf("%d meshs in scene\n", env->model.meshs.nb_cells);
+	printf("triggered %s | %d meshs in scene\n", strs[trigger_id], env->model.meshs.nb_cells);
 	return (ERR_NONE);
 }
 

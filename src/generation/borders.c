@@ -11,6 +11,8 @@ unsigned char	fix_east_border(t_chunk *chunk, t_chunk *neighbour)
 		if (delta == 0)
 			continue ;
 
+		//if (delta > 3)
+		//	printf("%d (%d - %d)\n", delta, chunk->surface_hmap[CHUNK_SIZE - 1][z], neighbour->surface_hmap[0][z]);
 		if (delta > 0)
 		{
 			a = (vec3){CHUNK_SIZE + chunk->x_start, chunk->surface_hmap[CHUNK_SIZE - 1][z], chunk->z_start + z + 1};
