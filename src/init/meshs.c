@@ -42,6 +42,7 @@ static unsigned char	gl_buffers(t_mesh *mesh, bool skybox)
 	}
 	set_layouts(skybox);
 	glBindVertexArray(0);
+
 	return (ERR_NONE);
 }
 

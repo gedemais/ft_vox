@@ -104,5 +104,6 @@ unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char 
 			|| (code = build_shader(mesh, GL_FRAGMENT_SHADER, sfragment_path)) != ERR_NONE
 			|| (code = link_shader_program(mesh)) != ERR_NONE)
 		return (code);
+
 	return (ERR_NONE);
 }

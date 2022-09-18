@@ -78,11 +78,22 @@ static void	cache_chunk(t_env *env, t_chunk *chunk)
 	cached->x_start = chunk->x_start;
 	cached->z_start = chunk->z_start;
 }*/
-
-static unsigned char	move_square_on_z(t_env *env, int trigger_id)
+/*
+typedef struct	s_ms_params
 {
-	unsigned char	code;
+	t_env		*env;
+	int			trigger_id;
+	pthread_t	*thread_id;
+}				t_ms_params;*/
+
+static unsigned char move_square_on_z(t_env *env, int trigger_id)
+{
+	//t_env			*env = ((t_ms_params*)params)->env;
+	//int				trigger_id = ((t_ms_params*)params)->trigger_id;
 	bool			north = (trigger_id == TRIGGER_NORTH);
+	//pthread_t		*tid = ((t_ms_params*)params)->thread_id;
+
+	unsigned char	code;
 	t_mesh			mesh;
 	t_chunk			*news[SQUARE_SIZE];
 	//t_chunk			*cached;
@@ -115,8 +126,8 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 		memset(news[i], 0, sizeof(t_chunk));
 
 	//	cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
-		if ((code = gen_chunk(env, news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true)) != ERR_NONE)
-			return (code);
+		if (gen_chunk(env, news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true) != ERR_NONE)
+			return (ERR_MALLOC_FAILED);
 		/*else if (cached)
 		{
 			printf("cached found !\n");
@@ -128,7 +139,6 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-
 		if (north)
 			fix_south_border(&env->model.chunks[i][new_z - 1], &env->model.chunks[i][new_z]);
 		else
@@ -141,12 +151,12 @@ static unsigned char	move_square_on_z(t_env *env, int trigger_id)
 		mesh.x_start = news[i]->x_start;
 		mesh.z_start = news[i]->z_start;
 
-		if (init_mesh(env, &mesh) || dynarray_push(&env->model.meshs, &mesh, true) < 0)
-			return (ERR_MALLOC_FAILED);
+		if (init_mesh(env, &mesh) != ERR_NONE || dynarray_push(&env->model.meshs, &mesh, true) < 0)
+			return (ERR_MALLOC_FAILED); // should be replaced by returning code (just as other returns statements in this function)
 	}
 
 	//printf("%d meshs\nsquare_x : %d\nsquare_z : %d\npos : %f %f %f\n",
-//		env->model.meshs.nb_cells, env->model.square_x * CHUNK_SIZE, env->model.square_z * CHUNK_SIZE, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
+	//env->model.meshs.nb_cells, env->model.square_x * CHUNK_SIZE, env->model.square_z * CHUNK_SIZE, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
 
 	//exit(0);
 	return (ERR_NONE);
@@ -224,9 +234,15 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 	return (ERR_NONE);
 }
 
-static unsigned char	move_square(t_env *env, int trigger_id, pthread_t *thread_id)
+static unsigned char	move_square(t_env *env, int trigger_id)
 {
-	char	*strs[TRIGGER_MAX] = {
+	/*t_ms_params	params =	{
+								env,
+								trigger_id,
+								thread_id
+							};*/
+
+	char		*strs[TRIGGER_MAX] = {
 		"north",
 		"south",
 		"west",
@@ -237,13 +253,11 @@ static unsigned char	move_square(t_env *env, int trigger_id, pthread_t *thread_i
 	//printf("square_x : %d square_y : %d\n", env->model.square_x, env->model.square_z);
 
 	if (trigger_id == TRIGGER_NORTH || trigger_id == TRIGGER_SOUTH)
-	{
-		move_square_on_z(env, trigger_id);
-	}
+		return (move_square_on_z(env, trigger_id));
 	else
 		return (move_square_on_x(env, trigger_id));
 
-	printf("triggered %s | %d meshs in scene\n", strs[trigger_id], env->model.meshs.nb_cells);
+	//printf("triggered %s | %d meshs in scene\n", strs[trigger_id], env->model.meshs.nb_cells);
 	return (ERR_NONE);
 }
 
@@ -274,7 +288,6 @@ static bool				check_trigger(int x, int z, int *trigger_id)
 
 unsigned char			update_world(t_env *env)
 {
-	//static pthread_t	thread_id = 0;
 	int					trigger_id = 0;
 	unsigned char		code;
 
@@ -283,7 +296,7 @@ unsigned char			update_world(t_env *env)
 		{
 			if (check_player_presence(env->camera.pos, env->model.chunks[x][z])
 				&& check_trigger(x, z, &trigger_id)
-				&& (code = move_square(env, trigger_id, &thread_id)))
+				&& (code = move_square(env, trigger_id)))
 				return (code);
 		}
 	return (ERR_NONE);

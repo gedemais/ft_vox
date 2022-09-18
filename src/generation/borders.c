@@ -66,8 +66,6 @@ unsigned char	fix_chunk_borders(t_env *env, int x, int z)
 	chunk = &env->model.chunks[x][z];
 	if (x + 1 < SQUARE_SIZE)
 	{
-		printf("fix east border\n");
-		fflush(stdout);
 		neighbour = &env->model.chunks[x + 1][z];
 		if ((code = fix_east_border(chunk, neighbour)))
 			return (code);
@@ -75,8 +73,6 @@ unsigned char	fix_chunk_borders(t_env *env, int x, int z)
 
 	if (z + 1 < SQUARE_SIZE)
 	{
-		printf("fix south border\n");
-		fflush(stdout);
 		neighbour = &env->model.chunks[x][z + 1];
 		if ((code = fix_south_border(chunk, neighbour)))
 			return (code);
