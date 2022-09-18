@@ -59,7 +59,6 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.program, "campos");
 		// textures
 		mesh->gl.uniform.textures = glGetUniformLocation(mesh->gl.program, "vTextures");
-		// +1 because we set depthmap at last position
 		int	samplers[TEXTURE_MAX + 1] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 		glUniform1iv(mesh->gl.uniform.textures, TEXTURE_MAX + 1, samplers);
 		// light
@@ -90,8 +89,8 @@ unsigned char			init_meshs(t_env *env)
 		if ((code = mount_shaders(&mesh->gl.program, env->shaders[SHADER_VERTEX], env->shaders[SHADER_FRAGMENT])) != ERR_NONE
 				|| (code = mount_shaders(&mesh->gl.depth_program, env->shaders[SHADER_DEPTH_VERTEX], env->shaders[SHADER_DEPTH_FRAGMENT])) != ERR_NONE
 				|| (code = gl_buffers(env, mesh, false)) != ERR_NONE
-				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE
-				|| (code = mount_shadows(env, mesh)) != ERR_NONE)
+				|| (code = mount_shadows(env, mesh)) != ERR_NONE
+				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE)
 			return (code);
 	}
 	// SKYBOX

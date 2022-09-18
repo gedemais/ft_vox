@@ -3,7 +3,10 @@
 
 unsigned char	mount_shadows(t_env *env, t_mesh *mesh)
 {
+	unsigned char	code;
+
     glGenFramebuffers(1, &mesh->gl.fbo);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, env->model.gl_textures[TEXTURE_MAX], 0);

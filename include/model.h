@@ -72,7 +72,7 @@ typedef struct	s_uniform
 	GLint	time;
 	GLint	textures, depthmap;
 	GLint	skybox, campos;
-	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
+	GLint	light_active, shadow, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
 	GLint	model, view, projection;
 	GLint	depth_view, depth_projection;
 }				t_uniform;
@@ -97,7 +97,7 @@ typedef struct	s_model
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
 	mat4		model, depthproj[LIGHT_SOURCE_MAX], depthview[LIGHT_SOURCE_MAX];
 	float		scale;
-	GLuint		gl_textures[TEXTURE_MAX + 1];	// gl's textures' id :: +1 for depthmap at the end
+	GLuint		gl_textures[TEXTURE_MAX + 1];	// gl's textures' id
 	GLuint		gl_tskybox;						// gl's texture for skybox
 	t_texture	textures[TEXTURE_SB_MAX];		// textures' ptr
 }				t_model;

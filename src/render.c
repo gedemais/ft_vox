@@ -92,7 +92,7 @@ static unsigned char	render_scene(t_env *env)
 	bool		skybox;
 
 	// reset viewport
-	glViewport(0, 0, env->window.w, env->window.h);
+	// glViewport(0, 0, env->window.w, env->window.h);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	i = -1;
 	while (++i < env->model.meshs.nb_cells) {
@@ -135,7 +135,7 @@ static void				update_data(t_env *env)
 	env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 	env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 
-	env->light.sources[LIGHT_SOURCE_PLAYER].pos.y -= 2.0f;
+	// env->light.sources[LIGHT_SOURCE_PLAYER].pos.y = 0.0f;
 
 	// SHADOWS
 	vec3	light_pos, light_dir;
@@ -147,7 +147,7 @@ static void				update_data(t_env *env)
 		light_dir = env->light.sources[i].dir;
 		mat4_lookat(env->model.depthview[i], light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
 		mat4_inverse(env->model.depthview[i]);
-		mat4_projection(env->model.depthproj[i], 90.0f, env->camera.near, 50.0f, env->camera.ratio);
+		mat4_projection(env->model.depthproj[i], 90.0f, env->camera.near, env->camera.far, env->camera.ratio);
 	}
 }
 

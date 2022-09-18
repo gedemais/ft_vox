@@ -1,4 +1,4 @@
-#version 400 core
+#version 410 core
 
 #define LIGHT_SOURCE_MAX	2
 #define TEXTURE_MAX			8
@@ -10,7 +10,7 @@ struct	LightSources {
 };
 
 struct	Light {
-	bool	is_active;
+	bool	is_active, shadow;
 	float	gamma;
 };
 
@@ -25,7 +25,7 @@ uniform float			u_time;
 
 uniform Light			light;
 uniform LightSources	light_sources[LIGHT_SOURCE_MAX];
-uniform sampler2D		vTextures[TEXTURE_MAX + 1]; // +1 for depthmap
+uniform sampler2D		vTextures[TEXTURE_MAX];
 
 out vec4				FragColor;
 
@@ -38,9 +38,9 @@ float	compute_shadows(vec3 light_dir)
 	coords	= coords * 0.5f + 0.5f;
 	if (coords.z > 1.0f)
 		coords.z = 1.0f;
-	depth	= texture(vTextures[TEXTURE_MAX], coords.xy).r;
+	depth	= texture(vTextures[0], coords.xy).r;
 	bias	= max(0.0005f * dot(vNormal, light_dir), 0.00005f);
-    return (depth + bias > coords.z ? 1.0f : 0.0f);
+	return (depth + bias > coords.z ? 1.0f : 0.25f);
 }
 
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
@@ -60,7 +60,7 @@ vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)
 	source.specular	= color * source.specular * e;
 
 	// shadows
-	shadows			= compute_shadows(light_dir);
+	shadows			= light.shadow == true ? compute_shadows(light_dir) : 1.0f;
 
 	color 			= source.ambient + shadows * (source.diffuse + source.specular);
 

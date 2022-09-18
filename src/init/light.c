@@ -40,9 +40,11 @@ unsigned char			light_uniforms(t_mesh *mesh, t_light *light)
 	// get uniforms
 	mesh->gl.uniform.light_active = glGetUniformLocation(mesh->gl.program, "light.is_active");
 	mesh->gl.uniform.light_gamma = glGetUniformLocation(mesh->gl.program, "light.gamma");
+	mesh->gl.uniform.shadow = glGetUniformLocation(mesh->gl.program, "light.shadow");
 	// consume uniforms
 	glUniform1i(mesh->gl.uniform.light_active, light->is_active);
 	glUniform1f(mesh->gl.uniform.light_gamma, light->gamma);
+	glUniform1f(mesh->gl.uniform.shadow, light->shadow);
 	i = -1;
 	while (++i < LIGHT_SOURCE_MAX) {
 		// get uniforms
@@ -94,6 +96,7 @@ void					light(t_env *env)
 
 	light = &env->light;
 	light->is_active = false;
+	light->shadow = false;
 	init_player(&light->sources[LIGHT_SOURCE_PLAYER]);
 	init_sun(env, &light->sources[LIGHT_SOURCE_SUN]);
 }
