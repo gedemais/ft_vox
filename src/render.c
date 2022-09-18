@@ -68,11 +68,8 @@ static void				render_mesh(t_mesh *mesh)
 	glBindVertexArray(0);
 }
 
-static void				render_depth(t_env *env, t_mesh *mesh, bool skybox)
+static void				render_depth(t_env *env, t_mesh *mesh)
 {
-	if (skybox == true || env->light.is_active == false || env->light.shadow == false)
-		return ;
-
 	// use program before set uniforms
 	glUseProgram(mesh->gl.depth_program);
 	// update depth matrices
@@ -101,11 +98,10 @@ static unsigned char	render_scene(t_env *env)
 	while (++i < env->model.meshs.nb_cells) {
 		mesh = dyacc(&env->model.meshs, i);
 		skybox = i == env->model.meshs.nb_cells - 1;
-
 		set_gl_options(skybox);
-
 		// first  - render depth
-		render_depth(env, mesh, skybox);
+		if (skybox == false  && env->light.shadow == true)
+			render_depth(env, mesh);
 		// second - render mesh
 		set_uniforms(env, mesh, skybox);
 		render_mesh(mesh);
@@ -145,11 +141,11 @@ static void				update_data(t_env *env)
 
 	i = -1;
 	while (++i < LIGHT_SOURCE_MAX) {
-		light_pos = env->light.sources[0].pos;
-		light_dir = env->light.sources[0].dir;
-		mat4_lookat(env->model.depthview[0], light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
-		mat4_inverse(env->model.depthview[0]);
-		mat4_projection(env->model.depthproj[0], 90.0f, env->camera.near, env->camera.far, env->camera.ratio);
+		light_pos = env->light.sources[i].pos;
+		light_dir = env->light.sources[i].dir;
+		mat4_lookat(env->model.depthview[i], light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
+		mat4_inverse(env->model.depthview[i]);
+		mat4_projection(env->model.depthproj[i], 135.0f, env->camera.near, 100.0f, env->camera.ratio);
 	}
 }
 
