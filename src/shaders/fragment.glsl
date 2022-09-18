@@ -40,9 +40,7 @@ float	compute_shadows(vec3 light_dir)
 		coords.z = 1.0f;
 	depth	= texture(vTextures[TEXTURE_MAX], coords.xy).r;
 	bias	= max(0.0005f * dot(vNormal, light_dir), 0.00005f);
-
-	bias	= 0.0f;
-    return (depth - bias > coords.z ? 1.0f : 0.0f);
+    return (depth + bias > coords.z ? 1.0f : 0.0f);
 }
 
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)

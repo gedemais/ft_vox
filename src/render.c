@@ -135,6 +135,8 @@ static void				update_data(t_env *env)
 	env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 	env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 
+	env->light.sources[LIGHT_SOURCE_PLAYER].pos.y -= 2.0f;
+
 	// SHADOWS
 	vec3	light_pos, light_dir;
 	int		i;
@@ -145,7 +147,7 @@ static void				update_data(t_env *env)
 		light_dir = env->light.sources[i].dir;
 		mat4_lookat(env->model.depthview[i], light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
 		mat4_inverse(env->model.depthview[i]);
-		mat4_projection(env->model.depthproj[i], 135.0f, env->camera.near, 100.0f, env->camera.ratio);
+		mat4_projection(env->model.depthproj[i], 90.0f, env->camera.near, 50.0f, env->camera.ratio);
 	}
 }
 
