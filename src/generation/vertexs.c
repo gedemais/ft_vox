@@ -11,24 +11,29 @@
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0')
 
-const float		block_size = 1.0f;
 
 static int	switch_block_type(unsigned int z)
 {
-	if (z < 1)
-		return (BT_SAND); // Water
-	else if (z < 15)
-		return (BT_WATER); // Water
-	else if (z < 20)
-		return (BT_SAND); // Water
-	else if (z >= 20 && z < 30)
-		return (BT_GROUND); // Sand
-	else if (z >= 30 && z < 40)
-		return (BT_GRASS); // Sand
-	else if (z >= 40 && z < 60)
-		return (BT_STONE); // Grass
+	if (z < 64)
+		return (BT_STONE); // Water
+	else if (z < 72)
+		return (BT_GROUND); //Grass
+	else if (z < 80)
+		return (BT_GRASS);
+	else if (z < 88)
+		return (BT_STONE);
 	else
-		return (BT_SNOW); //Grass
+		return (BT_SNOW);
+	/*else if (z < 72)
+		return (BT_WATER); // Water
+	else if (z < 80)
+		return (BT_SAND); // Water
+	else if (z < 88)
+		return (BT_GROUND); // Sand
+	else if (z < 96)
+		return (BT_GRASS); // Sand
+	else if (z < 104)
+		return (BT_STONE); // Grass*/
 }
 
 static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side)
@@ -77,15 +82,15 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_p
 	float			xx, yy, zz;
 	vec3			a, b, c, d;
 
-	xx = x * block_size;
-	yy = y * block_size;
-	zz = z * block_size;
+	xx = x;
+	yy = y;
+	zz = z;
 
 	// Cube's top plane ABCD points
-	a = (vec3){xx, yy, (z + 1) * block_size};
-	b = (vec3){(x + 1) * block_size, yy, (z + 1) * block_size};
+	a = (vec3){xx, yy, (z + 1)};
+	b = (vec3){(x + 1), yy, (z + 1)};
 	c = (vec3){xx, yy, zz};
-	d = (vec3){(x + 1) * block_size, yy, zz};
+	d = (vec3){(x + 1), yy, zz};
 
 	top_plane[0] = c;
 	top_plane[1] = a;
@@ -101,8 +106,8 @@ unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, 
 {
 	vec3		c, d;
 
-	c = vec_add(a, vec_fmult((vec3){0, -block_size, 0}, depth));
-	d = vec_add(b, vec_fmult((vec3){0, -block_size, 0}, depth));
+	c = vec_add(a, vec_fmult((vec3){0, -1.0f, 0}, depth));
+	d = vec_add(b, vec_fmult((vec3){0, -1.0f, 0}, depth));
 
 	vec3 side_plane[6] = {c, a, b, c, b, d};
 
@@ -156,6 +161,11 @@ unsigned char	generate_side_plane(t_chunk *chunk, uint8_t **hmap, int x, int y, 
 		n_x = x + neighbours[i][0];
 		n_z = z + neighbours[i][1];
 
+	//	if (n_x < 0 || n_x >= (int)size || n_z < 0 || n_z >= (int)size)
+	//		(void)n_x;
+	//	else
+	//		printf("%d %d : %d (y = %d)\n", n_x, n_z, hmap[n_x][n_z], y);
+	
 		if (n_x < 0 || n_x >= (int)size || n_z < 0 || n_z >= (int)size
 			|| (offset = y - hmap[n_x][n_z]) <= 0)
 			continue ;

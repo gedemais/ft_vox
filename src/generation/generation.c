@@ -5,7 +5,7 @@ unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
 	unsigned char	code;
 	unsigned int	y;
 	vec3			top_plane[6];
-/*
+
 	for (unsigned int x = 0; x < CHUNK_SIZE; x++)
 		for (unsigned int z = 0; z < CHUNK_SIZE; z++)
 		{
@@ -16,9 +16,7 @@ unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
 				//|| (code = generate_bottom_plane(chunk, x, y, z, top_plane)) != ERR_NONE)
 				return (code);
 
-		}*/
-
-	//printf("CAVES\n");
+		}
 
 	for (unsigned int x = 0; x < CHUNK_SIZE; x++)
 		for (unsigned int z = 0; z < CHUNK_SIZE; z++)
@@ -72,7 +70,7 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 {
 	unsigned char	code;
 	t_biome_params	surface_params;
-	t_biome_params	sub_params = {0.2f, 4.0f, 0.0f, 32.0f};
+	t_biome_params	sub_params = {0.1f, 4.0f, 0.0f, 32.0f};
 
 	chunk->x_start = x_start;
 	chunk->z_start = z_start;
@@ -84,8 +82,8 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 		//printf("frequency : %f | depth : %f\n", params.frequency, params.depth);
 		// Generate height maps for surface and cave
 		// Topography type should be a parameter which would affect perlin noise generation
-		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE))
-			|| !(chunk->sub_hmap = generate_height_map(sub_params, x_start, z_start, CHUNK_SIZE)))
+		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE, CHUNK_SIZE / 2))
+			|| !(chunk->sub_hmap = generate_height_map(sub_params, x_start, z_start, CHUNK_SIZE, 0)))
 			return (ERR_MALLOC_FAILED);
 	}
 
