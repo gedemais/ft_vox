@@ -1,17 +1,7 @@
 #include "../../include/main.h"
 
-
-// Paths array to shaders source files
-static const char		*shaders_path[SHADER_MAX] = {
-		[SHADER_VERTEX]			= "src/shaders/vertex.glsl",
-		[SHADER_FRAGMENT]		= "src/shaders/fragment.glsl",
-		[SHADER_SB_VERTEX]		= "src/shaders/skybox_vertex.glsl",
-		[SHADER_SB_FRAGMENT]	= "src/shaders/skybox_fragment.glsl"
-};
-
 static void				set_layouts(bool skybox)
 {
-	// Specifies the disposition of components in vertexs
 	// id ptr, size, GL_type, GL_FALSE, totalsize, start pos
 	if (skybox) {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void *)0);
@@ -25,96 +15,60 @@ static void				set_layouts(bool skybox)
 	}
 }
 
-static unsigned char	gl_buffers(t_mesh *mesh, bool skybox)
+static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 {
+	unsigned char	code;
+	GLsizeiptr		size;
+
 	// VAO -- Create Vertex Array Object
 	glGenVertexArrays(1, &mesh->gl.vao);
 	glBindVertexArray(mesh->gl.vao);
 	// VBO -- Create a Vertex Buffer Object and copy the vertex data to it
 	glGenBuffers(1, &mesh->gl.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->gl.vbo);
-	if (skybox) {
-		glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)sizeof(vec3) * mesh->vertices.nb_cells,
-			mesh->vertices.arr, GL_STATIC_DRAW);
-	} else {
-		glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)sizeof(t_stride) * mesh->vertices.nb_cells,
-			mesh->vertices.arr, GL_STATIC_DRAW);
-	}
+
+	size = (GLsizeiptr)(skybox ? sizeof(vec3) : sizeof(t_stride));
+	glBufferData(GL_ARRAY_BUFFER, size * mesh->vertices.nb_cells, mesh->vertices.arr, GL_STATIC_DRAW);
+	// Specifies the disposition of components in vertexs
 	set_layouts(skybox);
+	// load the textures this buffer will use
+	if ((code = mount_textures(env, skybox ? 1 : 0)) != ERR_NONE)
+		return (code);
 	glBindVertexArray(0);
 
 	return (ERR_NONE);
 }
 
-static void				load_skybox(t_env *env)
-{
-	t_texture	*texture;
-	int			i;
-
-	glGenTextures(1, &env->model.gl_tskybox);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
-	i = -1;
-	while (++i < 6) {
-		texture = &env->model.textures[TEXTURE_SB_PX + i];
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
-			texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
-	}
-
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-}
-
-static void				gl_textures(t_env *env)
-{
-	t_texture	*texture;
-	int			i;
-
-	// model's textures
-	glGenTextures(TEXTURE_MAX, env->model.gl_textures);
-	i = -1;
-	while (++i < TEXTURE_MAX) {
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, env->model.gl_textures[i]);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		texture = &env->model.textures[i];
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-			texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	// skybox's texture
-	load_skybox(env);
-}
-
+/*
+	we stock uniform's id for later use (matrices, ...)
+	and we consume what we need (textures, light, ...)
+*/
 static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 {
-	glUseProgram(mesh->gl.shader_program);
-	mesh->gl.uniform.model = glGetUniformLocation(mesh->gl.shader_program, "model");
-	mesh->gl.uniform.view = glGetUniformLocation(mesh->gl.shader_program, "view");
-	mesh->gl.uniform.projection = glGetUniformLocation(mesh->gl.shader_program, "projection");
+	unsigned char	code;
 
+	// use program before set uniforms
+	glUseProgram(mesh->gl.program);
+	// matrices
+	mesh->gl.uniform.model = glGetUniformLocation(mesh->gl.program, "model");
+	mesh->gl.uniform.view = glGetUniformLocation(mesh->gl.program, "view");
+	mesh->gl.uniform.projection = glGetUniformLocation(mesh->gl.program, "projection");
 	if (skybox == true) {
-		mesh->gl.uniform.skybox = glGetUniformLocation(mesh->gl.shader_program, "vSkybox");
+		// skybox's texture
+		mesh->gl.uniform.skybox = glGetUniformLocation(mesh->gl.program, "vSkybox");
 		glUniform1i(mesh->gl.uniform.skybox, 0);
 	} else {
-		mesh->gl.uniform.time = glGetUniformLocation(mesh->gl.shader_program, "u_time");
-		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.shader_program, "campos");
-
-		mesh->gl.uniform.texturesHD = glGetUniformLocation(mesh->gl.shader_program, "vTexturesHD");
-		mesh->gl.uniform.texturesLD = glGetUniformLocation(mesh->gl.shader_program, "vTexturesLD");
-		int	samplersHD[TEXTURE_MAX / 2] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-		int	samplersLD[TEXTURE_MAX / 2] = { 8, 9, 10, 11, 12, 13, 14, 15 };
-		glUniform1iv(mesh->gl.uniform.texturesHD, TEXTURE_MAX / 2, samplersHD);
-		glUniform1iv(mesh->gl.uniform.texturesLD, TEXTURE_MAX / 2, samplersLD);
-		light_uniforms(mesh, light);
+		// time
+		mesh->gl.uniform.time = glGetUniformLocation(mesh->gl.program, "u_time");
+		// campos
+		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.program, "campos");
+		// textures and light
+		if ((code = textures_uniforms(mesh)) != ERR_NONE
+				|| (code = light_uniforms(mesh, light)) != ERR_NONE)
+			return (code);
+		// depth matrix
+		mesh->gl.uniform.depth_view = glGetUniformLocation(mesh->gl.program, "depth_view");
+		mesh->gl.uniform.depth_projection = glGetUniformLocation(mesh->gl.program, "depth_projection");
 	}
 	return (ERR_NONE);
 }
@@ -123,9 +77,11 @@ unsigned char	init_mesh(t_env *env, t_mesh *mesh)
 {
 	unsigned char	code;
 
-	if ((code = mount_shaders(mesh, shaders_path[SHADER_VERTEX], shaders_path[SHADER_FRAGMENT])) != ERR_NONE
-		|| (code = gl_buffers(mesh, false)) != ERR_NONE
-		|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE)
+	if ((code = mount_shaders(&mesh->gl.program, env->shaders[SHADER_VERTEX], env->shaders[SHADER_FRAGMENT])) != ERR_NONE
+		|| (code = mount_shaders(&mesh->gl.depth_program, env->shaders[SHADER_DEPTH_VERTEX], env->shaders[SHADER_DEPTH_FRAGMENT])) != ERR_NONE
+		|| (code = gl_buffers(env, mesh, false)) != ERR_NONE
+		|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE
+		|| (code = mount_shadows(env, mesh)) != ERR_NONE)
 		return (code);
 
 	return (ERR_NONE);
@@ -140,8 +96,6 @@ unsigned char			init_meshs(t_env *env)
 	unsigned char	code;
 	t_mesh			*mesh;
 
-	// we mount the textures we will use
-	gl_textures(env);
 	// Initializes buffers, shaders and data structures for rendering
 	// last mesh is all time the skybox
 	// MODEL
@@ -152,8 +106,8 @@ unsigned char			init_meshs(t_env *env)
 
 	// SKYBOX
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells - 1);
-	if ((code = mount_shaders(mesh, shaders_path[SHADER_SB_VERTEX], shaders_path[SHADER_SB_FRAGMENT])) != ERR_NONE
-			|| (code = gl_buffers(mesh, true)) != ERR_NONE
+	if ((code = mount_shaders(&mesh->gl.program, env->shaders[SHADER_SB_VERTEX], env->shaders[SHADER_SB_FRAGMENT])) != ERR_NONE
+			|| (code = gl_buffers(env, mesh, true)) != ERR_NONE
 			|| (code = set_uniforms(mesh, &env->light, true)) != ERR_NONE)
 		return (code);
 	return (ERR_NONE);

@@ -4,28 +4,21 @@
 
 # include "main.h"
 # include "gen.h"
+# include "light.h"
 
 # define MODEL_SCALE	1
 # define SB_ROT_SPEED	10 // sun's rotation speed
 
 enum			e_texture
 {
-	TEXTURE_HD_WATER,
-	TEXTURE_HD_SAND,
-	TEXTURE_HD_GRASS,
-	TEXTURE_HD_GROUND,
-	TEXTURE_HD_STONE,
-	TEXTURE_HD_SNOW,
-	TEXTURE_HD_GRASS_SIDE,
-	TEXTURE_HD_SNOW_SIDE,
-	TEXTURE_LD_WATER,
-	TEXTURE_LD_SAND,
-	TEXTURE_LD_GRASS,
-	TEXTURE_LD_GROUND,
-	TEXTURE_LD_STONE,
-	TEXTURE_LD_SNOW,
-	TEXTURE_LD_GRASS_SIDE,
-	TEXTURE_LD_SNOW_SIDE,
+	TEXTURE_WATER,
+	TEXTURE_SAND,
+	TEXTURE_GRASS,
+	TEXTURE_GROUND,
+	TEXTURE_STONE,
+	TEXTURE_SNOW,
+	TEXTURE_GRASS_SIDE,
+	TEXTURE_SNOW_SIDE,
 	TEXTURE_MAX
 };
 
@@ -76,18 +69,17 @@ typedef struct	s_texture
 
 typedef struct	s_uniform
 {
-	GLint	time;
-	GLint	texturesHD, texturesLD;
-	GLint	skybox, campos;
-	GLint	light_active, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
+	GLint	time, campos;
+	GLint	textures[TEXTURE_MAX + 1], skybox;
+	GLint	light_active, shadow, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
 	GLint	model, view, projection;
+	GLint	depth_view, depth_projection;
 }				t_uniform;
 
 typedef struct	s_gltools
 {
-	GLuint		vao, vbo;
-	GLuint		shader_program;
-	GLuint		shader_vertex, shader_fragment;
+	GLuint		vao, vbo, fbo;
+	GLuint		program, depth_program;
 	t_uniform	uniform;
 }				t_gltools;
 
@@ -105,12 +97,11 @@ typedef struct	s_model
 	int			square_x, square_z;
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
 	t_dynarray	chunks_cache; // 2D dynarray of chunks
-	mat4		model;
-	mat4		mvp;
+	mat4		model, depthproj[LIGHT_SOURCE_MAX], depthview[LIGHT_SOURCE_MAX];
 	float		scale;
-	GLuint		gl_textures[TEXTURE_MAX];	// gl's textures' id
-	GLuint		gl_tskybox;					// gl's texture for skybox
-	t_texture	textures[TEXTURE_SB_MAX];	// textures' ptr
+	GLuint		gl_textures[TEXTURE_MAX + 1];	// gl's textures' id
+	GLuint		gl_tskybox;						// gl's texture for skybox
+	t_texture	textures[TEXTURE_SB_MAX];		// textures' ptr
 }				t_model;
 
 #endif

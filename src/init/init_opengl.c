@@ -53,11 +53,8 @@ unsigned char			init_display(t_env *env)
 	}
 #endif
 
-	env->window.w = env->settings.w_wdt;
-	env->window.h = env->settings.w_hgt;
-
 	if ((code = glfw_create_window(&env->window.ptr, "ft_vox",
-		env->window.w, env->window.h, env->window.fullscreen) != ERR_NONE))
+			env->window.w, env->window.h, env->window.fullscreen) != ERR_NONE))
 		return (code);
 	glfwMakeContextCurrent(env->window.ptr);
 	if (!gladLoadGL())

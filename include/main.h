@@ -57,6 +57,7 @@ enum				e_settings
 	SET_KEY_MOVE_CAM_LEFT,
 	SET_KEY_MOVE_CAM_RIGHT,
 	SET_KEY_LIGHT,
+	SET_KEY_SHADOW,
 	SET_MAX
 };
 
@@ -71,6 +72,7 @@ enum				e_keys
 	KEY_MOVE_CAM_LEFT,
 	KEY_MOVE_CAM_RIGHT,
 	KEY_LIGHT,
+	KEY_SHADOW,
 	KEY_MAX
 };
 
@@ -112,16 +114,22 @@ typedef struct		s_env
 	t_mouse		mouse;
 	t_model		model;
 	t_light		light;
+	t_shaders	shaders[SHADER_MAX];
 	// Function pointers array linking actions functions with key binds
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;
 
-// Initializes scop
+// Initializes
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
 void				light(t_env *env);
 unsigned char		light_uniforms(t_mesh *mesh, t_light *light);
+unsigned char		textures_uniforms(t_mesh *mesh);
 unsigned char		model(t_env *env);
+unsigned char		mount_textures(t_env *env, char buffer_type);
+unsigned char		mount_shadows(t_env *env, t_mesh *mesh);
+unsigned char		load_shaders(t_env *env);
+unsigned char		mount_shaders(GLuint *program, t_shaders vertex, t_shaders fragment);
 
 // OpenGL
 unsigned char   	init_display(t_env *env);
@@ -145,6 +153,7 @@ void				events_mouse(t_env *env, float xpos, float ypos);
 void 				glfw_init_callbacks(t_env *env);
 
 void				event_light(t_env *env, int key);
+void				event_shadow(t_env *env, int key);
 
 // Singletons
 int					*biomes_seed(void);
@@ -190,13 +199,12 @@ static const char	*settings_keys[SET_MAX] = {
 	"move_cam_left",
 	"move_cam_right",
 	"toggle_light",
+	"toggle_shadow",
 };
 
 // UTILS
 // fps
 void				fps(t_fps *fps, bool print);
-// shaders
-unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path);
 
 
 #endif

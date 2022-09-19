@@ -46,7 +46,7 @@ static void			set_mesh_center(t_mesh *mesh)
 	}
 }
 
-unsigned char	push_world(t_env *env)
+static unsigned char	push_world(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			mesh;
@@ -70,7 +70,7 @@ unsigned char	push_world(t_env *env)
 	return (ERR_NONE);
 }
 
-unsigned char	push_skybox(t_env *env)
+static unsigned char	push_skybox(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			*mesh;

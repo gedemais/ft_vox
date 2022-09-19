@@ -54,7 +54,9 @@ SRC_NAME=main.c\
 	init/meshs.c\
 	init/model.c\
 	init/shaders.c\
+	init/shadows.c\
 	init/settings.c\
+	init/textures.c\
 	utils/fps.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))

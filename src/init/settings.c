@@ -49,9 +49,11 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 	// Numerical values
 		case SET_WIN_HEIGHT:
 			env->settings.w_hgt = (uint16_t)n;
+			env->window.h = (uint16_t)n;
 			break;
 		case SET_WIN_WIDTH:
 			env->settings.w_wdt = (uint16_t)n;
+			env->window.w = (uint16_t)n;
 			break;
 	// Floating point values
 		case SET_FOV:
@@ -112,6 +114,9 @@ static unsigned char	assign_value(t_env *env, unsigned int j, char *line, char *
 			break;
 		case SET_KEY_LIGHT:
 			env->settings.keys[KEY_LIGHT] = (uint8_t)n;
+			break;
+		case SET_KEY_SHADOW:
+			env->settings.keys[KEY_SHADOW] = (uint8_t)n;
 			break;
 	};
 

@@ -1,6 +1,87 @@
 #include "../../include/main.h"
 
 
+static unsigned char	compile_shader(unsigned int shader_id, const GLchar *source, size_t size)
+{
+	(void)size;
+
+	char			info_log[4096];
+	int				success;
+
+	// Give shader source code to OpenGL
+	glShaderSource(shader_id, 1, &source, NULL);
+	// Compile the loaded shader source
+	glCompileShader(shader_id);
+
+	// Check for more informations about compilation
+	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
+	// If shader's compilation failed
+	if (success == GL_FALSE)
+	{ // Then display error log message before to exit
+		ft_memset(info_log, 0, sizeof(info_log));
+		glGetShaderInfoLog(shader_id, sizeof(info_log), NULL, info_log);
+		ft_putstr_fd(info_log, 2);
+		return (ERR_FAILED_TO_COMPILE_SHADER);
+	}
+	return (ERR_NONE);
+}
+
+static unsigned char	build_shader(GLuint *shader_ptr, GLenum shader_type, t_shaders shader)
+{
+	unsigned char	code;
+	unsigned int	shader_id;
+
+	// Create new shader object
+	shader_id = glCreateShader(shader_type);
+	// Compile shader with its source code
+	if ((code = compile_shader(shader_id, shader.source, shader.size)) != ERR_NONE)
+		return (code);
+	*shader_ptr = shader_id;
+	return (ERR_NONE);
+}
+
+static unsigned char	link_program(GLuint *program, GLuint *v, GLuint *f)
+{
+	char	info_log[4096];
+	int		success;
+
+	*program = glCreateProgram(); // Create new program object
+	glAttachShader(*program, *v); // Attach vertex shader to the program
+	glAttachShader(*program, *f); // Attach fragment shader to the program
+	glLinkProgram(*program); // Link the final program
+
+	glDeleteShader(*v);
+    glDeleteShader(*f);
+
+	// Checks for more informations about compilation.
+	glGetProgramiv(*program, GL_LINK_STATUS, &success);
+	// If compilation failed
+	if (!success)
+	{ // Then display the error log message before to exit
+		glGetProgramInfoLog(*program, 4096, NULL, info_log);
+		ft_putendl_fd(info_log, 2);
+		return (ERR_FAILED_TO_LINK_SHADER_PROGRAM);
+	}
+	return (ERR_NONE);
+}
+
+unsigned char		mount_shaders(GLuint *program, t_shaders vertex, t_shaders fragment)
+{
+	unsigned char	code;
+	GLuint			v, f;
+
+	// il faut identifier la mesh skybox,
+
+	if ((code = build_shader(&v, GL_VERTEX_SHADER, vertex)) != ERR_NONE
+			|| (code = build_shader(&f, GL_FRAGMENT_SHADER, fragment)) != ERR_NONE
+			|| (code = link_program(program, &v, &f)) != ERR_NONE)
+		return (code);
+
+	return (ERR_NONE);
+}
+
+// =======================================================================
+
 static unsigned char	load_shader_source(const char *path, const GLchar **ptr, size_t *file_size)
 {
 	int		fd;
@@ -24,86 +105,20 @@ static unsigned char	load_shader_source(const char *path, const GLchar **ptr, si
 	return (ERR_NONE);
 }
 
-static unsigned char	compile_shader(unsigned int shader_id, const GLchar *source, size_t size)
+unsigned char		load_shaders(t_env *env)
 {
-	(void)size;
-
-	char			info_log[4096];
-	int				success;
-
-	// Give shader source code to OpenGL
-	glShaderSource(shader_id, 1, &source, NULL);
-	// Compile the loaded shader source
-	glCompileShader(shader_id);
-
-	// Check for more informations about compilation
-	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
-	// If shader's compilation failed
-	if (success == GL_FALSE)
-	{ // Then display error log message before to exit
-		ft_memset(info_log, 0, sizeof(info_log));
-		glGetShaderInfoLog(shader_id, sizeof(info_log), NULL, info_log);
-		ft_putstr_fd(info_log, 2);
-		munmap((void*)source, size);
-		return (ERR_FAILED_TO_COMPILE_SHADER);
-	}
-	munmap((void*)source, size); // Free memory mapping used for shader source file
-	return (ERR_NONE);
-}
-
-static unsigned char	build_shader(t_mesh *mesh, GLenum shader_type, const char *path)
-{
-	const GLchar	*shader_source;
-	size_t			shader_size;
+	t_shaders		*shader;
 	unsigned char	code;
-	unsigned int	shader_id;
+	int				i;
 
-	// Map shader source file content in memory
-	if ((code = load_shader_source(path, &shader_source, &shader_size)))
-		return (code);
-	// Create new shader object
-	shader_id = glCreateShader(shader_type);
-	// Compile shader with its source code
-	if ((code = compile_shader(shader_id, shader_source, shader_size)) != ERR_NONE)
-		return (code); 
-	// Assign shaders in mesh
-	if (shader_type == GL_VERTEX_SHADER)
-		mesh->gl.shader_vertex = shader_id;
-	else if (shader_type == GL_FRAGMENT_SHADER)
-		mesh->gl.shader_fragment = shader_id;
-	return (ERR_NONE);
-}
-
-static unsigned char	link_shader_program(t_mesh *mesh)
-{
-	char	info_log[4096];
-	int		success;
-
-	mesh->gl.shader_program = glCreateProgram(); // Create new program object
-	glAttachShader(mesh->gl.shader_program, mesh->gl.shader_vertex); // Attach vertex shader to the program
-	glAttachShader(mesh->gl.shader_program, mesh->gl.shader_fragment); // Attach fragment shader to the program
-	glLinkProgram(mesh->gl.shader_program); // Link the final program
-
-	// Checks for more informations about compilation.
-	glGetProgramiv(mesh->gl.shader_program, GL_LINK_STATUS, &success);
-	// If compilation failed
-	if (!success)
-	{ // Then display the error log message before to exit
-		glGetProgramInfoLog(mesh->gl.shader_program, 4096, NULL, info_log);
-		ft_putendl_fd(info_log, 2);
-		return (ERR_FAILED_TO_LINK_SHADER_PROGRAM);
+	i = -1;
+	while (++i < SHADER_MAX) {
+		shader = &env->shaders[i];
+		shader->id = i;
+		// Map shader source file content in memory
+		if ((code = load_shader_source(shaders_path[i], &shader->source, &shader->size)))
+			return (code);
 	}
-	return (ERR_NONE);
-}
-
-unsigned char		mount_shaders(t_mesh *mesh, const char *svertex_path, const char *sfragment_path)
-{
-	unsigned char	code;
-
-	if ((code = build_shader(mesh, GL_VERTEX_SHADER, svertex_path)) != ERR_NONE
-			|| (code = build_shader(mesh, GL_FRAGMENT_SHADER, sfragment_path)) != ERR_NONE
-			|| (code = link_shader_program(mesh)) != ERR_NONE)
-		return (code);
-
+	// penser a free les shaders
 	return (ERR_NONE);
 }

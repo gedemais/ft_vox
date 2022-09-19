@@ -10,7 +10,10 @@ out vec3						vPosition;
 
 void	main()
 {
+	vec4	pos	= vec4(aPosition, 1) * model * view * projection;
+
 	vPosition	= aPosition;
 
-	gl_Position	= vec4(aPosition, 1) * model * view * projection;
+	// z is useless for the skybox
+	gl_Position	= pos.xyww;
 }

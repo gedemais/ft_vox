@@ -6,11 +6,14 @@ layout (location = 1) in int	data2;
 uniform mat4 					model;
 uniform mat4 					view;
 uniform mat4 					projection;
+uniform mat4 					depth_view;
+uniform mat4 					depth_projection;
 uniform float 					u_time;
 
 out vec3						vNormal;
 out vec3						vPosition;
 out vec2						vTextCoord;
+out vec4						vShadCoord;
 flat out float					vType;
 
 vec3	get_normal(int n)
@@ -90,15 +93,16 @@ void	main()
 	if (vType == 0) {
 		float	time, wavelength;
 
-		time		= u_time * 0.025f;
+		time		= u_time * 0.005f;
 		wavelength	= 0.05f;
 		pos.y		+= (sin(pos.x * time) * cos(pos.y * time)) * wavelength + 0.5f;
 	}
 
 	// Output assignations
-	vTextCoord	= get_uv(int(uv_id), fall_size);
 	vNormal		= get_normal(int(normal_id));
 	vPosition	= vec3(pos);
+	vTextCoord	= get_uv(int(uv_id), fall_size);
+	vShadCoord	= pos * depth_view * depth_projection;
 
 	gl_Position	= pos * model * view * projection;
 }

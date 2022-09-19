@@ -25,7 +25,8 @@ enum	e_bloc_types
 	BT_GROUND,
 	BT_STONE,
 	BT_SNOW,
-	BT_SKYBOX,
+	BT_GRASS_SIDE,
+	BT_SNOW_SIDE,
 	BT_MAX
 };
 

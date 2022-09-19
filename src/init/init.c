@@ -3,23 +3,14 @@
 
 const char				*textures_paths[TEXTURE_SB_MAX] = {
 	// TEXTURES HD
-	[TEXTURE_HD_WATER]		= "./resources/HD/water.png",
-	[TEXTURE_HD_SAND]		= "./resources/HD/sand.png",
-	[TEXTURE_HD_GRASS]		= "./resources/HD/grass.png",
-	[TEXTURE_HD_GROUND]		= "./resources/HD/ground.png",
-	[TEXTURE_HD_STONE]		= "./resources/HD/stone.png",
-	[TEXTURE_HD_SNOW]		= "./resources/HD/snow.png",
-	[TEXTURE_HD_GRASS_SIDE]	= "./resources/HD/grass_side.png",
-	[TEXTURE_HD_SNOW_SIDE]	= "./resources/HD/stone_side.png",
-	// TEXTURES LD
-	[TEXTURE_LD_WATER]		= "./resources/LD/water.png",
-	[TEXTURE_LD_SAND]		= "./resources/LD/sand.png",
-	[TEXTURE_LD_GRASS]		= "./resources/LD/grass.png",
-	[TEXTURE_LD_GROUND]		= "./resources/LD/ground.png",
-	[TEXTURE_LD_STONE]		= "./resources/LD/stone.png",
-	[TEXTURE_LD_SNOW]		= "./resources/LD/snow.png",
-	[TEXTURE_LD_GRASS_SIDE]	= "./resources/LD/grass_side.png",
-	[TEXTURE_LD_SNOW_SIDE]	= "./resources/LD/stone_side.png",
+	[TEXTURE_WATER]			= "./resources/textures/water.png",
+	[TEXTURE_SAND]			= "./resources/textures/sand.png",
+	[TEXTURE_GRASS]			= "./resources/textures/grass.png",
+	[TEXTURE_GROUND]		= "./resources/textures/ground.png",
+	[TEXTURE_STONE]			= "./resources/textures/stone.png",
+	[TEXTURE_SNOW]			= "./resources/textures/snow.png",
+	[TEXTURE_GRASS_SIDE]	= "./resources/textures/grass_side.png",
+	[TEXTURE_SNOW_SIDE]		= "./resources/textures/stone_side.png",
 	// TEXTURES SKYBOX
 	[TEXTURE_SB_PX]			= "./resources/skybox/px.png",
 	[TEXTURE_SB_PY]			= "./resources/skybox/py.png",
@@ -59,6 +50,7 @@ static void				bind_actions_to_keys(t_env *env)
 		[KEY_MOVE_CAM_LEFT] = move_cam,
 		[KEY_MOVE_CAM_RIGHT] = move_cam,
 		[KEY_LIGHT] = event_light,
+		[KEY_SHADOW] = event_shadow,
 	};
 
 	// Assignation of actions functions in respect with handled key indices.
@@ -70,13 +62,9 @@ static void				gl_options(void)
 {
 	//  DEPTH BUFFER
 	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS);
 
-	// CULLING : we only draw front face in clock-wise order
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_FRONT);
-	//glFrontFace(GL_CW);
+	// CULLING
+	// glEnable(GL_CULL_FACE);
 
 	// GAMA CORRECTION
 	// glEnable(GL_FRAMEBUFFER_SRGB);
@@ -85,7 +73,7 @@ static void				gl_options(void)
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_LINE_SMOOTH);
 
-	// BLENDING => for water cube WIP
+	// BLENDING
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 }
@@ -96,15 +84,14 @@ unsigned char			init(t_env *env, int argc, char **argv)
 
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
 		|| (code = load_textures(env)) != ERR_NONE
-		|| (code = init_world(env, argc, argv)) != ERR_NONE
+		|| (code = load_shaders(env)) != ERR_NONE
 		|| (code = init_display(env)) != ERR_NONE // Inits display with glad and glfw3
+		|| (code = init_world(env, argc, argv)) != ERR_NONE
 		|| (code = init_meshs(env)) != ERR_NONE)  // init shaders after model because we need to buffer each mesh
 		return (code);
 
 
 	bind_actions_to_keys(env); // Attribute action functions to keys loaded from settings file
-
-	camera(env); // camera after load settings cause we need ww and wh
 
 	gl_options();
 

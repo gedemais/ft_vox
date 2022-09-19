@@ -26,6 +26,18 @@ void		mat4_projection(mat4 m, float fov, float near, float far, float ratio)
 	m[15] = 0;
 }
 
+void		mat4_orthogonal(mat4 m, float top, float right, float bottom, float left, float near, float far)
+{
+	mat4_identity(m);
+	m[0] = 2.0f / (right - left);
+	m[5] = 2.0f / (top - bottom);
+	m[10] = -2.0f / (far - near);
+	m[12] = -(right + left) / (right - left);;
+	m[13] = -(top + bottom) / (top - bottom);;
+	m[14] = -(far + near) / (far - near);;
+	m[15] = 1;
+}
+
 /*
 	zaxis = normal(At - Eye)
 	xaxis = normal(cross(Up, zaxis))

@@ -33,6 +33,7 @@ typedef struct	s_light_source
 typedef struct	s_light
 {
 	bool			is_active;
+	bool			shadow;
 	float			gamma;
 	t_light_source	sources[LIGHT_SOURCE_MAX];
 }				t_light;
