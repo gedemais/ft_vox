@@ -26,12 +26,15 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk)
 	t_mesh	*m;
 
 	dynarray_free(&chunk->stride);
+	free(chunk->surface_hmap); // To remove if cache system comes back
+	free(chunk->sub_hmap);
 
 	for (int i = 0; i < env->model.meshs.nb_cells; i++)
 	{
 		m = dyacc(&env->model.meshs, i);
 		if (m->x_start == chunk->x_start && m->z_start == chunk->z_start)
 		{
+			glDeleteBuffers(1, &m->gl.vbo);
 			dynarray_extract(&env->model.meshs, i);
 			found = true;
 			break ;

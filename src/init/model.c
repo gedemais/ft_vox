@@ -55,15 +55,11 @@ unsigned char	push_world(t_env *env)
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int y = 0; y < SQUARE_SIZE; y++)
 		{
-			ft_memset(&mesh, 0, sizeof(t_mesh));
-			if (dynarray_init(&mesh.vertices, sizeof(t_stride), CHUNK_SIZE *  6 * sizeof(t_stride)) < 0)
-				return (ERR_MALLOC_FAILED);
 
 			chunk = &env->model.chunks[x][y];
-			for (int i = 0; i < chunk->stride.nb_cells; i++)
-				if (dynarray_push(&mesh.vertices, dyacc(&chunk->stride, i), false))
-					return (ERR_MALLOC_FAILED);
 
+			ft_memset(&mesh, 0, sizeof(t_mesh));
+			mesh.vertices = chunk->stride;
 			mesh.x_start = chunk->x_start;
 			mesh.z_start = chunk->z_start;
 

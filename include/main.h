@@ -155,7 +155,7 @@ unsigned char		init_world(t_env *env, int argc, char **argv);
 unsigned char		gen_chunk(t_env *env, t_chunk *chunk, int x_start, int z_start, bool stride);
 uint8_t				**generate_height_map(t_biome_params params, int x_start, int y_start, unsigned int size);
 unsigned char		generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6]);
-unsigned char		generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned int size, vec3 top_plane[6]);
+unsigned char		generate_side_plane(t_chunk *chunk, uint8_t **hmap, int x, int y, int z, unsigned int size, vec3 top_plane[6]);
 unsigned char		generate_bottom_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6]);
 size_t				*stride_bytesize(void);
 unsigned char		borders(t_env *env);

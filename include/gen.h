@@ -4,7 +4,7 @@
 # define CHUNK_SIZE			 64 // Size of chunk blocks in cubes
 # define MAP_SIZE			 256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			 2 // Size of individual biome matrix in chunks
-# define SQUARE_SIZE		 12 // Size of visible chunks matrix for the player (max_limit)
+# define SQUARE_SIZE		 4 // Size of visible chunks matrix for the player (max_limit)
 # define SQUARE_TRIGGER_SIZE 2 // Size of visible chunks matrix for the player (max_limit)
 # define CACHE_SIZE			 32 // Size of chunks matrix available in the absolute world at startup
 
@@ -44,6 +44,7 @@ typedef struct	s_biome_params
 	float		frequency; // Mean delta between each block
 	float		depth; // Granularity of generation (kind of a zoom)
 	float		bound; // 0-1 value used to LERP the biomes params
+	float		y_offset; // Height offset between surface map and sub map
 }				t_biome_params;
 
 typedef struct	s_chunk
@@ -56,11 +57,11 @@ typedef struct	s_chunk
 
 // Biomes Generation Parameters
 static const t_biome_params	bgp[TP_MAX] = {
-	[TP_SEA] = {0.002f, 6.0f, 0.0f},
-	[TP_DESERT] = {0.006f, 6.0f, 0.25f},
-	[TP_PLAINS] = {0.01f, 6.0f, 0.5f},
-	[TP_FOREST] = {0.015f, 6.0f, 0.75f},
-	[TP_MOUNTAINS] = {0.03f, 6.0f, 1.0f}
+	[TP_SEA] = {0.002f, 6.0f, 0.0f, 0.0f},
+	[TP_DESERT] = {0.006f, 6.0f, 0.25f, 0.0f},
+	[TP_PLAINS] = {0.01f, 6.0f, 0.5f, 0.0f},
+	[TP_FOREST] = {0.015f, 6.0f, 0.75f, 0.0f},
+	[TP_MOUNTAINS] = {0.03f, 6.0f, 1.0f, 0.0f}
 };
 
 #endif

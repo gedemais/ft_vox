@@ -1,5 +1,5 @@
 #include "main.h"
-
+/*
 static unsigned char	allocate_caches(t_env *env)
 {
 	t_chunk			chunk;
@@ -29,13 +29,14 @@ static unsigned char	allocate_caches(t_env *env)
 	}
 	printf("Allocated %d x %d (%d) chunks\n", MAP_SIZE, MAP_SIZE, MAP_SIZE * MAP_SIZE);
 	return (ERR_NONE);
-}
+}*/
 
 unsigned char	init_caches(t_env *env)
 {
-	unsigned char	code;
+	//unsigned char	code;
 
-	if ((code = allocate_caches(env)))
-		return (code);
+	(void)env;
+	//if ((code = allocate_caches(env)))
+//		return (code);
 	return (ERR_NONE);
 }

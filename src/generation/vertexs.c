@@ -16,19 +16,19 @@ const float		block_size = 1.0f;
 static int	switch_block_type(unsigned int z)
 {
 	if (z < 1)
-		return (BT_SAND);
+		return (BT_SAND); // Water
 	else if (z < 15)
-		return (BT_WATER);
+		return (BT_WATER); // Water
 	else if (z < 20)
-		return (BT_SAND);
+		return (BT_SAND); // Water
 	else if (z >= 20 && z < 30)
-		return (BT_GROUND);
+		return (BT_GROUND); // Sand
 	else if (z >= 30 && z < 40)
-		return (BT_GRASS);
+		return (BT_GRASS); // Sand
 	else if (z >= 40 && z < 60)
-		return (BT_STONE);
+		return (BT_STONE); // Grass
 	else
-		return (BT_SNOW);
+		return (BT_SNOW); //Grass
 }
 
 static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side)
@@ -135,7 +135,7 @@ static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned
 	return (ERR_NONE);
 }
 
-unsigned char	generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned int size, vec3 top_plane[6])
+unsigned char	generate_side_plane(t_chunk *chunk, uint8_t **hmap, int x, int y, int z, unsigned int size, vec3 top_plane[6])
 {
 	unsigned char	code;
 	const int		neighbours[4][2] =	{{0, 1},
@@ -157,7 +157,7 @@ unsigned char	generate_side_plane(t_chunk *chunk, int x, int y, int z, unsigned 
 		n_z = z + neighbours[i][1];
 
 		if (n_x < 0 || n_x >= (int)size || n_z < 0 || n_z >= (int)size
-			|| (offset = y - chunk->surface_hmap[n_x][n_z]) <= 0)
+			|| (offset = y - hmap[n_x][n_z]) <= 0)
 			continue ;
 
 		a = top_plane[fall_planes[i][0]];
