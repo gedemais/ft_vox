@@ -135,7 +135,7 @@ static void				update_data(t_env *env)
 	env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 	env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 
-	// env->light.sources[LIGHT_SOURCE_PLAYER].pos.y = 0.0f;
+	env->light.sources[LIGHT_SOURCE_PLAYER].pos.y -= 2.0f;
 
 	// SHADOWS
 	vec3	light_pos, light_dir;

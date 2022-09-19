@@ -40,8 +40,14 @@ static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 	return (ERR_NONE);
 }
 
+/*
+	we stock uniform's id for later use (matrices, ...)
+	and we consume what we need (textures, light, ...)
+*/
 static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 {
+	unsigned char	code;
+
 	// use program before set uniforms
 	glUseProgram(mesh->gl.program);
 	// matrices
@@ -57,12 +63,10 @@ static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
 		mesh->gl.uniform.time = glGetUniformLocation(mesh->gl.program, "u_time");
 		// campos
 		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.program, "campos");
-		// textures
-		mesh->gl.uniform.textures = glGetUniformLocation(mesh->gl.program, "vTextures");
-		int	samplers[TEXTURE_MAX + 1] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-		glUniform1iv(mesh->gl.uniform.textures, TEXTURE_MAX + 1, samplers);
-		// light
-		light_uniforms(mesh, light);
+		// textures and light
+		if ((code = textures_uniforms(mesh)) != ERR_NONE
+				|| (code = light_uniforms(mesh, light)) != ERR_NONE)
+			return (code);
 		// depth matrix
 		mesh->gl.uniform.depth_view = glGetUniformLocation(mesh->gl.program, "depth_view");
 		mesh->gl.uniform.depth_projection = glGetUniformLocation(mesh->gl.program, "depth_projection");
@@ -89,8 +93,8 @@ unsigned char			init_meshs(t_env *env)
 		if ((code = mount_shaders(&mesh->gl.program, env->shaders[SHADER_VERTEX], env->shaders[SHADER_FRAGMENT])) != ERR_NONE
 				|| (code = mount_shaders(&mesh->gl.depth_program, env->shaders[SHADER_DEPTH_VERTEX], env->shaders[SHADER_DEPTH_FRAGMENT])) != ERR_NONE
 				|| (code = gl_buffers(env, mesh, false)) != ERR_NONE
-				|| (code = mount_shadows(env, mesh)) != ERR_NONE
-				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE)
+				|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE
+				|| (code = mount_shadows(env, mesh)) != ERR_NONE)
 			return (code);
 	}
 	// SKYBOX
