@@ -38,17 +38,29 @@ static int	switch_block_type(unsigned int z)
 
 static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side)
 {
+	/*
+	const t_vt		vts_ccw[6] = {
+		(t_vt){1, fall_size},	// A
+		(t_vt){1, 0},			// B
+		(t_vt){0, 0},			// C
+
+		(t_vt){1, fall_size},	// D
+		(t_vt){0, 0},			// E
+		(t_vt){0, fall_size},	// F
+	};
+	const t_vt		vts_cw[6] = {
+		(t_vt){1, fall_size},	// A
+		(t_vt){0, 0},			// C
+		(t_vt){1, 0},			// B
+
+		(t_vt){1, fall_size},	// D
+		(t_vt){0, fall_size},	// F
+		(t_vt){0, 0},			// E
+	};
+	*/
+
 	t_stride		vertex;
 	uint8_t			block_type;
-	const t_vt	vts[6] = {
-						(t_vt){1, fall_size}, // A
-						(t_vt){1, 0}, // B
-						(t_vt){0, 0}, // C
-
-						(t_vt){1, fall_size}, // D
-						(t_vt){0, 0}, // E
-						(t_vt){0, fall_size}, // F
-						};
 
 	// Addition of 6 vertexs plane to the mesh's data stride
 	for (unsigned int i = 0; i < 6; i++)
@@ -91,26 +103,37 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_p
 	c = (vec3){xx, yy, zz};
 	d = (vec3){(x + 1), yy, zz};
 
+	// ccw
 	top_plane[0] = c;
 	top_plane[1] = a;
 	top_plane[2] = b;
 	top_plane[3] = c;
 	top_plane[4] = b;
 	top_plane[5] = d;
+	// cw
+	// top_plane[0] = c;
+	// top_plane[1] = b;
+	// top_plane[2] = a;
+	// top_plane[3] = c;
+	// top_plane[4] = d;
+	// top_plane[5] = b;
 
 	return (push_plane(chunk, top_plane, N_UP, y, 1.0f, false));
 }
 
 unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int y, float depth)
 {
-	vec3		c, d;
+	vec3	c, d;
 
 	c = vec_add(a, vec_fmult((vec3){0, -1.0f, 0}, depth));
 	d = vec_add(b, vec_fmult((vec3){0, -1.0f, 0}, depth));
 
-	vec3 side_plane[6] = {c, a, b, c, b, d};
+	vec3	side_plane_ccw[6]	= {c, a, b, c, b, d};
+	// apparement à n'utiliser que quand c'est left side
+	vec3	side_plane_cw[6]	= {c, b, a, c, d, b};
 
-	return (push_plane(chunk, side_plane, index, y, depth, true));
+	return (push_plane(chunk, index == 2 ? side_plane_cw : side_plane_ccw,
+		index, y, depth, true));
 }
 
 static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y)

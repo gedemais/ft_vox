@@ -48,14 +48,21 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 
 static void				set_gl_options(bool skybox)
 {
+	// we kept a static to know when to display in count clock wise order
+	static bool	display_front = true;
+
 	if (skybox) {
-		// glCullFace(GL_FRONT);
+		// hide front faces
+		glCullFace(GL_FRONT);
+		// Passes if the incoming depth value is less than or equal to the stored depth value.
     	glDepthFunc(GL_LEQUAL);
-	} else {
-		// glCullFace(GL_BACK);
-		// glFrontFace(GL_CW);
-		// Accept fragment if it closer to the camera than the former one
+		display_front = true;
+	} else if (display_front == true) {
+		// hide back faces
+		glCullFace(GL_BACK);
+		// Passes if the incoming depth value is less than the stored depth value.
 		glDepthFunc(GL_LESS);
+		display_front = false;
 	}
 }
 
