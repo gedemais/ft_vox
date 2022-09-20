@@ -86,8 +86,6 @@ static void				init_sun(t_env *env, t_light_source *source)
 	source->ambient		= (vec3){ 0.66f, 0.66f, 0.66f };
 	source->diffuse		= (vec3){ 0.66f, 0.66f, 0.66f };
 	source->specular	= (vec3){ 0.33f, 0.25f, 0.33f };
-
-	printf("light dir : %f %f %f\n", source->dir.x , source->dir.y, source->dir.z);
 }
 
 void					light(t_env *env)

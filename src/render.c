@@ -132,7 +132,6 @@ static void				update_data(t_env *env)
 	mat4_view(&env->camera);
 	mat4_projection(env->camera.projection, env->camera.fov, env->camera.near, env->camera.far, env->camera.ratio);
 
-	//printf("player_pos : %f %f %f\n", env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
 	env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 	env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 
