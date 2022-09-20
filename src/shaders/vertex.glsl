@@ -85,7 +85,7 @@ void	main()
 	uv_id		= ((uint(data2) & 0x70000u) >> 16u);
 	fall_size	= float((uint(data2) & 0x1F80000u) >> 19u);
 	normal_id	= ((uint(data2) & 0xE000000u) >> 25u);
-	block_type	= ((uint(data2) & 0x70000000u) >> 29u);
+	block_type	= ((uint(data2) & 0x70000000u) >> 28u);
 	//////////////////////////////////////
 
 	// Water ripples
