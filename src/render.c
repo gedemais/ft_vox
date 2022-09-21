@@ -95,11 +95,15 @@ static void				render_depth(t_env *env, t_mesh *mesh)
 static unsigned char	render_scene(t_env *env)
 {
 	t_mesh		*mesh;
-	int			i;
+	int			i, e = 1;
 	bool		skybox;
 
+#ifdef __APPLE__
+	e = 2;
+#endif
+
 	// reset viewport
-	// glViewport(0, 0, env->window.w, env->window.h);
+	glViewport(0, 0, env->window.w * e, env->window.h * e);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	i = -1;
 	while (++i < env->model.meshs.nb_cells) {
