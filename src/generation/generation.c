@@ -15,7 +15,6 @@ unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
 				|| (code = generate_side_plane(chunk, chunk->surface_hmap, x, y, z, CHUNK_SIZE, top_plane)) != ERR_NONE)
 				//|| (code = generate_bottom_plane(chunk, x, y, z, top_plane)) != ERR_NONE)
 				return (code);
-
 		}
 
 	for (unsigned int x = 0; x < CHUNK_SIZE; x++)

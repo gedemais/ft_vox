@@ -81,13 +81,13 @@ static void	cache_chunk(t_env *env, t_chunk *chunk)
 	cached->x_start = chunk->x_start;
 	cached->z_start = chunk->z_start;
 }*/
-/*
+
 typedef struct	s_ms_params
 {
 	t_env		*env;
 	int			trigger_id;
 	pthread_t	*thread_id;
-}				t_ms_params;*/
+}				t_ms_params;
 
 static unsigned char move_square_on_z(t_env *env, int trigger_id)
 {
@@ -148,6 +148,8 @@ static unsigned char move_square_on_z(t_env *env, int trigger_id)
 			fix_south_border(&env->model.chunks[i][new_z], &env->model.chunks[i][new_z + 1]);
 		if (i < SQUARE_SIZE - 1)
 			fix_east_border(&env->model.chunks[i][new_z], &env->model.chunks[i + 1][new_z]);
+
+		generate_water(&env->model.chunks[i][new_z]);
 
 		ft_memset(&mesh, 0, sizeof(t_mesh));
 		mesh.vertices = news[i]->stride;
@@ -222,6 +224,8 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 		if (i < SQUARE_SIZE - 1)
 			fix_south_border(&env->model.chunks[new_x][i], &env->model.chunks[new_x][i + 1]);
 
+		generate_water(&env->model.chunks[new_x][i]);
+
 		ft_memset(&mesh, 0, sizeof(t_mesh));
 		mesh.vertices = news[i]->stride;
 		mesh.x_start = news[i]->x_start;
@@ -237,13 +241,15 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id)
 	return (ERR_NONE);
 }
 
-static unsigned char	move_square(t_env *env, int trigger_id)
+//static void	finish_square_moves(t_env *env)
+
+static void	*move_square(void *params)
 {
-	/*t_ms_params	params =	{
-								env,
-								trigger_id,
-								thread_id
-							};*/
+	t_env	*env;
+	int		trigger_id;
+
+	env = ((t_ms_params*)params)->env;
+	trigger_id = ((t_ms_params*)params)->trigger_id;
 
 	char		*strs[TRIGGER_MAX] = {
 		"north",
@@ -251,14 +257,14 @@ static unsigned char	move_square(t_env *env, int trigger_id)
 		"west",
 		"east"};
 
-	//printf("trigger %s\n", strs[trigger_id]);
+	printf("trigger %s\n", strs[trigger_id]);
 	//printf("%d meshs\n", env->model.meshs.nb_cells);
 	//printf("square_x : %d square_y : %d\n", env->model.square_x, env->model.square_z);
 
 	if (trigger_id == TRIGGER_NORTH || trigger_id == TRIGGER_SOUTH)
-		return (move_square_on_z(env, trigger_id));
+		move_square_on_z(env, trigger_id);
 	else
-		return (move_square_on_x(env, trigger_id));
+		move_square_on_x(env, trigger_id);
 
 	//printf("triggered %s | %d meshs in scene\n", strs[trigger_id], env->model.meshs.nb_cells);
 	return (ERR_NONE);
@@ -291,6 +297,8 @@ static bool				check_trigger(int x, int z, int *trigger_id)
 
 unsigned char			update_world(t_env *env)
 {
+	t_ms_params			params;
+	pthread_t			thread_id;
 	int					trigger_id = 0;
 	unsigned char		code;
 
@@ -298,9 +306,15 @@ unsigned char			update_world(t_env *env)
 		for (int z = 0; z < SQUARE_SIZE; z++)
 		{
 			if (check_player_presence(env->camera.pos, env->model.chunks[x][z])
-				&& check_trigger(x, z, &trigger_id)
-				&& (code = move_square(env, trigger_id)))
-				return (code);
+				&& check_trigger(x, z, &trigger_id))
+				{
+					params = (t_ms_params){env, trigger_id, &thread_id};
+//					pthread_create(&thread_id, NULL, &move_square, &params);
+//					pthread_detach(thread_id);
+					move_square(&params);
+					//&& (code = move_square(env, trigger_id)))
+					//return (code);
+				}
 		}
 	return (ERR_NONE);
 }

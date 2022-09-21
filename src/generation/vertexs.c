@@ -14,29 +14,23 @@
 
 static int	switch_block_type(unsigned int z)
 {
-	if (z < 64)
-		return (BT_STONE); // Water
-	else if (z < 72)
-		return (BT_GROUND); //Grass
-	else if (z < 80)
-		return (BT_GRASS);
-	else if (z < 88)
-		return (BT_STONE);
-	else
-		return (BT_SNOW);
-	/*else if (z < 72)
-		return (BT_WATER); // Water
-	else if (z < 80)
-		return (BT_SAND); // Water
-	else if (z < 88)
-		return (BT_GROUND); // Sand
-	else if (z < 96)
-		return (BT_GRASS); // Sand
-	else if (z < 104)
-		return (BT_STONE); // Grass*/
+	const unsigned int	bounds[BTB_MAX][2] ={
+											{BTB_CAVE, BT_STONE},
+											{BTB_BEACH, BT_SAND},
+											{BTB_SOIL, BT_GROUND},
+											{BTB_PLAIN, BT_GRASS},
+											{BTB_MOUTAIN, BT_STONE},
+											{BTB_HIGH_MOUTAINS, BT_SNOW}
+											};
+
+	for (unsigned int i = 0; i < BTB_MAX; i++)
+		if (z < bounds[i][0])
+			return (bounds[i][1]);
+
+	return (BT_WATER);
 }
 
-static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side)
+unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water)
 {
 	t_stride		vertex;
 	uint8_t			block_type;
@@ -55,7 +49,7 @@ static unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, u
 	{
 		ft_memset(&vertex, 0, sizeof(t_stride));
 
-		block_type = switch_block_type(y);
+		block_type = water ? BT_WATER : switch_block_type(y);
 		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
 		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
 
@@ -98,7 +92,7 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_p
 	top_plane[4] = b;
 	top_plane[5] = d;
 
-	return (push_plane(chunk, top_plane, N_UP, y, 1.0f, false));
+	return (push_plane(chunk, top_plane, N_UP, y, 1.0f, false, false));
 }
 
 unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int y, float depth)
@@ -110,7 +104,7 @@ unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, 
 
 	vec3 side_plane[6] = {c, a, b, c, b, d};
 
-	return (push_plane(chunk, side_plane, index, y, depth, true));
+	return (push_plane(chunk, side_plane, index, y, depth, true, false));
 }
 
 static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y)

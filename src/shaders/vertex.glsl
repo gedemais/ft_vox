@@ -93,7 +93,7 @@ void	main()
 	if (vType == 0) {
 		float	time, wavelength;
 
-		time		= u_time * 0.005f;
+		time		= u_time * 0.001f;
 		wavelength	= 0.05f;
 		pos.y		+= (sin(pos.x * time) * cos(pos.y * time)) * wavelength + 0.5f;
 	}

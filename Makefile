@@ -45,6 +45,7 @@ SRC_NAME=main.c\
 	generation/vertexs.c\
 	generation/borders.c\
 	generation/update_world.c\
+	generation/water.c\
 	init/camera.c\
 	init/init.c\
 	init/init_opengl.c\
