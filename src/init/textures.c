@@ -1,7 +1,7 @@
 #include "../../include/main.h"
 
 
-static unsigned char	get_textures_uniforms(t_env *env, t_gltools *gl, int i)
+static unsigned char	get_textures_uniforms(t_env *env, int i)
 {
 	char	target[256], *ai;
 
@@ -10,12 +10,12 @@ static unsigned char	get_textures_uniforms(t_env *env, t_gltools *gl, int i)
 	ft_memset(target, 0, sizeof(char) * 256);
 	ft_strcat(target, "vTexture_");
 	ft_strcat(target, ai);
-	gl->uniform.textures[i] = glGetUniformLocation(env->model.program, target);
+	env->model.uniforms.textures[i] = glGetUniformLocation(env->model.program, target);
 	ft_strdel(&ai);
 	return (ERR_NONE);
 }
 
-unsigned char			textures_uniforms(t_env *env, t_mesh *mesh)
+unsigned char			textures_uniforms(t_env *env)
 {
 	unsigned char	code;
 	int				i;
@@ -23,9 +23,9 @@ unsigned char			textures_uniforms(t_env *env, t_mesh *mesh)
 	i = -1;
 	while (++i < TEXTURE_MAX + 1) {
 		// get uniforms
-		if ((code = get_textures_uniforms(env, &mesh->gl, i)) != ERR_NONE)
+		if ((code = get_textures_uniforms(env, i)) != ERR_NONE)
 			return (code);
-		glUniform1i(mesh->gl.uniform.textures[i], i);
+		glUniform1i(env->model.uniforms.textures[i], i);
 	}
 	return (ERR_NONE);
 }

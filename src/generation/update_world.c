@@ -34,7 +34,7 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk)
 		m = dyacc(&env->model.meshs, i);
 		if (m->x_start == chunk->x_start && m->z_start == chunk->z_start)
 		{
-			glDeleteBuffers(1, &m->gl.vbo);
+			glDeleteBuffers(1, &m->vbo);
 			dynarray_extract(&env->model.meshs, i);
 			found = true;
 			break ;

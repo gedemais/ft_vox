@@ -76,16 +76,11 @@ typedef struct	s_uniform
 	GLint	depth_view, depth_projection;
 }				t_uniform;
 
-typedef struct	s_gltools
-{
-	GLuint		vao, vbo, fbo;
-	t_uniform	uniform;
-}				t_gltools;
-
 typedef struct	s_mesh
 {
 	t_dynarray	vertices;
-	t_gltools	gl;
+	// vertex array object, vertex buffer object, frame buffer object
+	GLuint		vao, vbo, fbo;
 	int			x_start, z_start;
 }				t_mesh;
 
@@ -93,6 +88,7 @@ typedef struct	s_model
 {
 	t_dynarray	meshs;
 	GLuint		program, program_skybox, program_depth; // shaders' program for model, skybox and depth
+	t_uniform	uniforms; // 
 	float		**biomes;
 	int			square_x, square_z;
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];
