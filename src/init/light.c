@@ -8,39 +8,40 @@ static void				build_target(char target[256], char *str, char *ai)
 	ft_strcat(target, str);
 }
 
-static unsigned char	get_light_uniforms(t_gltools *gl, int i)
+static unsigned char	get_light_uniforms(t_env *env, t_gltools *gl, int i)
 {
 	char	target[256], *ai;
 
 	if ((ai = ft_itoa(i)) == NULL)
 		return (ERR_MALLOC_FAILED);
 	build_target(target, "].pos", ai);
-	gl->uniform.light[i][LIGHT_POSITION] = glGetUniformLocation(gl->program, target);
+	gl->uniform.light[i][LIGHT_POSITION] = glGetUniformLocation(env->model.program, target);
 	build_target(target, "].dir", ai);
-	gl->uniform.light[i][LIGHT_DIRECTION] = glGetUniformLocation(gl->program, target);
+	gl->uniform.light[i][LIGHT_DIRECTION] = glGetUniformLocation(env->model.program, target);
 	build_target(target, "].color", ai);
-	gl->uniform.light[i][LIGHT_COLOR] = glGetUniformLocation(gl->program, target);
+	gl->uniform.light[i][LIGHT_COLOR] = glGetUniformLocation(env->model.program, target);
 	build_target(target, "].ambient", ai);
-	gl->uniform.light[i][LIGHT_AMBIENT] = glGetUniformLocation(gl->program, target);
+	gl->uniform.light[i][LIGHT_AMBIENT] = glGetUniformLocation(env->model.program, target);
 	build_target(target, "].diffuse", ai);
-	gl->uniform.light[i][LIGHT_DIFFUSE] = glGetUniformLocation(gl->program, target);
+	gl->uniform.light[i][LIGHT_DIFFUSE] = glGetUniformLocation(env->model.program, target);
 	build_target(target, "].specular", ai);
-	gl->uniform.light[i][LIGHT_SPECULAR] = glGetUniformLocation(gl->program, target);
+	gl->uniform.light[i][LIGHT_SPECULAR] = glGetUniformLocation(env->model.program, target);
 	build_target(target, "].intensity", ai);
-	gl->uniform.light[i][LIGHT_INTENSITY] = glGetUniformLocation(gl->program, target);
+	gl->uniform.light[i][LIGHT_INTENSITY] = glGetUniformLocation(env->model.program, target);
 	ft_strdel(&ai);
 	return (ERR_NONE);
 }
 
-unsigned char			light_uniforms(t_mesh *mesh, t_light *light)
+unsigned char			light_uniforms(t_env *env, t_mesh *mesh)
 {
+	t_light			*light = &env->light;
 	unsigned char	code;
 	int				i;
 
 	// get uniforms
-	mesh->gl.uniform.light_active = glGetUniformLocation(mesh->gl.program, "light.is_active");
-	mesh->gl.uniform.light_gamma = glGetUniformLocation(mesh->gl.program, "light.gamma");
-	mesh->gl.uniform.shadow = glGetUniformLocation(mesh->gl.program, "light.shadow");
+	mesh->gl.uniform.light_active = glGetUniformLocation(env->model.program, "light.is_active");
+	mesh->gl.uniform.light_gamma = glGetUniformLocation(env->model.program, "light.gamma");
+	mesh->gl.uniform.shadow = glGetUniformLocation(env->model.program, "light.shadow");
 	// consume uniforms
 	glUniform1i(mesh->gl.uniform.light_active, light->is_active);
 	glUniform1f(mesh->gl.uniform.light_gamma, light->gamma);
@@ -48,7 +49,7 @@ unsigned char			light_uniforms(t_mesh *mesh, t_light *light)
 	i = -1;
 	while (++i < LIGHT_SOURCE_MAX) {
 		// get uniforms
-		if ((code = get_light_uniforms(&mesh->gl, i)) != ERR_NONE)
+		if ((code = get_light_uniforms(env, &mesh->gl, i)) != ERR_NONE)
 			return (code);
 		// consume uniforms
 		glUniform3fv(mesh->gl.uniform.light[i][LIGHT_POSITION], 1, (GLfloat *)&light->sources[i].pos);

@@ -23,7 +23,7 @@ void		event_light(t_env *env, int key)
 	while (++i < env->model.meshs.nb_cells -1) {
 		mesh = dyacc(&env->model.meshs, i);
 		// use program before update uniforms
-		glUseProgram(mesh->gl.program);
+		glUseProgram(env->model.program);
 		// we update the uniforms
 		glUniform1i(mesh->gl.uniform.shadow, env->light.shadow);
 		glUniform1i(mesh->gl.uniform.light_active, env->light.is_active);
@@ -43,7 +43,7 @@ void		event_shadow(t_env *env, int key)
 	while (++i < env->model.meshs.nb_cells -1) {
 		mesh = dyacc(&env->model.meshs, i);
 		// use program before update uniforms
-		glUseProgram(mesh->gl.program);
+		glUseProgram(env->model.program);
 		// we update the uniforms
 		glUniform1i(mesh->gl.uniform.shadow, env->light.shadow);
 	}

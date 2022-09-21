@@ -79,7 +79,6 @@ typedef struct	s_uniform
 typedef struct	s_gltools
 {
 	GLuint		vao, vbo, fbo;
-	GLuint		program, depth_program;
 	t_uniform	uniform;
 }				t_gltools;
 
@@ -93,6 +92,7 @@ typedef struct	s_mesh
 typedef struct	s_model
 {
 	t_dynarray	meshs;
+	GLuint		program, program_skybox, program_depth; // shaders' program for model, skybox and depth
 	float		**biomes;
 	int			square_x, square_z;
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];

@@ -123,8 +123,8 @@ typedef struct		s_env
 unsigned char		init(t_env *env, int argc, char **argv);
 void				camera(t_env *env);
 void				light(t_env *env);
-unsigned char		light_uniforms(t_mesh *mesh, t_light *light);
-unsigned char		textures_uniforms(t_mesh *mesh);
+unsigned char		light_uniforms(t_env *env, t_mesh *mesh);
+unsigned char		textures_uniforms(t_env *env, t_mesh *mesh);
 unsigned char		model(t_env *env);
 unsigned char		load_textures(t_env *env);
 unsigned char		mount_textures(t_env *env, char buffer_type);

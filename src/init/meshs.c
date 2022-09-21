@@ -43,32 +43,33 @@ static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 	we stock uniform's id for later use (matrices, ...)
 	and we consume what we need (textures, light, ...)
 */
-static unsigned char	set_uniforms(t_mesh *mesh, t_light *light, bool skybox)
+static unsigned char	set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 {
 	unsigned char	code;
+	GLuint			program = skybox ? env->model.program_skybox : env->model.program;
 
 	// use program before set uniforms
-	glUseProgram(mesh->gl.program);
+	glUseProgram(program);
 	// matrices
-	mesh->gl.uniform.model = glGetUniformLocation(mesh->gl.program, "model");
-	mesh->gl.uniform.view = glGetUniformLocation(mesh->gl.program, "view");
-	mesh->gl.uniform.projection = glGetUniformLocation(mesh->gl.program, "projection");
+	mesh->gl.uniform.model = glGetUniformLocation(program, "model");
+	mesh->gl.uniform.view = glGetUniformLocation(program, "view");
+	mesh->gl.uniform.projection = glGetUniformLocation(program, "projection");
 	if (skybox == true) {
 		// skybox's texture
-		mesh->gl.uniform.skybox = glGetUniformLocation(mesh->gl.program, "vSkybox");
+		mesh->gl.uniform.skybox = glGetUniformLocation(program, "vSkybox");
 		glUniform1i(mesh->gl.uniform.skybox, 0);
 	} else {
 		// time
-		mesh->gl.uniform.time = glGetUniformLocation(mesh->gl.program, "u_time");
+		mesh->gl.uniform.time = glGetUniformLocation(program, "u_time");
 		// campos
-		mesh->gl.uniform.campos = glGetUniformLocation(mesh->gl.program, "campos");
+		mesh->gl.uniform.campos = glGetUniformLocation(program, "campos");
 		// textures and light
-		if ((code = textures_uniforms(mesh)) != ERR_NONE
-				|| (code = light_uniforms(mesh, light)) != ERR_NONE)
+		if ((code = textures_uniforms(env, mesh)) != ERR_NONE
+				|| (code = light_uniforms(env, mesh)) != ERR_NONE)
 			return (code);
 		// depth matrix
-		mesh->gl.uniform.depth_view = glGetUniformLocation(mesh->gl.program, "depth_view");
-		mesh->gl.uniform.depth_projection = glGetUniformLocation(mesh->gl.program, "depth_projection");
+		mesh->gl.uniform.depth_view = glGetUniformLocation(program, "depth_view");
+		mesh->gl.uniform.depth_projection = glGetUniformLocation(program, "depth_projection");
 	}
 	return (ERR_NONE);
 }
@@ -77,10 +78,8 @@ unsigned char	init_mesh(t_env *env, t_mesh *mesh)
 {
 	unsigned char	code;
 
-	if ((code = mount_shaders(&mesh->gl.program, env->shaders[SHADER_VERTEX], env->shaders[SHADER_FRAGMENT])) != ERR_NONE
-		|| (code = mount_shaders(&mesh->gl.depth_program, env->shaders[SHADER_DEPTH_VERTEX], env->shaders[SHADER_DEPTH_FRAGMENT])) != ERR_NONE
-		|| (code = gl_buffers(env, mesh, false)) != ERR_NONE
-		|| (code = set_uniforms(mesh, &env->light, false)) != ERR_NONE
+	if ((code = gl_buffers(env, mesh, false)) != ERR_NONE
+		|| (code = set_uniforms(env, mesh, false)) != ERR_NONE
 		|| (code = mount_shadows(env, mesh)) != ERR_NONE)
 		return (code);
 
@@ -95,20 +94,26 @@ unsigned char			init_meshs(t_env *env)
 {
 	unsigned char	code;
 	t_mesh			*mesh;
+	int				i;
 
 	// Initializes buffers, shaders and data structures for rendering
+	// on load model program, skybox program and depth program
+	if ((code = mount_shaders(&env->model.program, env->shaders[SHADER_VERTEX], env->shaders[SHADER_FRAGMENT])) != ERR_NONE
+			|| (code = mount_shaders(&env->model.program_depth, env->shaders[SHADER_DEPTH_VERTEX], env->shaders[SHADER_DEPTH_FRAGMENT])) != ERR_NONE
+			|| (code = mount_shaders(&env->model.program_skybox, env->shaders[SHADER_SB_VERTEX], env->shaders[SHADER_SB_FRAGMENT])) != ERR_NONE)
+		return (code);
 	// last mesh is all time the skybox
 	// MODEL
-	for (int i = 0; i < env->model.meshs.nb_cells - 1; i++)
+	i = -1;
+	while (++i < env->model.meshs.nb_cells - 1) {
 		if (!((mesh = dyacc(&env->model.meshs, i)) && (code = ERR_MALLOC_FAILED))
 			|| (code = init_mesh(env, mesh)))
 			return (code);
-
+	}
 	// SKYBOX
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells - 1);
-	if ((code = mount_shaders(&mesh->gl.program, env->shaders[SHADER_SB_VERTEX], env->shaders[SHADER_SB_FRAGMENT])) != ERR_NONE
-			|| (code = gl_buffers(env, mesh, true)) != ERR_NONE
-			|| (code = set_uniforms(mesh, &env->light, true)) != ERR_NONE)
+	if ((code = gl_buffers(env, mesh, true)) != ERR_NONE
+			|| (code = set_uniforms(env, mesh, true)) != ERR_NONE)
 		return (code);
 	return (ERR_NONE);
 }

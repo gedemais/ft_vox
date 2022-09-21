@@ -21,6 +21,7 @@ static void				light_and_shadows_uniforms(t_env *env, t_mesh *mesh, mat4 m)
 
 static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 {
+	GLuint	program = skybox ? env->model.program_skybox : env->model.program;
 	mat4	m;
 
 	mat4_identity(m);
@@ -28,7 +29,7 @@ static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
 
 	// use shader program before set the uniforms
-	glUseProgram(mesh->gl.program);
+	glUseProgram(program);
 	if (skybox == true) {
 		// skybox's rotation around the player
 		mat4_multiply(env->model.model, m);
@@ -78,10 +79,10 @@ static void				render_mesh(t_mesh *mesh)
 static void				render_depth(t_env *env, t_mesh *mesh)
 {
 	// use program before set uniforms
-	glUseProgram(mesh->gl.depth_program);
+	glUseProgram(env->model.program_depth);
 	// update depth matrices
-	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "view"), 1, GL_FALSE, env->model.depthview[0]);
-	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
+	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "view"), 1, GL_FALSE, env->model.depthview[0]);
+	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
 
