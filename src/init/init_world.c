@@ -54,7 +54,6 @@ static unsigned char	init_map(t_env *env)
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
 			if ((code = fix_chunk_borders(env, x, z)) != ERR_NONE
 				|| (code = generate_water(&env->model.chunks[x][z])))
-				
 				return (code);
 
 	printf("%zu bytes per chunk | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
