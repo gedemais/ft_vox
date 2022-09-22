@@ -30,11 +30,19 @@ static void				render_mesh(t_mesh *mesh)
 	glBindVertexArray(0);
 }
 
-static void				render_depth(t_mesh *mesh)
+static void				render_depth(t_env *env, t_mesh *mesh)
 {
+	// use program before set uniforms
+	glUseProgram(env->model.program_depth);
+	// update depth matrices
+	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "view"), 1, GL_FALSE, env->model.depthview[0]);
+	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, mesh->fbo);
 	glClear(GL_DEPTH_BUFFER_BIT);
+
 	render_mesh(mesh);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -57,14 +65,11 @@ static unsigned char	render_scene(t_env *env)
 		skybox = i == env->model.meshs.nb_cells - 1;
 		set_gl_options(skybox);
 		// first  - render depth
-		if (skybox == false  && env->light.shadow == true) {
-			// use program to use the proper shaders
-			glUseProgram(env->model.program_depth);
-			render_depth(mesh);
-		}
+		if (skybox == false  && env->light.shadow == true)
+			render_depth(env, mesh);
+		// update all the uniforms
+		set_uniforms(env, skybox);
 		// second - render mesh
-		// use program to use the proper shaders
-		glUseProgram(skybox ? env->model.program_skybox : env->model.program);
 		render_mesh(mesh);
 	}
 	return (ERR_NONE);
@@ -112,9 +117,6 @@ static void				update_data(t_env *env)
 		mat4_inverse(env->model.depthview[i]);
 		mat4_projection(env->model.depthproj[i], 90.0f, env->camera.near, env->camera.far, env->camera.ratio);
 	}
-
-	// update all the uniforms
-	set_uniforms(env);
 }
 
 // ====================================================================

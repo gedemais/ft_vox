@@ -42,7 +42,7 @@ static void				update_uniforms(t_env *env, bool skybox, mat4 m)
 	glUniformMatrix4fv(env->model.uniforms.projection, 1, GL_FALSE, env->camera.projection);
 }
 
-void					set_uniforms(t_env *env)
+void					set_uniforms(t_env *env, bool skybox)
 {
 	mat4	m;
 
@@ -51,15 +51,7 @@ void					set_uniforms(t_env *env)
 	mat4_yrotation(m, (env->fps.current_seconds * SB_ROT_SPEED) / 100.0f);
 	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
 
-	// depth
-	// use program before set uniforms
-	glUseProgram(env->model.program_depth);
-	// update depth matrices
-	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "view"), 1, GL_FALSE, env->model.depthview[0]);
-	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
-
-	update_uniforms(env, false, m); // model
-	update_uniforms(env, true, m); // skybox
+	update_uniforms(env, skybox, m);
 }
 
 // =======================================================================
