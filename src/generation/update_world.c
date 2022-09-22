@@ -195,7 +195,7 @@ static unsigned char	update_square(t_env *env, t_chunk *news[SQUARE_SIZE])
 {
 	t_mesh			mesh;
 	unsigned char	code;
-	unsigned int	x, z;
+	//unsigned int	x, z;
 
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
@@ -204,8 +204,8 @@ static unsigned char	update_square(t_env *env, t_chunk *news[SQUARE_SIZE])
 
 	for (unsigned int i = 0; i < SQUARE_SIZE; i++)
 	{
-		x = news[i]->x_start / CHUNK_SIZE - env->model.square_x;
-		z = news[i]->z_start / CHUNK_SIZE - env->model.square_z;
+	//	x = news[i]->x_start / CHUNK_SIZE - env->model.square_x;
+	//	z = news[i]->z_start / CHUNK_SIZE - env->model.square_z;
 
 		//printf("%d %d\n", x, z);
 
