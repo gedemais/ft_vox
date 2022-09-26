@@ -20,7 +20,7 @@ void				print_square(t_env *env)
 }
 
 // Shall we return an error if the chunk to remove is not found ?
-static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk)
+static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *olds)
 {
 	bool	found = false;
 	t_mesh	*m;
@@ -34,7 +34,10 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk)
 		m = dyacc(&env->model.meshs, i);
 		if (m->x_start == chunk->x_start && m->z_start == chunk->z_start)
 		{
-			glDeleteBuffers(1, &m->gl.vbo);
+			if ((olds->arr == NULL && dynarray_init(olds, sizeof(GLuint), SQUARE_SIZE))
+				|| dynarray_push(olds, &m->gl.vbo, false))
+				return (ERR_MALLOC_FAILED);
+			//glDeleteBuffers(1, &m->gl.vbo);
 			dynarray_extract(&env->model.meshs, i);
 			found = true;
 			break ;
@@ -88,32 +91,29 @@ typedef struct	s_ms_params
 	int			trigger_id;
 	pthread_t	*thread_id;
 	t_chunk		*news[SQUARE_SIZE];
+	t_dynarray	olds;
 }				t_ms_params;
 
-static unsigned char move_square_on_z(t_env *env, int trigger_id, t_chunk *news[SQUARE_SIZE])
+static unsigned char move_square_on_z(t_env *env, t_ms_params *params)
 {
-	//t_env			*env = ((t_ms_params*)params)->env;
-	//int				trigger_id = ((t_ms_params*)params)->trigger_id;
+	int				trigger_id = params->trigger_id;
 	bool			north = (trigger_id == TRIGGER_NORTH);
-	//pthread_t		*tid = ((t_ms_params*)params)->thread_id;
-
 	unsigned char	code;
 	t_mesh			mesh;
 	//t_chunk			*cached;
 	int				new_z;
 
 	new_z = north ? SQUARE_SIZE - 1 : 0;
-	//printf("remove line\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		if (north && !remove_chunk_mesh(env, &env->model.chunks[i][0]))
+		if (north && !remove_chunk_mesh(env, &env->model.chunks[i][0], &params->olds))
 		{
 			//cache_chunk(env, &env->model.chunks[i][0]);
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[i][j] = env->model.chunks[i][j + 1];
 		}
 
-		else if (!remove_chunk_mesh(env, &env->model.chunks[i][SQUARE_SIZE - 1]))
+		else if (!remove_chunk_mesh(env, &env->model.chunks[i][SQUARE_SIZE - 1], &params->olds))
 		{
 			//cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
 			for (int j = SQUARE_SIZE - 1; j > 0; j--)
@@ -122,14 +122,13 @@ static unsigned char move_square_on_z(t_env *env, int trigger_id, t_chunk *news[
 	}
 
 	env->model.square_z += north ? 1 : -1;
-	//printf("add new chunks\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		news[i] = &env->model.chunks[i][new_z];
-		memset(news[i], 0, sizeof(t_chunk));
+		params->news[i] = &env->model.chunks[i][new_z];
+		memset(params->news[i], 0, sizeof(t_chunk));
 
 	//	cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
-		if (gen_chunk(env, news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true) != ERR_NONE)
+		if (gen_chunk(env, params->news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true) != ERR_NONE)
 			return (ERR_MALLOC_FAILED);
 		/*else if (cached)
 		{
@@ -142,26 +141,26 @@ static unsigned char move_square_on_z(t_env *env, int trigger_id, t_chunk *news[
 	return (ERR_NONE);
 }
 
-static unsigned char	move_square_on_x(t_env *env, int trigger_id, t_chunk *news[SQUARE_SIZE])
+static unsigned char	move_square_on_x(t_env *env, t_ms_params *params)
 {
 	unsigned char	code;
+	int				trigger_id = params->trigger_id;
 	bool			west = trigger_id == TRIGGER_WEST;
 	t_mesh			mesh;
 	//t_chunk			*cached;
 	int				new_x;
 
 	new_x = west ? SQUARE_SIZE - 1 : 0;
-	//printf("remove line\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		if (west && !remove_chunk_mesh(env, &env->model.chunks[0][i]))
+		if (west && !remove_chunk_mesh(env, &env->model.chunks[0][i], &params->olds))
 		{
 			//cache_chunk(env, &env->model.chunks[i][0]);
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[j][i] = env->model.chunks[j + 1][i];
 		}
 
-		else if (!remove_chunk_mesh(env, &env->model.chunks[SQUARE_SIZE - 1][i]))
+		else if (!remove_chunk_mesh(env, &env->model.chunks[SQUARE_SIZE - 1][i], &params->olds))
 		{
 			//cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
 			for (int j = SQUARE_SIZE - 1; j > 0; j--)
@@ -173,11 +172,11 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id, t_chunk *news[
 	//printf("add new chunks\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
-		news[i] = &env->model.chunks[new_x][i];
-		memset(news[i], 0, sizeof(t_chunk));
+		params->news[i] = &env->model.chunks[new_x][i];
+		memset(params->news[i], 0, sizeof(t_chunk));
 
 //		cached = get_cached_chunk(env, env->model.square_x + new_x, env->model.square_z + i);
-		if ((code = gen_chunk(env, news[i], (env->model.square_x + new_x) * CHUNK_SIZE, (env->model.square_z + i) * CHUNK_SIZE, true)) != ERR_NONE)
+		if ((code = gen_chunk(env, params->news[i], (env->model.square_x + new_x) * CHUNK_SIZE, (env->model.square_z + i) * CHUNK_SIZE, true)) != ERR_NONE)
 			return (code);
 /*		else if (cached)
 		{
@@ -191,11 +190,11 @@ static unsigned char	move_square_on_x(t_env *env, int trigger_id, t_chunk *news[
 	return (ERR_NONE);
 }
 
-static unsigned char	update_square(t_env *env, t_chunk *news[SQUARE_SIZE])
+static unsigned char	update_square(t_env *env, t_ms_params *params)
 {
 	t_mesh			mesh;
+	GLuint			*vbo;
 	unsigned char	code;
-	//unsigned int	x, z;
 
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
@@ -204,22 +203,24 @@ static unsigned char	update_square(t_env *env, t_chunk *news[SQUARE_SIZE])
 
 	for (unsigned int i = 0; i < SQUARE_SIZE; i++)
 	{
-	//	x = news[i]->x_start / CHUNK_SIZE - env->model.square_x;
-	//	z = news[i]->z_start / CHUNK_SIZE - env->model.square_z;
-
-		//printf("%d %d\n", x, z);
-
-		if ((code = generate_water(news[i])) != ERR_NONE)
+		// Water generation
+		if ((code = generate_water(params->news[i])) != ERR_NONE)
 			return (code);
 
+		// Initialization of the newly created mesh
 		ft_memset(&mesh, 0, sizeof(t_mesh));
-		mesh.vertices = news[i]->stride;
-		mesh.x_start = news[i]->x_start;
-		mesh.z_start = news[i]->z_start;
+		mesh.vertices = params->news[i]->stride;
+		mesh.x_start = params->news[i]->x_start;
+		mesh.z_start = params->news[i]->z_start;
 
+		// Addition of the mesh to the chunks pool
 		if (init_mesh(env, &mesh) || dynarray_push(&env->model.meshs, &mesh, true) < 0)
 			return (ERR_MALLOC_FAILED);
+
+		// Free vbo for disappeared chunks
+		glDeleteBuffers(1, dyacc(&params->olds, (int)i));
 	}
+
 
 	return (ERR_NONE);
 }
@@ -240,15 +241,18 @@ static void	*move_square(void *params)
 		"east"};
 
 	printf("%s\n", strs[trigger_id]);
+	fflush(stdout);
 	//printf("%d meshs\n", env->model.meshs.nb_cells);
 	//printf("square_x : %d square_y : %d\n", env->model.square_x, env->model.square_z);
 
 	if (trigger_id == TRIGGER_NORTH || trigger_id == TRIGGER_SOUTH)
-		move_square_on_z(env, trigger_id, ((t_ms_params*)params)->news);
+		move_square_on_z(env, params);
 	else
-		move_square_on_x(env, trigger_id, ((t_ms_params*)params)->news);
+		move_square_on_x(env, params);
 
-	*((t_ms_params*)params)->thread_id = 1;
+	*((t_ms_params*)params)->thread_id = (pthread_t)1;
+	printf("generation finished\n");
+	fflush(stdout);
 	return (NULL);
 }
 
@@ -280,14 +284,18 @@ static bool				check_trigger(int x, int z, int *trigger_id)
 unsigned char			update_world(t_env *env)
 {
 	static t_ms_params	params;
-	static pthread_t	thread_id = 0;
+	static pthread_t	thread_id = (pthread_t)0;
 	int					trigger_id = 0;
 	unsigned char		code;
 
-	if (thread_id == 1)
+	if (thread_id == (pthread_t)1)
 	{
-		update_square(env, params.news);
-		thread_id = 0;
+		printf("back to loop\n");
+	fflush(stdout);
+		update_square(env, &params);
+		printf("update finished\n");
+	fflush(stdout);
+		thread_id = (pthread_t)0;
 		return (ERR_NONE);
 	}
 
@@ -297,9 +305,9 @@ unsigned char			update_world(t_env *env)
 			if (check_player_presence(env->camera.pos, env->model.chunks[x][z])
 				&& check_trigger(x, z, &trigger_id))
 				{
-					if (thread_id == 0)
+					if (thread_id == (pthread_t)0)
 					{
-						params = (t_ms_params){env, trigger_id, &thread_id, {}};
+						params = (t_ms_params){env, trigger_id, &thread_id, {}, {}};
 						pthread_create(&thread_id, NULL, &move_square, &params);
 						pthread_detach(thread_id);
 						return (ERR_NONE);
