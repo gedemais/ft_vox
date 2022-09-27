@@ -1,61 +1,23 @@
 #include "../include/main.h"
 
 
-static void				light_and_shadows_uniforms(t_env *env, t_mesh *mesh, mat4 m)
-{
-	vec3	tmp;
-
-	// LIGHT PLAYER
-	glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
-	// SUNLIGHT
-	glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
-	// sunlight follow the sun's texture
-	tmp = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].pos);
-	glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&tmp);
-	tmp = vec_normalize(mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].dir));
-	glUniform3fv(mesh->gl.uniform.light[LIGHT_SOURCE_SUN][LIGHT_DIRECTION], 1, (GLfloat *)&tmp);
-	// SHADOWS :: update depth matrices
-	glUniformMatrix4fv(mesh->gl.uniform.depth_view, 1, GL_FALSE, env->model.depthview[0]);
-	glUniformMatrix4fv(mesh->gl.uniform.depth_projection, 1, GL_FALSE, env->model.depthproj[0]);
-}
-
-static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
-{
-	mat4	m;
-
-	mat4_identity(m);
-	mat4_yrotation(m, (env->fps.current_seconds * SB_ROT_SPEED) / 100.0f);
-	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
-
-	// use shader program before set the uniforms
-	glUseProgram(mesh->gl.program);
-	if (skybox == true) {
-		// skybox's rotation around the player
-		mat4_multiply(env->model.model, m);
-	} else {
-		// update time
-		glUniform1f(mesh->gl.uniform.time, env->fps.current_seconds);
-		// update campos
-		glUniform3fv(mesh->gl.uniform.campos, 1, (GLfloat *)&env->camera.pos);
-		if (env->light.is_active == true)
-			light_and_shadows_uniforms(env, mesh, m);
-	}
-	// update matrices
-	glUniformMatrix4fv(mesh->gl.uniform.model, 1, GL_FALSE, env->model.model);
-	glUniformMatrix4fv(mesh->gl.uniform.view, 1, GL_FALSE, env->camera.view);
-	glUniformMatrix4fv(mesh->gl.uniform.projection, 1, GL_FALSE, env->camera.projection);
-}
-
 static void				set_gl_options(bool skybox)
 {
+	// we kept a static to know when to display in count clock wise order
+	static bool	display_front = true;
+
 	if (skybox) {
-		// glCullFace(GL_FRONT);
+		// hide front faces
+		glCullFace(GL_FRONT);
+		// Passes if the incoming depth value is less than or equal to the stored depth value.
     	glDepthFunc(GL_LEQUAL);
-	} else {
-		// glCullFace(GL_BACK);
-		// glFrontFace(GL_CW);
-		// Accept fragment if it closer to the camera than the former one
+		display_front = true;
+	} else if (display_front == true) {
+		// hide back faces
+		glCullFace(GL_BACK);
+		// Passes if the incoming depth value is less than the stored depth value.
 		glDepthFunc(GL_LESS);
+		display_front = false;
 	}
 }
 
@@ -63,7 +25,7 @@ static void				set_gl_options(bool skybox)
 
 static void				render_mesh(t_mesh *mesh)
 {
-	glBindVertexArray(mesh->gl.vao);
+	glBindVertexArray(mesh->vao);
 	glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
 	glBindVertexArray(0);
 }
@@ -71,13 +33,12 @@ static void				render_mesh(t_mesh *mesh)
 static void				render_depth(t_env *env, t_mesh *mesh)
 {
 	// use program before set uniforms
-	glUseProgram(mesh->gl.depth_program);
+	glUseProgram(env->model.program_depth);
 	// update depth matrices
-	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "view"), 1, GL_FALSE, env->model.depthview[0]);
-	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
+	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "view"), 1, GL_FALSE, env->model.depthview[0]);
+	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
-
+	glBindFramebuffer(GL_FRAMEBUFFER, mesh->fbo);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	render_mesh(mesh);
@@ -88,11 +49,15 @@ static void				render_depth(t_env *env, t_mesh *mesh)
 static unsigned char	render_scene(t_env *env)
 {
 	t_mesh		*mesh;
-	int			i;
+	int			i, e = 1;
 	bool		skybox;
 
+#ifdef __APPLE__
+	e = 2;
+#endif
+
 	// reset viewport
-	// glViewport(0, 0, env->window.w, env->window.h);
+	glViewport(0, 0, env->window.w * e, env->window.h * e);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	i = -1;
 	while (++i < env->model.meshs.nb_cells) {
@@ -102,8 +67,9 @@ static unsigned char	render_scene(t_env *env)
 		// first  - render depth
 		if (skybox == false  && env->light.shadow == true)
 			render_depth(env, mesh);
+		// update all the uniforms
+		set_uniforms(env, skybox);
 		// second - render mesh
-		set_uniforms(env, mesh, skybox);
 		render_mesh(mesh);
 	}
 	return (ERR_NONE);
@@ -132,10 +98,11 @@ static void				update_data(t_env *env)
 	mat4_view(&env->camera);
 	mat4_projection(env->camera.projection, env->camera.fov, env->camera.near, env->camera.far, env->camera.ratio);
 
-	//printf("player_pos : %f %f %f\n", env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
+	// LIGHT
+	// we update the flaslight position
 	env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 	env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
-
+	// player's height
 	env->light.sources[LIGHT_SOURCE_PLAYER].pos.y -= 2.0f;
 
 	// SHADOWS
@@ -168,9 +135,9 @@ unsigned char			display_loop(t_env *env)
 		// update data
 		update_data(env);
 		// render scene
-		if ((code = update_world(env)) != ERR_NONE
-			|| (code = render_scene(env)) != ERR_NONE)
-			return (code);
+			if ((code = update_world(env)) != ERR_NONE
+				|| (code = render_scene(env)) != ERR_NONE)
+				return (code);
 		// glfw: swap buffers and poll IO events
 		glfwSwapBuffers(env->window.ptr);
 		glfwPollEvents();

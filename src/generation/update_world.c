@@ -35,9 +35,8 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 		if (m->x_start == chunk->x_start && m->z_start == chunk->z_start)
 		{
 			if ((olds->arr == NULL && dynarray_init(olds, sizeof(GLuint), SQUARE_SIZE))
-				|| dynarray_push(olds, &m->gl.vbo, false))
+				|| dynarray_push(olds, &m->vbo, false))
 				return (ERR_MALLOC_FAILED);
-			//glDeleteBuffers(1, &m->gl.vbo);
 			dynarray_extract(&env->model.meshs, i);
 			found = true;
 			break ;
@@ -292,11 +291,7 @@ unsigned char			update_world(t_env *env)
 
 	if (thread_id == (pthread_t)1)
 	{
-		printf("back to loop\n");
-	fflush(stdout);
 		update_square(env, &params);
-		printf("update finished\n");
-	fflush(stdout);
 		thread_id = (pthread_t)0;
 		return (ERR_NONE);
 	}

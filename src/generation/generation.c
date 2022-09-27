@@ -26,7 +26,6 @@ unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
 				//|| (code = generate_bottom_plane(chunk, x, y, z, top_plane)) != ERR_NONE)
 				return (code);
 		}*/
-
 	return (ERR_NONE);
 }
 
