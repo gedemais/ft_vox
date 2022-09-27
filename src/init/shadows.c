@@ -12,8 +12,8 @@ unsigned char	mount_shadows(t_env *env, t_mesh *mesh)
 	// we link the depthmap to the framebuffer
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, env->model.uniforms.textures[TEXTURE_MAX], 0);
 	
-	// glDrawBuffer(GL_NONE);
-	// glReadBuffer(GL_NONE);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
