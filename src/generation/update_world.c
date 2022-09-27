@@ -221,6 +221,8 @@ static unsigned char	update_square(t_env *env, t_ms_params *params)
 		glDeleteBuffers(1, dyacc(&params->olds, (int)i));
 	}
 
+	dynarray_free(&params->olds);
+
 
 	return (ERR_NONE);
 }

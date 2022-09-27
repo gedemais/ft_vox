@@ -24,6 +24,11 @@ ifeq ($(DEBUG), 1)
 	FLAGS += -g3 -fsanitize=address
 endif
 
+VALGRIND_CHECK ?= 0
+ifeq ($(VALGRIND_CHECK), 1)
+	FLAGS += -g
+endif
+
 OPTI ?= 0
 ifeq ($(OPTI), 1)
 	FLAGS += -Ofast -march=native

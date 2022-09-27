@@ -1,10 +1,12 @@
 MANDATORY
-gestion des caches
 caves
-eau (post generation)
+fix water (remove useless faces)
 OPTIONAL
-biomes (interpoler avec une granularite plus faible)
-ombres
+gestion des caches
+biomes (interpoler les parametres de generation avec une granularite plus faible, de l'ordre du bloc)
 TO FIX
+leaks textures
+leaks shaders
+ombres
 #include ../../*
 rm const float block_size
