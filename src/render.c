@@ -19,7 +19,7 @@ static void				light_and_shadows_uniforms(t_env *env, t_mesh *mesh, mat4 m)
 	glUniformMatrix4fv(mesh->gl.uniform.depth_projection, 1, GL_FALSE, env->model.depthproj[0]);
 }
 
-static void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
+void				set_uniforms(t_env *env, t_mesh *mesh, bool skybox)
 {
 	mat4	m;
 
@@ -76,13 +76,13 @@ static void				render_depth(t_env *env, t_mesh *mesh)
 	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "view"), 1, GL_FALSE, env->model.depthview[0]);
 	glUniformMatrix4fv(glGetUniformLocation(mesh->gl.depth_program, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
+	// glBindFramebuffer(GL_FRAMEBUFFER, mesh->gl.fbo);
 
-	glClear(GL_DEPTH_BUFFER_BIT);
+	// glClear(GL_DEPTH_BUFFER_BIT);
 
 	render_mesh(mesh);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	// glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 static unsigned char	render_scene(t_env *env)
@@ -103,8 +103,8 @@ static unsigned char	render_scene(t_env *env)
 		if (skybox == false  && env->light.shadow == true)
 			render_depth(env, mesh);
 		// second - render mesh
-		set_uniforms(env, mesh, skybox);
-		render_mesh(mesh);
+		// set_uniforms(env, mesh, skybox);
+		// render_mesh(mesh);
 	}
 	return (ERR_NONE);
 }
