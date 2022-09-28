@@ -4,7 +4,7 @@ const uint8_t	half = (BTB_BEACH - BTB_CAVE) / 2;
 
 static bool		is_water(uint8_t y)
 {
-	return (y < BTB_BEACH - 1);
+	return (y < BTB_BEACH);
 }
 
 static unsigned char	pour_water(t_chunk *chunk, unsigned int x, unsigned int y, unsigned int z)

@@ -1,9 +1,10 @@
 #include "main.h"
-/*
+
 static void	free_shaders(t_env *env)
 {
-	
-}*/
+	for (int i = 0; i < SHADER_MAX; i++)
+		munmap((void*)env->shaders[i].source, env->shaders[i].size);
+}
 
 static void	free_textures(t_env *env)
 {
@@ -11,6 +12,7 @@ static void	free_textures(t_env *env)
 		free(env->model.textures[i].ptr);
 
 	glDeleteTextures(TEXTURE_MAX + 1, env->model.gl_textures);
+	glDeleteTextures(1, &env->model.gl_tskybox);
 }
 
 static void	free_chunk(t_chunk *chunk)
@@ -64,6 +66,7 @@ static void	free_chunks(t_env *env)
 {
 	free_chunks(env);
 	free_textures(env);
+	free_shaders(env);
 
 	for (unsigned int i = 0; i < MAP_SIZE; i++)
 		free(env->model.biomes[i]);

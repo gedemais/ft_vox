@@ -228,7 +228,6 @@ static unsigned char	update_square(t_env *env, t_ms_params *params)
 
 	dynarray_free(&params->olds);
 
-
 	return (ERR_NONE);
 }
 
