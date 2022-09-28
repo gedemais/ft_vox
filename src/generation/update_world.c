@@ -26,6 +26,12 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 	t_mesh	*m;
 
 	dynarray_free(&chunk->stride);
+
+	for (unsigned int i = 0; i < CHUNK_SIZE; i++)
+	{
+		free(chunk->surface_hmap[i]); // To remove if cache system comes back
+		free(chunk->sub_hmap[i]);
+	}
 	free(chunk->surface_hmap); // To remove if cache system comes back
 	free(chunk->sub_hmap);
 
