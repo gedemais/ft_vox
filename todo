@@ -1,7 +1,7 @@
 MANDATORY
-fix killed
 caves
 fix water (remove useless faces)
+fix killed
 OPTIONAL
 gestion des caches
 biomes (interpoler les parametres de generation avec une granularite plus faible, de l'ordre du bloc)

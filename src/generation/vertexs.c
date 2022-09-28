@@ -30,7 +30,7 @@ static int	switch_block_type(unsigned int z)
 	return (BT_WATER);
 }
 
-unsigned char	push_plane(t_chunk *chunk, vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water)
+unsigned char	push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water)
 {
 	/*
 	const t_vt		vts_ccw[6] = {
@@ -104,29 +104,20 @@ unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_p
 	top_plane[3] = c;
 	top_plane[4] = b;
 	top_plane[5] = d;
-	// cw
-	// top_plane[0] = c;
-	// top_plane[1] = b;
-	// top_plane[2] = a;
-	// top_plane[3] = c;
-	// top_plane[4] = d;
-	// top_plane[5] = b;
 
 	return (push_plane(chunk, top_plane, N_UP, y, 1.0f, false, false));
 }
 
 unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int y, float depth)
 {
-	vec3	c, d;
+	const vec3	c = vec_add(a, vec_fmult((vec3){0, -1.0f, 0}, depth));
+	const vec3	d = vec_add(b, vec_fmult((vec3){0, -1.0f, 0}, depth));
 
-	c = vec_add(a, vec_fmult((vec3){0, -1.0f, 0}, depth));
-	d = vec_add(b, vec_fmult((vec3){0, -1.0f, 0}, depth));
-
-	vec3	side_plane_ccw[6]	= {c, a, b, c, b, d};
+	const vec3	side_plane_ccw[6]	= {c, a, b, c, b, d};
 	// apparement à n'utiliser que quand c'est left side
-	vec3	side_plane_cw[6]	= {c, b, a, c, d, b};
+	const vec3	side_plane_cw[6]	= {c, b, a, c, d, b};
 
-	return (push_plane(chunk, index == 2 ? side_plane_cw : side_plane_ccw,
+	return (push_plane(chunk, index == N_WEST ? side_plane_cw : side_plane_ccw,
 		index, y, depth, true, false));
 }
 

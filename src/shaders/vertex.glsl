@@ -43,28 +43,30 @@ vec3	get_normal(int n)
 	return (normal);
 }
 
-vec2	get_uv(int n, float fall_size)
+vec2	get_uv(int n, bool cw, float fall_size)
 {
 	vec2	uv;
 
-	switch (n) {
+	switch (n)
+	{
 		case (0):
 			uv = vec2(1, fall_size);
 			break ;
 		case (1):
-			uv = vec2(1, 0);
+			uv = vec2(cw ? 0 : 1, 0);
 			break ;
 		case (2):
-			uv = vec2(0, 0);
+			uv = vec2(cw ? 1 : 0, 0);
 			break ;
+
 		case (3):
 			uv = vec2(1, fall_size);
 			break ;
 		case (4):
-			uv = vec2(0, 0);
+			uv = vec2(0, cw ? fall_size : 0);
 			break ;
 		case (5):
-			uv = vec2(0, fall_size);
+			uv = vec2(0, cw ? 0 : fall_size);
 			break ;
 	}
 	return (uv);
@@ -101,7 +103,7 @@ void	main()
 	// Output assignations
 	vNormal		= get_normal(int(normal_id));
 	vPosition	= vec3(pos);
-	vTextCoord	= get_uv(int(uv_id), fall_size);
+	vTextCoord	= get_uv(int(uv_id), int(normal_id) == 2, fall_size);
 	vShadCoord	= pos * depth_view * depth_projection;
 
 	gl_Position	= pos * model * view * projection;

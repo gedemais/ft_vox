@@ -241,8 +241,6 @@ static void	*move_square(void *params)
 		"west",
 		"east"};
 
-	printf("%s\n", strs[trigger_id]);
-	fflush(stdout);
 	//printf("%d meshs\n", env->model.meshs.nb_cells);
 	//printf("square_x : %d square_y : %d\n", env->model.square_x, env->model.square_z);
 
@@ -252,8 +250,6 @@ static void	*move_square(void *params)
 		move_square_on_x(env, params);
 
 	*((t_ms_params*)params)->thread_id = (pthread_t)1;
-	printf("generation finished\n");
-	fflush(stdout);
 	return (NULL);
 }
 
@@ -288,6 +284,7 @@ unsigned char			update_world(t_env *env)
 	static pthread_t	thread_id = (pthread_t)0;
 	int					trigger_id = 0;
 	unsigned char		code;
+
 
 	if (thread_id == (pthread_t)1)
 	{
