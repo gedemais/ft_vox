@@ -7,7 +7,8 @@
 # include "light.h"
 
 # define MODEL_SCALE	1
-# define SB_ROT_SPEED	10 // sun's rotation speed
+# define SB_ROT_SPEED	100 // sun's rotation speed
+# define SHADOW_TARGET	0 // 0 :: player, 1 :: sun
 
 enum			e_texture
 {

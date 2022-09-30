@@ -10,13 +10,13 @@ static void				light_and_shadows_uniforms(t_env *env, mat4 m)
 	// SUNLIGHT
 	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
 	// sunlight follow the sun's texture
-	tmp = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].pos);
-	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&tmp);
-	tmp = vec_normalize(mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].dir));
-	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_SUN][LIGHT_DIRECTION], 1, (GLfloat *)&tmp);
+	env->light.sources[LIGHT_SOURCE_SUN].pos = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].base_pos);
+	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_SUN].pos);
+	env->light.sources[LIGHT_SOURCE_SUN].dir = vec_normalize(mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].base_dir));
+	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_SUN][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_SUN].dir);
 	// SHADOWS :: update depth matrices
-	glUniformMatrix4fv(env->model.uniforms.depth_view, 1, GL_FALSE, env->model.depthview[0]);
-	glUniformMatrix4fv(env->model.uniforms.depth_projection, 1, GL_FALSE, env->model.depthproj[0]);
+	glUniformMatrix4fv(env->model.uniforms.depth_view, 1, GL_FALSE, env->model.depthview[SHADOW_TARGET]);
+	glUniformMatrix4fv(env->model.uniforms.depth_projection, 1, GL_FALSE, env->model.depthproj[SHADOW_TARGET]);
 }
 
 static void				update_uniforms(t_env *env, bool skybox, mat4 m)

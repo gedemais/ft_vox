@@ -82,7 +82,9 @@ static void				init_sun(t_env *env, t_light_source *source)
 	e = env->camera.far / 2.0f;
 	source->pos			= (vec3){ 0.85f, 0, -1 };
 	source->pos			= (vec3){ source->pos.x * e, 16, source->pos.z * e };
+	source->base_pos	= source->pos;
 	source->dir			= vec_normalize(env->camera.pos);
+	source->base_dir	= source->dir;
 	source->color		= (vec3){ 1, 1, 1 };
 	source->ambient		= (vec3){ 0.66f, 0.66f, 0.66f };
 	source->diffuse		= (vec3){ 0.66f, 0.66f, 0.66f };

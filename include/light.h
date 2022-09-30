@@ -26,6 +26,7 @@ enum			e_light_tools
 typedef struct	s_light_source
 {
 	vec3	pos, dir, color;
+	vec3	base_pos, base_dir;
 	vec3	ambient, diffuse, specular;
 	float	intensity, cutoff;
 }				t_light_source;

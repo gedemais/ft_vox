@@ -31,15 +31,15 @@ static void				render_depth(t_env *env, t_mesh *mesh)
 	// use program before set uniforms
 	glUseProgram(env->model.program_depth);
 	// update depth matrices
-	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "view"), 1, GL_FALSE, env->model.depthview[0]);
-	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "projection"), 1, GL_FALSE, env->model.depthproj[0]);
+	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "view"), 1, GL_FALSE, env->model.depthview[SHADOW_TARGET]);
+	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "projection"), 1, GL_FALSE, env->model.depthproj[SHADOW_TARGET]);
 
-	// glBindFramebuffer(GL_FRAMEBUFFER, env->model.fbo);
-	// glClear(GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, env->model.fbo);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	render_mesh(mesh);
 
-	// glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 static unsigned char	render_scene(t_env *env)
@@ -63,10 +63,10 @@ static unsigned char	render_scene(t_env *env)
 		if (skybox == false  && env->light.shadow == true)
 			render_depth(env, mesh);
 		// second - render mesh
-		// set_gl_options(skybox);
-		// // update all the uniforms
-		// set_uniforms(env, skybox);
-		// render_mesh(mesh);
+		set_gl_options(skybox);
+		// update all the uniforms
+		set_uniforms(env, skybox);
+		render_mesh(mesh);
 	}
 	return (ERR_NONE);
 }
@@ -103,7 +103,7 @@ static void				update_data(t_env *env)
 	env->light.sources[LIGHT_SOURCE_PLAYER].pos = env->camera.pos;
 	env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 	// player's height
-	// env->light.sources[LIGHT_SOURCE_PLAYER].pos.y -= 1.0f;
+	env->light.sources[LIGHT_SOURCE_PLAYER].pos.y -= MODEL_SCALE / 2.0f;
 
 	// SHADOWS
 	vec3	light_pos, light_dir;
@@ -113,9 +113,10 @@ static void				update_data(t_env *env)
 	while (++i < LIGHT_SOURCE_MAX) {
 		light_pos = env->light.sources[i].pos;
 		light_dir = env->light.sources[i].dir;
-		mat4_lookat(env->model.depthview[i], light_pos, vec_add(light_pos, light_dir), (vec3){ 0, 1, 0 });
+		light_dir = (vec3){ -light_dir.x, -light_dir.y, -light_dir.z };
+		mat4_lookat(env->model.depthview[i], light_pos, vec_sub(light_pos, light_dir), (vec3){ 0, 1, 0 });
 		mat4_inverse(env->model.depthview[i]);
-		mat4_projection(env->model.depthproj[i], env->camera.fov, env->camera.near, 50.0f, env->camera.ratio);
+		mat4_projection(env->model.depthproj[i], 90.0f, env->camera.near, 50.0f, env->camera.ratio);
 	}
 }
 
