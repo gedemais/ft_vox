@@ -1,16 +1,14 @@
 #include "../../include/main.h"
 
 
-unsigned char	mount_shadows(t_env *env, t_mesh *mesh)
+unsigned char	mount_shadows(t_env *env)
 {
-	(void)env;
+    glGenFramebuffers(1, &env->model.fbo);
 
-    glGenFramebuffers(1, &mesh->fbo);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, mesh->fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, env->model.fbo);
 
 	// we link the depthmap to the framebuffer
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, env->model.uniforms.textures[TEXTURE_MAX], 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, env->model.depthmap, 0);
 	
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);

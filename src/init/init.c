@@ -25,6 +25,7 @@ static void				gl_options(void)
 {
 	// DEPTH BUFFER
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	// CULLING
 	glEnable(GL_CULL_FACE);

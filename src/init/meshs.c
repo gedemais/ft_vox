@@ -15,7 +15,7 @@ static void				set_layouts(bool skybox)
 	}
 }
 
-static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
+static unsigned char	gl_buffers(t_mesh *mesh, bool skybox)
 {
 	unsigned char	code;
 	GLsizeiptr		size;
@@ -30,9 +30,6 @@ static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 	glBufferData(GL_ARRAY_BUFFER, size * mesh->vertices.nb_cells, mesh->vertices.arr, GL_STATIC_DRAW);
 	// Specifies the disposition of components in vertexs
 	set_layouts(skybox);
-	// load the textures this buffer will use
-	if ((code = mount_textures(env, skybox ? 1 : 0)) != ERR_NONE)
-		return (code);
 	glBindVertexArray(0);
 	return (ERR_NONE);
 }
@@ -41,9 +38,8 @@ unsigned char	init_mesh(t_env *env, t_mesh *mesh)
 {
 	unsigned char	code;
 
-	if ((code = gl_buffers(env, mesh, false)) != ERR_NONE
-			|| (code = load_uniforms(env, false)) != ERR_NONE
-			|| (code = mount_shadows(env, mesh)) != ERR_NONE)
+	if ((code = gl_buffers(mesh, false)) != ERR_NONE
+			|| (code = load_uniforms(env, false)) != ERR_NONE)
 		return (code);
 
 	return (ERR_NONE);
@@ -65,6 +61,11 @@ unsigned char			init_meshs(t_env *env)
 			|| (code = mount_shaders(&env->model.program_skybox, env->shaders[SHADER_SB_VERTEX], env->shaders[SHADER_SB_FRAGMENT])) != ERR_NONE)
 		return (code);
 
+	// load the textures
+	if ((code = mount_textures(env)) != ERR_NONE
+			|| (code = mount_shadows(env)) != ERR_NONE)
+		return (code);
+
 	// ===================================================================
 
 	// last mesh is all time the skybox
@@ -77,7 +78,7 @@ unsigned char			init_meshs(t_env *env)
 	}
 	// SKYBOX
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells - 1);
-	if ((code = gl_buffers(env, mesh, true)) != ERR_NONE
+	if ((code = gl_buffers(mesh, true)) != ERR_NONE
 			|| (code = load_uniforms(env, false)) != ERR_NONE)
 		return (code);
 

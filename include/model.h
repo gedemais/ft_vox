@@ -79,8 +79,8 @@ typedef struct	s_uniform
 typedef struct	s_mesh
 {
 	t_dynarray	vertices;
-	// vertex array object, vertex buffer object, frame buffer object
-	GLuint		vao, vbo, fbo;
+	// vertex array object, vertex buffer object
+	GLuint		vao, vbo;
 	int			x_start, z_start;
 }				t_mesh;
 
@@ -95,8 +95,10 @@ typedef struct	s_model
 	t_dynarray	chunks_cache; // 2D dynarray of chunks
 	mat4		model, depthproj[LIGHT_SOURCE_MAX], depthview[LIGHT_SOURCE_MAX];
 	float		scale;
-	GLuint		gl_textures[TEXTURE_MAX + 1];	// gl's textures' id
+	GLuint		gl_textures[TEXTURE_MAX];		// gl's textures' id
 	GLuint		gl_tskybox;						// gl's texture for skybox
+	GLuint		depthmap;						// gl's texture for depthmap
+	GLuint		fbo;							// frame buffer object
 	t_texture	textures[TEXTURE_SB_MAX];		// textures' ptr
 }				t_model;
 

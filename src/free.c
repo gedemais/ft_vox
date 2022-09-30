@@ -38,8 +38,8 @@ static void	free_chunks(t_env *env)
 		m = dyacc(&env->model.meshs, i);
 		glDeleteBuffers(1, &m->vao);
 		glDeleteBuffers(1, &m->vbo);
-		glDeleteBuffers(1, &m->fbo);
 	}
+	glDeleteBuffers(1, &env->model.fbo);
 	dynarray_free(&env->model.meshs);
 }
 
