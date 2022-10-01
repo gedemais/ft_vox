@@ -135,8 +135,8 @@ unsigned char			display_loop(t_env *env)
 		// update data
 		update_data(env);
 		// render scene
-//			if ((code = update_world(env)) != ERR_NONE
-			if ((code = render_scene(env)) != ERR_NONE)
+			if ((code = update_world(env)) != ERR_NONE
+				|| (code = render_scene(env)) != ERR_NONE)
 				return (code);
 		// glfw: swap buffers and poll IO events
 		glfwSwapBuffers(env->window.ptr);

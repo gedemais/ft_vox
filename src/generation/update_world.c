@@ -203,8 +203,10 @@ static unsigned char	update_square(t_env *env, t_ms_params *params)
 
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
-			if ((code = fix_chunk_borders(env, x, z)) != ERR_NONE)
+			if ((code = fix_chunk_borders(env, x, z)) != ERR_NONE
+				|| (code = update_chunk_mesh(env, x, z)))
 				return (code);
+
 
 	for (unsigned int i = 0; i < SQUARE_SIZE; i++)
 	{

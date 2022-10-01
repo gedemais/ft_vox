@@ -37,6 +37,31 @@ static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 	return (ERR_NONE);
 }
 
+unsigned char	update_chunk_mesh(t_env *env, unsigned int x, unsigned int z)
+{
+	t_mesh		*m;
+	GLsizeiptr	size;
+
+	t_chunk	*chunk = &env->model.chunks[x][z];
+	for (int i = 0; i < env->model.meshs.nb_cells; i++)
+	{
+		m = dyacc(&env->model.meshs, i);
+		if (m->x_start == chunk->x_start && m->z_start == chunk->z_start)
+		{
+			m->vertices = chunk->stride;
+			break ;
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, m->vbo);
+	size = (GLsizeiptr)sizeof(t_stride) * m->vertices.nb_cells;
+	glBufferData(GL_ARRAY_BUFFER, size, m->vertices.arr, GL_STATIC_DRAW);
+	// Specifies the disposition of components in vertexs
+	set_layouts(false);
+	glBindVertexArray(0);
+	return (ERR_NONE);
+}
+
 unsigned char	init_mesh(t_env *env, t_mesh *mesh)
 {
 	unsigned char	code;
