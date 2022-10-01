@@ -63,12 +63,10 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 {
 	unsigned char	code;
 
-	srand(time(NULL));
 	env->window.fullscreen = false;
 
 	if ((argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
 		|| (code = init_biomes(env)) != ERR_NONE
-		|| (code = init_caches(env)) != ERR_NONE
 		|| (code = init_map(env)) != ERR_NONE)
 		return (code);
 

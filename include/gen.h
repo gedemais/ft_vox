@@ -6,7 +6,8 @@
 # define BIOME_SIZE			 2 // Size of individual biome matrix in chunks
 # define SQUARE_SIZE		 10 // Size of visible chunks matrix for the player (max_limit)
 # define SQUARE_TRIGGER_SIZE 2 // Size of visible chunks matrix for the player (max_limit)
-# define CACHE_SIZE			 32 // Size of chunks matrix available in the absolute world at startup
+# define NB_WORLEY_DOTS		 32
+# define WORLEY_THRESHOLD	 16
 
 enum	e_side_orientation
 {
@@ -51,6 +52,13 @@ enum e_topography_type
 	TP_MAX
 };
 
+typedef struct	s_3dpoint
+{
+	uint8_t		x;
+	uint8_t		y;
+	uint8_t		z;
+}				t_3dpoint;
+
 typedef struct	s_biome_params
 {
 	float		frequency; // Mean delta between each block
@@ -64,6 +72,7 @@ typedef struct	s_chunk
 	t_dynarray		stride;
 	uint8_t			**surface_hmap;
 	uint8_t			**sub_hmap;
+	uint8_t			***cave_map;
 	int				x_start, z_start;
 }				t_chunk;
 

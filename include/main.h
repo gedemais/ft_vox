@@ -184,6 +184,7 @@ unsigned char		fix_east_border(t_chunk *chunk, t_chunk *neighbour, bool surface)
 unsigned char		fix_south_border(t_chunk *chunk, t_chunk *neighbour, bool surface);
 unsigned char		push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water);
 unsigned char		generate_water(t_chunk *chunk);
+unsigned char		generate_cave_map(t_chunk *chunk, unsigned int size);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {

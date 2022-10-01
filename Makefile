@@ -43,10 +43,10 @@ SRC_NAME=main.c\
 	actions/events.c\
 	actions/live.c\
 	actions/toggles.c\
-	generation/caches.c\
 	generation/generation.c\
 	generation/height_map.c\
 	generation/noise.c\
+	generation/caves.c\
 	generation/vertexs.c\
 	generation/borders.c\
 	generation/update_world.c\
