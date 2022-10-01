@@ -43,7 +43,7 @@ unsigned char	update_chunk_mesh(t_env *env, unsigned int x, unsigned int z)
 	GLsizeiptr	size;
 
 	t_chunk	*chunk = &env->model.chunks[x][z];
-	for (int i = 0; i < env->model.meshs.nb_cells; i++)
+	for (int i = 0; i < env->model.meshs.nb_cells - 1; i++)
 	{
 		m = dyacc(&env->model.meshs, i);
 		if (m->x_start == chunk->x_start && m->z_start == chunk->z_start)
