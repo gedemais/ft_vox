@@ -1,13 +1,10 @@
 MANDATORY
 caves
 fix water (remove useless faces)
-fix killed
 OPTIONAL
-gestion des caches
 biomes (interpoler les parametres de generation avec une granularite plus faible, de l'ordre du bloc)
 TO FIX
-leaks textures
-leaks shaders
+player_light_intensity
 ombres
 #include ../../*
 rm const float block_size

@@ -8,7 +8,7 @@ near_plane = 0.1
 player_speed = 12.0
 mouse_sensitivity = 8.0
 player_light_intensity = 20.0
-sunlight_intensity = 600.0
+sunlight_intensity = 400.0
 
 exit = escape
 move_cam_up = r

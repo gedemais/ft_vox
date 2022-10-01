@@ -47,7 +47,6 @@ static unsigned char	init_map(t_env *env)
 			z_start = (env->model.square_z + z) * CHUNK_SIZE;
 			if ((code = gen_chunk(env, &env->model.chunks[x][z], x_start, z_start, true)))
 				return (code);
-			// water
 		}
 
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)

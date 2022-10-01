@@ -27,7 +27,7 @@ static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 	glGenBuffers(1, &mesh->vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
 	size = (GLsizeiptr)(skybox ? sizeof(vec3) : sizeof(t_stride));
-	glBufferData(GL_ARRAY_BUFFER, size * mesh->vertices.nb_cells, mesh->vertices.arr, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size * mesh->vertices.nb_cells, mesh->vertices.arr, GL_DYNAMIC_DRAW);
 	// Specifies the disposition of components in vertexs
 	set_layouts(skybox);
 	// load the textures this buffer will use
@@ -42,7 +42,7 @@ unsigned char	update_chunk_mesh(t_env *env, unsigned int x, unsigned int z)
 	t_mesh		*m;
 	GLsizeiptr	size;
 
-	t_chunk	*chunk = &env->model.chunks[x][z];
+	const t_chunk	*chunk = &env->model.chunks[x][z];
 	for (int i = 0; i < env->model.meshs.nb_cells - 1; i++)
 	{
 		m = dyacc(&env->model.meshs, i);
@@ -55,8 +55,7 @@ unsigned char	update_chunk_mesh(t_env *env, unsigned int x, unsigned int z)
 
 	glBindBuffer(GL_ARRAY_BUFFER, m->vbo);
 	size = (GLsizeiptr)sizeof(t_stride) * m->vertices.nb_cells;
-	glBufferData(GL_ARRAY_BUFFER, size, m->vertices.arr, GL_STATIC_DRAW);
-	// Specifies the disposition of components in vertexs
+	glBufferData(GL_ARRAY_BUFFER, size, m->vertices.arr, GL_DYNAMIC_DRAW);
 	set_layouts(false);
 	glBindVertexArray(0);
 	return (ERR_NONE);

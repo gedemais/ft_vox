@@ -105,25 +105,18 @@ static unsigned char move_square_on_z(t_env *env, t_ms_params *params)
 	bool			north = (trigger_id == TRIGGER_NORTH);
 	unsigned char	code;
 	t_mesh			mesh;
-	//t_chunk			*cached;
 	int				new_z;
 
 	new_z = north ? SQUARE_SIZE - 1 : 0;
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
 		if (north && !remove_chunk_mesh(env, &env->model.chunks[i][0], &params->olds))
-		{
-			//cache_chunk(env, &env->model.chunks[i][0]);
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[i][j] = env->model.chunks[i][j + 1];
-		}
 
 		else if (!remove_chunk_mesh(env, &env->model.chunks[i][SQUARE_SIZE - 1], &params->olds))
-		{
-			//cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
 			for (int j = SQUARE_SIZE - 1; j > 0; j--)
 				env->model.chunks[i][j] = env->model.chunks[i][j - 1];
-		}
 	}
 
 	env->model.square_z += north ? 1 : -1;
@@ -131,67 +124,40 @@ static unsigned char move_square_on_z(t_env *env, t_ms_params *params)
 	{
 		params->news[i] = &env->model.chunks[i][new_z];
 		memset(params->news[i], 0, sizeof(t_chunk));
-
-	//	cached = get_cached_chunk(env, env->model.square_x + i, env->model.square_z + new_z);
 		if (gen_chunk(env, params->news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true) != ERR_NONE)
 			return (ERR_MALLOC_FAILED);
-		/*else if (cached)
-		{
-			printf("cached found !\n");
-			memcpy(news[i], cached, sizeof(t_chunk));
-			if ((code = gen_chunk(env, news[i], news[i]->x_start, news[i]->z_start, true)))
-				return (code);
-		}*/
 	}
 	return (ERR_NONE);
 }
 
 static unsigned char	move_square_on_x(t_env *env, t_ms_params *params)
 {
-	unsigned char	code;
 	int				trigger_id = params->trigger_id;
 	bool			west = trigger_id == TRIGGER_WEST;
+	unsigned char	code;
 	t_mesh			mesh;
-	//t_chunk			*cached;
 	int				new_x;
 
 	new_x = west ? SQUARE_SIZE - 1 : 0;
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
 		if (west && !remove_chunk_mesh(env, &env->model.chunks[0][i], &params->olds))
-		{
-			//cache_chunk(env, &env->model.chunks[i][0]);
 			for (int j = 0; j < SQUARE_SIZE - 1; j++)
 				env->model.chunks[j][i] = env->model.chunks[j + 1][i];
-		}
 
 		else if (!remove_chunk_mesh(env, &env->model.chunks[SQUARE_SIZE - 1][i], &params->olds))
-		{
-			//cache_chunk(env, &env->model.chunks[i][SQUARE_SIZE - 1]);
 			for (int j = SQUARE_SIZE - 1; j > 0; j--)
 				env->model.chunks[j][i] = env->model.chunks[j - 1][i];
-		}
 	}
 
 	env->model.square_x += west ? 1 : -1;
-	//printf("add new chunks\n");
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
 		params->news[i] = &env->model.chunks[new_x][i];
 		memset(params->news[i], 0, sizeof(t_chunk));
-
-//		cached = get_cached_chunk(env, env->model.square_x + new_x, env->model.square_z + i);
 		if ((code = gen_chunk(env, params->news[i], (env->model.square_x + new_x) * CHUNK_SIZE, (env->model.square_z + i) * CHUNK_SIZE, true)) != ERR_NONE)
 			return (code);
-/*		else if (cached)
-		{
-			printf("cached found !\n");
-			memcpy(news[i], cached, sizeof(t_chunk));
-			if ((code = gen_chunk(env, news[i], news[i]->x_start, news[i]->z_start, true)))
-				return (code);
-		}*/
 	}
-
 	return (ERR_NONE);
 }
 
@@ -202,17 +168,21 @@ static unsigned char	update_square(t_env *env, t_ms_params *params)
 	unsigned char	code;
 
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
+	{
+		// Water generation
+		if ((code = generate_water(params->news[x])) != ERR_NONE)
+			return (code);
+
+		// Borders fix
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
 			if ((code = fix_chunk_borders(env, x, z)) != ERR_NONE
 				|| (code = update_chunk_mesh(env, x, z)))
 				return (code);
-
+	}
 
 	for (unsigned int i = 0; i < SQUARE_SIZE; i++)
 	{
 		// Water generation
-		if ((code = generate_water(params->news[i])) != ERR_NONE)
-			return (code);
 
 		// Initialization of the newly created mesh
 		ft_memset(&mesh, 0, sizeof(t_mesh));
@@ -241,15 +211,6 @@ static void	*move_square(void *params)
 
 	env = ((t_ms_params*)params)->env;
 	trigger_id = ((t_ms_params*)params)->trigger_id;
-
-	char		*strs[TRIGGER_MAX] = {
-		"north",
-		"south",
-		"west",
-		"east"};
-
-	//printf("%d meshs\n", env->model.meshs.nb_cells);
-	//printf("square_x : %d square_y : %d\n", env->model.square_x, env->model.square_z);
 
 	if (trigger_id == TRIGGER_NORTH || trigger_id == TRIGGER_SOUTH)
 		move_square_on_z(env, params);
@@ -290,7 +251,6 @@ unsigned char			update_world(t_env *env)
 	static t_ms_params	params;
 	static pthread_t	thread_id = (pthread_t)0;
 	int					trigger_id = 0;
-	unsigned char		code;
 
 
 	if (thread_id == (pthread_t)1)
@@ -302,18 +262,15 @@ unsigned char			update_world(t_env *env)
 
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int z = 0; z < SQUARE_SIZE; z++)
-		{
 			if (check_player_presence(env->camera.pos, env->model.chunks[x][z])
 				&& check_trigger(x, z, &trigger_id))
+				if (thread_id == (pthread_t)0)
 				{
-					if (thread_id == (pthread_t)0)
-					{
-						params = (t_ms_params){env, trigger_id, &thread_id, {}, {}};
-						pthread_create(&thread_id, NULL, &move_square, &params);
-						pthread_detach(thread_id);
-						return (ERR_NONE);
-					}
+					params = (t_ms_params){env, trigger_id, &thread_id, {}, {}};
+					pthread_create(&thread_id, NULL, &move_square, &params);
+					pthread_detach(thread_id);
+					return (ERR_NONE);
 				}
-		}
+
 	return (ERR_NONE);
 }

@@ -180,8 +180,8 @@ unsigned char		update_chunk_mesh(t_env *env, unsigned int x, unsigned int z);
 void				print_square(t_env *env);
 unsigned char		init_mesh(t_env *env, t_mesh *m);
 unsigned char		fix_chunk_borders(t_env *env, int x, int y);
-unsigned char		fix_east_border(t_chunk *chunk, t_chunk *neighbour);
-unsigned char		fix_south_border(t_chunk *chunk, t_chunk *neighbour);
+unsigned char		fix_east_border(t_chunk *chunk, t_chunk *neighbour, bool surface);
+unsigned char		fix_south_border(t_chunk *chunk, t_chunk *neighbour, bool surface);
 unsigned char		push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water);
 unsigned char		generate_water(t_chunk *chunk);
 
