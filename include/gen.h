@@ -34,7 +34,7 @@ enum	e_bloc_type_bounds
 {
 	BTB_CAVE = 56,
 	BTB_BEACH = 64,
-	BTB_SOIL = 72,
+	BTB_SOIL = 68,
 	BTB_PLAIN = 80,
 	BTB_MOUTAIN = 92,
 	BTB_HIGH_MOUTAINS = 128,

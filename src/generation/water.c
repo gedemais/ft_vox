@@ -1,10 +1,11 @@
 # include "main.h"
 
-const uint8_t	half = (BTB_BEACH - BTB_CAVE) / 2;
+const uint8_t	third = (BTB_BEACH - BTB_CAVE) / 3;
+const uint8_t	water_level = BTB_BEACH - third;
 
 static bool		is_water(uint8_t y)
 {
-	return (y < BTB_BEACH);
+	return (y < water_level);
 }
 
 static unsigned char	pour_water(t_chunk *chunk, unsigned int x, unsigned int y, unsigned int z)
@@ -43,7 +44,7 @@ unsigned char			generate_water(t_chunk *chunk)
 		for (unsigned int z = 0; z < CHUNK_SIZE; z++)
 		{
 			y = chunk->surface_hmap[x][z];
-			if (is_water(y) && (code = pour_water(chunk, chunk->x_start + x, BTB_BEACH - half - 1, chunk->z_start + z)))
+			if (is_water(y) && (code = pour_water(chunk, chunk->x_start + x, water_level - 1, chunk->z_start + z)))
 				return (code);
 		}
 	return (ERR_NONE);
