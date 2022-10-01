@@ -48,9 +48,9 @@ unsigned char			init(t_env *env, int argc, char **argv)
 
 	srand(time(NULL));
 
-	t_chunk	new;
-	generate_cave_map(&new, CHUNK_SIZE);
-	exit(0);
+//	t_chunk	new;
+//	generate_cave_map(&new, CHUNK_SIZE);
+//	exit(0);
 
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
 		|| (code = load_textures(env)) != ERR_NONE

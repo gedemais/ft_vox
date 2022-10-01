@@ -55,7 +55,7 @@ static unsigned char	init_map(t_env *env)
 				|| (code = generate_water(&env->model.chunks[x][z])))
 				return (code);
 
-	printf("%zu bytes per chunk | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
+	printf("%zu bytes per vertex | %.2f Mo on heap\n", sizeof(t_stride), *stride_bytesize() / 1000000.0f);
 	return (ERR_NONE);
 }
 
