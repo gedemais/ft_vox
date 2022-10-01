@@ -65,10 +65,11 @@ unsigned char			light_uniforms(t_env *env)
 
 // ====================================================================
 
-static void				init_player(t_light_source *source)
+static void				init_player(t_env *env, t_light_source *source)
 {
-	source->pos			= (vec3){};
-	source->dir			= (vec3){ 1, 1, 1 };
+	source->pos			= env->camera.pos;
+	source->dir			= env->camera.zaxis;
+	// ----------------------------------
 	source->color		= (vec3){ 0.33f, 0.33f, 0.33f };
 	source->ambient		= (vec3){ 0.25f, 0.25f, 0.25f };
 	source->diffuse		= (vec3){ 0.5f, 0.5f, 0.5f };
@@ -83,8 +84,10 @@ static void				init_sun(t_env *env, t_light_source *source)
 	source->pos			= (vec3){ 0.85f, 0, -1 };
 	source->pos			= (vec3){ source->pos.x * e, 16, source->pos.z * e };
 	source->base_pos	= source->pos;
-	source->dir			= vec_normalize(env->camera.pos);
+	source->dir			= (vec3){ -source->pos.x, -source->pos.y, -source->pos.z };
+	source->dir			= vec_sub(env->camera.pos, source->dir);
 	source->base_dir	= source->dir;
+	// ----------------------------------
 	source->color		= (vec3){ 1, 1, 1 };
 	source->ambient		= (vec3){ 0.66f, 0.66f, 0.66f };
 	source->diffuse		= (vec3){ 0.66f, 0.66f, 0.66f };
@@ -98,6 +101,6 @@ void					light(t_env *env)
 	light = &env->light;
 	light->is_active = false;
 	light->shadow = false;
-	init_player(&light->sources[LIGHT_SOURCE_PLAYER]);
+	init_player(env, &light->sources[LIGHT_SOURCE_PLAYER]);
 	init_sun(env, &light->sources[LIGHT_SOURCE_SUN]);
 }

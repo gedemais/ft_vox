@@ -7,20 +7,30 @@ static void				light_and_shadows_uniforms(t_env *env, mat4 m)
 
 	// LIGHT PLAYER
 	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_PLAYER][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].pos);
-	// SUNLIGHT
 	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_PLAYER][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_PLAYER].dir);
-	// sunlight follow the sun's texture
+	// SUNLIGHT
+	// sunlight follow the sun's texture :: ze make it rotate like the skybox
 	env->light.sources[LIGHT_SOURCE_SUN].pos = mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].base_pos);
 	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_SUN][LIGHT_POSITION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_SUN].pos);
-	env->light.sources[LIGHT_SOURCE_SUN].dir = vec_normalize(mat4_x_vec3(m, env->light.sources[LIGHT_SOURCE_SUN].base_dir));
+	// we update sunlight dir after sunlight pos
+	env->light.sources[LIGHT_SOURCE_SUN].dir = vec_add(env->camera.pos, env->light.sources[LIGHT_SOURCE_SUN].pos);
 	glUniform3fv(env->model.uniforms.light[LIGHT_SOURCE_SUN][LIGHT_DIRECTION], 1, (GLfloat *)&env->light.sources[LIGHT_SOURCE_SUN].dir);
 	// SHADOWS :: update depth matrices
 	glUniformMatrix4fv(env->model.uniforms.depth_view, 1, GL_FALSE, env->model.depthview[SHADOW_TARGET]);
 	glUniformMatrix4fv(env->model.uniforms.depth_projection, 1, GL_FALSE, env->model.depthproj[SHADOW_TARGET]);
 }
 
-static void				update_uniforms(t_env *env, bool skybox, mat4 m)
+static void				update_uniforms(t_env *env, bool skybox)
 {
+	mat4	m;
+
+	// rotation and translation around player (for sunlight and skybox for exemple)
+	mat4_identity(m);
+	mat4_yrotation(m, (env->fps.current_seconds * SB_ROT_SPEED) / 100.0f);
+	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
+
+	// ----------------------------------
+
 	GLuint	program = skybox ? env->model.program_skybox : env->model.program;
 
 	// use shader program before set the uniforms
@@ -42,16 +52,21 @@ static void				update_uniforms(t_env *env, bool skybox, mat4 m)
 	glUniformMatrix4fv(env->model.uniforms.projection, 1, GL_FALSE, env->camera.projection);
 }
 
-void					set_uniforms(t_env *env, bool skybox)
+void					set_uniforms(t_env *env, char type)
 {
-	mat4	m;
-
-	// rotation and translation around player (for sunlight and skybox for exemple)
-	mat4_identity(m);
-	mat4_yrotation(m, (env->fps.current_seconds * SB_ROT_SPEED) / 100.0f);
-	mat4_translate(m, env->camera.pos.x, env->camera.pos.y, env->camera.pos.z);
-
-	update_uniforms(env, skybox, m);
+	switch (type) {
+		case (0): // depth
+			glUseProgram(env->model.program_depth);
+			glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "view"), 1, GL_FALSE, env->model.depthview[SHADOW_TARGET]);
+			glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "projection"), 1, GL_FALSE, env->model.depthproj[SHADOW_TARGET]);
+			break ;
+		case (1): // model
+			update_uniforms(env, false);
+			break ;
+		case (2): // skybox
+			update_uniforms(env, true);
+			break ;
+	}
 }
 
 // =======================================================================

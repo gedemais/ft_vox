@@ -63,7 +63,7 @@ static void				cb_framebuffer_size(GLFWwindow *window, int width, int height)
 {
 	(void)window;
 
-	glViewport(0, 0, width, height);
+	reset_viewport(width, height);
 
 	g_env->settings.w_wdt = (uint16_t)width;
 	g_env->settings.w_hgt = (uint16_t)height;
@@ -71,6 +71,7 @@ static void				cb_framebuffer_size(GLFWwindow *window, int width, int height)
 	g_env->window.w = width;
 	g_env->window.h = height;
 	g_env->camera.ratio = (float)width / (float)height;
+
 }
 
 static float			clamp(float min, float max, float val)

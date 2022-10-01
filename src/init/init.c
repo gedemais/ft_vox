@@ -25,7 +25,6 @@ static void				gl_options(void)
 {
 	// DEPTH BUFFER
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
 
 	// CULLING
 	glEnable(GL_CULL_FACE);
@@ -46,6 +45,8 @@ static void				gl_options(void)
 unsigned char			init(t_env *env, int argc, char **argv)
 {
 	unsigned char code;
+
+	env->window.fullscreen = true;
 
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
 		|| (code = load_textures(env)) != ERR_NONE

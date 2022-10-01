@@ -9,6 +9,8 @@
 # define MODEL_SCALE	1
 # define SB_ROT_SPEED	100 // sun's rotation speed
 # define SHADOW_TARGET	0 // 0 :: player, 1 :: sun
+# define DEPTHMAP_W		1024
+# define DEPTHMAP_H		1024
 
 enum			e_texture
 {
@@ -71,7 +73,7 @@ typedef struct	s_texture
 typedef struct	s_uniform
 {
 	GLint	time, campos;
-	GLint	textures[TEXTURE_MAX + 1], skybox;
+	GLint	textures[TEXTURE_MAX], skybox, depthmap;
 	GLint	light_active, shadow, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
 	GLint	model, view, projection;
 	GLint	depth_view, depth_projection;

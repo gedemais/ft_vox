@@ -131,7 +131,7 @@ unsigned char		mount_textures(t_env *env);
 unsigned char		mount_shadows(t_env *env);
 unsigned char		load_shaders(t_env *env);
 unsigned char		mount_shaders(GLuint *program, t_shaders vertex, t_shaders fragment);
-void				set_uniforms(t_env *env, bool skybox);
+void				set_uniforms(t_env *env, char type);
 unsigned char		load_uniforms(t_env *env, bool skybox);
 
 // OpenGL
@@ -208,8 +208,8 @@ static const char	*settings_keys[SET_MAX] = {
 };
 
 // UTILS
-// fps
 void				fps(t_fps *fps, bool print);
+void				reset_viewport(unsigned int width, unsigned int height);
 
 
 #endif

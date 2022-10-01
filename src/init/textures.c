@@ -21,12 +21,15 @@ unsigned char			textures_uniforms(t_env *env)
 	int				i;
 
 	i = -1;
-	while (++i < TEXTURE_MAX + 1) {
+	while (++i < TEXTURE_MAX) {
 		// get uniforms
 		if ((code = get_textures_uniforms(env, i)) != ERR_NONE)
 			return (code);
 		glUniform1i(env->model.uniforms.textures[i], i);
 	}
+	// depthmap
+	env->model.uniforms.depthmap = glGetUniformLocation(env->model.program, "depthmap");
+	glUniform1i(env->model.uniforms.depthmap, TEXTURE_MAX);
 	return (ERR_NONE);
 }
 
@@ -40,7 +43,7 @@ static void		load_depthmap(t_env *env)
 	glBindTexture(GL_TEXTURE_2D, env->model.depthmap);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-		env->window.w, env->window.h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		DEPTHMAP_W, DEPTHMAP_W, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -49,7 +52,6 @@ static void		load_depthmap(t_env *env)
 
 	float	border_color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
-
 }
 
 static void			load_model(t_env *env)

@@ -38,8 +38,9 @@ unsigned char	init_mesh(t_env *env, t_mesh *mesh)
 {
 	unsigned char	code;
 
-	if ((code = gl_buffers(mesh, false)) != ERR_NONE
-			|| (code = load_uniforms(env, false)) != ERR_NONE)
+	(void)env;
+
+	if ((code = gl_buffers(mesh, false)) != ERR_NONE)
 		return (code);
 
 	return (ERR_NONE);
@@ -47,7 +48,7 @@ unsigned char	init_mesh(t_env *env, t_mesh *mesh)
 
 /*
 	we set one shader program for model, skybox and depth
-	=> all mesh got their own buffers :: vao, vbo, fbo
+	=> all mesh got their own buffers :: vao, vbo
 */
 unsigned char			init_meshs(t_env *env)
 {
@@ -61,15 +62,15 @@ unsigned char			init_meshs(t_env *env)
 			|| (code = mount_shaders(&env->model.program_skybox, env->shaders[SHADER_SB_VERTEX], env->shaders[SHADER_SB_FRAGMENT])) != ERR_NONE)
 		return (code);
 
-	// load the textures
+	// load textures and shadows :: fbo for shadows
 	if ((code = mount_textures(env)) != ERR_NONE
-			|| (code = mount_shadows(env)) != ERR_NONE)
+			|| (code = mount_shadows(env)) != ERR_NONE
+			|| (code = load_uniforms(env, false)) != ERR_NONE)
 		return (code);
 
 	// ===================================================================
 
 	// last mesh is all time the skybox
-	// setting the uniforms for each shaders' programs
 	// MODEL
 	i = -1;
 	while (++i < env->model.meshs.nb_cells - 1) {
@@ -79,7 +80,7 @@ unsigned char			init_meshs(t_env *env)
 	// SKYBOX
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells - 1);
 	if ((code = gl_buffers(mesh, true)) != ERR_NONE
-			|| (code = load_uniforms(env, false)) != ERR_NONE)
+			|| (code = load_uniforms(env, true)) != ERR_NONE)
 		return (code);
 
 	return (ERR_NONE);

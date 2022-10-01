@@ -33,22 +33,52 @@ uniform sampler2D		vTexture_4;
 uniform sampler2D		vTexture_5;
 uniform sampler2D		vTexture_6;
 uniform sampler2D		vTexture_7;
-uniform sampler2D		vTexture_8;
+
+uniform sampler2D		depthmap;
 
 out vec4				FragColor;
 
+// float	linearize_depth(float depth)
+// {
+// 	float	z;
+
+// 	const float	near_plane	= 0.1f;
+// 	const float	far_plane	= 50.0f;
+
+// 	z	= depth * 2.0f - 1.0f; // Back to NDC
+// 	z	= (2.0f * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));
+//     return (z / far_plane);
+// }
+
+float	percentage_closer_filtering(vec3 coords, float bias)
+{
+	float	depth, shadow;
+	vec2	texel;
+
+	texel	= 1.0f / textureSize(depthmap, 0);
+	for (int x = -1; x <= 1; ++x) {
+		for (int y = -1; y <= 1; ++y) {
+			depth	= texture(depthmap, coords.xy + vec2(x, y) * texel).r;
+			// depth	= linearize_depth(depth);
+			shadow	+= depth + bias > coords.z ? 1.0f : 0.0f;        
+		}    
+	}
+	shadow /= 10.0f;
+	return (shadow);
+}
+
 float	compute_shadows(vec3 light_dir)
 {
-	float	depth, bias;
+	float	bias;
 	vec3	coords;
 
 	coords	= vShadCoord.xyz / vShadCoord.w;
 	coords	= coords * 0.5f + 0.5f;
-	// if (coords.z > 1.0f)
-	// 	coords.z = 1.0f;
-	depth	= textureProj(vTexture_8, coords).x;
-	bias	= max(0.005f * dot(vNormal, light_dir), 0.0005f);
-	return (depth + bias > coords.z ? 1.0f : 0.25f);
+	if (coords.z > 1.0f)
+		coords.z = 0.0f;
+	bias	= max(0.001f * (1.0f - dot(vNormal, light_dir)), 0.0001f);
+	// PCF EFFECT
+	return (percentage_closer_filtering(coords, bias));
 }
 
 vec4	compute_light_sources(LightSources source, vec3 color, vec3 view_dir)

@@ -1,74 +1,78 @@
 #include "../include/main.h"
 
 
- void				set_gl_options(bool skybox)
+static void				render_mesh(t_mesh *mesh);
+
+// ====================================================================
+
+static void				update_options(t_env *env, char type)
 {
-	if (skybox) {
-		// hide front faces
-		glCullFace(GL_FRONT);
-		// Passes if the incoming depth value is less than or equal to the stored depth value.
-    	glDepthFunc(GL_LEQUAL);
-	} else {
-		// hide back faces
-		glCullFace(GL_BACK);
-		// Passes if the incoming depth value is less than the stored depth value.
-		glDepthFunc(GL_LESS);
+	switch (type) {
+		case (0): // depth
+			reset_viewport(DEPTHMAP_W, DEPTHMAP_H);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			glCullFace(GL_FRONT);
+			// Passes if the incoming depth value is less than the stored depth value.
+			glDepthFunc(GL_LESS);
+			// update uniforms
+			set_uniforms(env, 0);
+			break;
+		case (1): // model
+			reset_viewport(env->window.w, env->window.h);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glCullFace(GL_BACK);
+			// Passes if the incoming depth value is less than the stored depth value.
+			glDepthFunc(GL_LESS);
+			// update uniforms
+			set_uniforms(env, 1);
+			break;
+		case (2): // skybox
+			glCullFace(GL_FRONT);
+			// Passes if the incoming depth value is less than or equal to the stored depth value.
+			glDepthFunc(GL_LEQUAL);
+			// update uniforms
+			set_uniforms(env, 2);
+			break;
 	}
 }
 
 // ====================================================================
 
-static void				render_mesh(t_mesh *mesh)
+static void				pass_depth(t_env *env)
 {
-	glBindVertexArray(mesh->vao);
-	glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
-	glBindVertexArray(0);
-}
-
-static void				render_depth(t_env *env, t_mesh *mesh)
-{
-	glCullFace(GL_FRONT);
-	// use program before set uniforms
-	glUseProgram(env->model.program_depth);
-	// update depth matrices
-	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "view"), 1, GL_FALSE, env->model.depthview[SHADOW_TARGET]);
-	glUniformMatrix4fv(glGetUniformLocation(env->model.program_depth, "projection"), 1, GL_FALSE, env->model.depthproj[SHADOW_TARGET]);
+	int		i;
+	t_mesh	*mesh;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, env->model.fbo);
-	glClear(GL_DEPTH_BUFFER_BIT);
 
-	render_mesh(mesh);
+	update_options(env, 0);
+	i = -1;
+	while (++i < env->model.meshs.nb_cells - 1) {
+		mesh = dyacc(&env->model.meshs, i);
+		render_mesh(mesh);
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-static unsigned char	render_scene(t_env *env)
+static void				pass_scene(t_env *env)
 {
-	t_mesh		*mesh;
-	int			i, e = 1;
-	bool		skybox;
+	int		i;
+	bool	skybox;
+	t_mesh	*mesh;
 
-#ifdef __APPLE__
-	e = 2;
-#endif
-
-	// reset viewport
-	glViewport(0, 0, env->window.w * e, env->window.h * e);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	update_options(env, 1);
 	i = -1;
-	while (++i < env->model.meshs.nb_cells) {
+	while (++i < env->model.meshs.nb_cells - 1) {
 		mesh = dyacc(&env->model.meshs, i);
-		skybox = i == env->model.meshs.nb_cells - 1;
-		// first  - render depth
-		if (skybox == false  && env->light.shadow == true)
-			render_depth(env, mesh);
-		// second - render mesh
-		set_gl_options(skybox);
-		// update all the uniforms
-		set_uniforms(env, skybox);
 		render_mesh(mesh);
 	}
-	return (ERR_NONE);
+}
+
+static inline void		pass_skybox(t_env *env)
+{
+	update_options(env, 2);
+	render_mesh(dyacc(&env->model.meshs, env->model.meshs.nb_cells - 1));
 }
 
 // ====================================================================
@@ -116,8 +120,38 @@ static void				update_data(t_env *env)
 		light_dir = (vec3){ -light_dir.x, -light_dir.y, -light_dir.z };
 		mat4_lookat(env->model.depthview[i], light_pos, vec_sub(light_pos, light_dir), (vec3){ 0, 1, 0 });
 		mat4_inverse(env->model.depthview[i]);
-		mat4_projection(env->model.depthproj[i], 90.0f, env->camera.near, 50.0f, env->camera.ratio);
+		mat4_projection(env->model.depthproj[i],
+			SHADOW_TARGET == 0 ? 90.0f : 180.0f,
+			env->camera.near,
+			SHADOW_TARGET == 0 ? CHUNK_SIZE / 2.0f : env->camera.far * env->camera.far,
+			env->camera.ratio);
 	}
+}
+
+// ====================================================================
+
+static void				render_mesh(t_mesh *mesh)
+{
+	glBindVertexArray(mesh->vao);
+	glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.nb_cells);
+	glBindVertexArray(0);
+}
+
+static unsigned char	render_scene(t_env *env)
+{
+	unsigned char	code;
+
+	if ((code = update_world(env)) != ERR_NONE)
+		return (code);
+	// update data
+	update_data(env);
+	// first  - render depth
+	pass_depth(env);
+	// second - render scene
+	pass_scene(env);
+	// third  - render skybox
+	pass_skybox(env);
+	return (ERR_NONE);
 }
 
 // ====================================================================
@@ -131,11 +165,8 @@ unsigned char			display_loop(t_env *env)
 	{
 		// handle inputs
 		processInput(env->window.ptr);
-		// update data
-		update_data(env);
 		// render scene
-		if ((code = update_world(env)) != ERR_NONE
-			|| (code = render_scene(env)) != ERR_NONE)
+		if ((code = render_scene(env)) != ERR_NONE)
 			return (code);
 		// glfw: swap buffers and poll IO events
 		glfwSwapBuffers(env->window.ptr);
