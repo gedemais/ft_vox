@@ -219,6 +219,8 @@ unsigned char			update_world(t_env *env)
 	{
 		update_square(env, &params);
 		thread_id = (pthread_t)0;
+		printf("thread stopped\n");
+		fflush(stdout);
 		return (ERR_NONE);
 	}
 
@@ -228,6 +230,8 @@ unsigned char			update_world(t_env *env)
 				&& check_trigger(x, z, &trigger_id))
 				if (thread_id == (pthread_t)0)
 				{
+					printf("thread launch\n");
+					fflush(stdout);
 					params = (t_ms_params){env, trigger_id, &thread_id, {}, {}};
 					pthread_create(&thread_id, NULL, &move_square, &params);
 					pthread_detach(thread_id);
