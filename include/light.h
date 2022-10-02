@@ -14,7 +14,7 @@ enum			e_light_sources
 enum			e_shadows_sources
 {
 	SHADOW_SOURCE_PLAYER,
-	// SHADOW_SOURCE_SUN,
+	SHADOW_SOURCE_SUN,
 	SHADOW_SOURCE_MAX
 };
 

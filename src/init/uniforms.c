@@ -18,10 +18,10 @@ static void				light_and_shadows_uniforms(t_env *env, mat4 m)
 	if (env->light.shadow == true) {
 		// SHADOWS :: update depth matrices
 		// we set a proj and view matrix for each lightsource (not scalable yet)
-		glUniformMatrix4fv(glGetUniformLocation(env->model.program, "depth_viewP"), 1, GL_FALSE, env->model.depthview[0]);
-		glUniformMatrix4fv(glGetUniformLocation(env->model.program, "depth_projectionP"), 1, GL_FALSE, env->model.depthproj[0]);
-		glUniformMatrix4fv(glGetUniformLocation(env->model.program, "depth_viewS"), 1, GL_FALSE, env->model.depthview[1]);
-		glUniformMatrix4fv(glGetUniformLocation(env->model.program, "depth_projectionS"), 1, GL_FALSE, env->model.depthproj[1]);
+		glUniformMatrix4fv(glGetUniformLocation(env->model.program, "dvp"), 1, GL_FALSE, env->model.depthview[0]);
+		glUniformMatrix4fv(glGetUniformLocation(env->model.program, "dpp"), 1, GL_FALSE, env->model.depthproj[0]);
+		glUniformMatrix4fv(glGetUniformLocation(env->model.program, "dvs"), 1, GL_FALSE, env->model.depthview[1]);
+		glUniformMatrix4fv(glGetUniformLocation(env->model.program, "dps"), 1, GL_FALSE, env->model.depthproj[1]);
 	}
 }
 
