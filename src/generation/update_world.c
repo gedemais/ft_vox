@@ -9,6 +9,15 @@ enum	e_trigger_ids
 	TRIGGER_MAX
 };
 
+typedef struct	s_ms_params
+{
+	t_env		*env;
+	int			trigger_id;
+	pthread_t	*thread_id;
+	t_chunk		*news[SQUARE_SIZE];
+	t_dynarray	olds;
+}				t_ms_params;
+
 void				print_square(t_env *env)
 {
 	for (int x = 0; x < SQUARE_SIZE; x++)
@@ -26,14 +35,8 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 	t_mesh	*m;
 
 	dynarray_free(&chunk->stride);
-
-	for (unsigned int i = 0; i < CHUNK_SIZE; i++)
-	{
-		free(chunk->surface_hmap[i]); // To remove if cache system comes back
-		free(chunk->sub_hmap[i]);
-	}
-	free(chunk->surface_hmap); // To remove if cache system comes back
-	free(chunk->sub_hmap);
+	free_hmap(chunk->surface_hmap);
+	free_cave_map(chunk->cave_map);
 
 	for (int i = 0; i < env->model.meshs.nb_cells; i++)
 	{
@@ -57,47 +60,6 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 
 	return (ERR_NONE);
 }
-/*
-static t_chunk			*get_cached_chunk(t_env *env, int x, int z)
-{
-	t_chunk		*chunk;
-	int			x_chunk, z_chunk;
-
-	x_chunk = (env->model.square_x + x) / 2;
-	z_chunk = (env->model.square_z + z) / 2;
-	//printf("looking for %d %d\n", x_chunk, z_chunk);
-	if (!(chunk = dyacc(dyacc(&env->model.chunks_cache, x_chunk), z_chunk))
-		|| !chunk->surface_hmap || !chunk->sub_hmap)
-		return (NULL);
-
-	return (chunk);
-}
-
-static void	cache_chunk(t_env *env, t_chunk *chunk)
-{
-	t_chunk			*cached;
-	int				x, z;
-
-	x = chunk->x_start / CHUNK_SIZE;
-	z = chunk->z_start / CHUNK_SIZE;
-
-	//printf("%d %d cached\n", x, z);
-	cached = dyacc(dyacc(&env->model.chunks_cache, x), z);
-
-	cached->surface_hmap = chunk->surface_hmap;
-	cached->sub_hmap = chunk->sub_hmap;
-	cached->x_start = chunk->x_start;
-	cached->z_start = chunk->z_start;
-}*/
-
-typedef struct	s_ms_params
-{
-	t_env		*env;
-	int			trigger_id;
-	pthread_t	*thread_id;
-	t_chunk		*news[SQUARE_SIZE];
-	t_dynarray	olds;
-}				t_ms_params;
 
 static unsigned char move_square_on_z(t_env *env, t_ms_params *params)
 {

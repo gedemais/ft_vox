@@ -39,7 +39,7 @@ static unsigned char	gl_buffers(t_env *env, t_mesh *mesh, bool skybox)
 
 unsigned char	update_chunk_mesh(t_env *env, unsigned int x, unsigned int z)
 {
-	t_mesh		*m;
+	t_mesh		*m = NULL;
 	GLsizeiptr	size;
 
 	const t_chunk	*chunk = &env->model.chunks[x][z];
@@ -52,6 +52,9 @@ unsigned char	update_chunk_mesh(t_env *env, unsigned int x, unsigned int z)
 			break ;
 		}
 	}
+
+	if (!m)
+		return (ERR_NONE);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m->vbo);
 	size = (GLsizeiptr)sizeof(t_stride) * m->vertices.nb_cells;

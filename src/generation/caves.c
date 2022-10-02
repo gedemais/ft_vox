@@ -1,4 +1,6 @@
 #include "main.h"
+#include "immintrin.h"
+
 static	uint8_t	***allocate_cave_map(unsigned int size)
 {
 	uint8_t	***new;
@@ -42,38 +44,40 @@ static float	dist(t_3dpoint a, t_3dpoint b)
 	return (sqrtf((dx * dx) + (dy * dy) + (dz * dz)));
 }
 
-static float	get_lowest(float distances[NB_WORLEY_DOTS])
+static float	get_lowest(float distances[NB_WORLEY_DOTS], float *offset, int *index)
 {
 	float	lowest = INFINITY;
 
 	for (int i = 0; i < NB_WORLEY_DOTS; i++)
 		if (lowest > distances[i])
+		{
+			*offset = lowest - distances[i];
 			lowest = distances[i];
+			*index = i;
+		}
 
 	return (lowest);
 }
 
 static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], float distances[NB_WORLEY_DOTS], t_3dpoint current, uint8_t *res)
 {
-	float d;
+	static float	offset = 0;
+	static int		index = 0;
+	float			d;
 
-	for (unsigned int i = 0; i < NB_WORLEY_DOTS; i++)
-		distances[i] = dist(current, points[i]);
+	if (offset > 8)
+		distances[index] = dist(current, points[index]);
+	else
+		for (unsigned int i = 0; i < NB_WORLEY_DOTS; i++)
+			distances[i] = dist(current, points[i]);
 
-	d = get_lowest(distances);
+	d = get_lowest(distances, &offset, &index);
+
 
 	if (d > WORLEY_THRESHOLD)
 		*res = BT_STONE;
 
 	return (ERR_NONE);
-}
-
-static bool				is_point(t_3dpoint points[NB_WORLEY_DOTS], unsigned int x, unsigned int y, unsigned int z)
-{
-	for (unsigned int i = 0; i < NB_WORLEY_DOTS; i++)
-		if (x == points[i].x && y == points[i].y && z == points[i].z)
-			return (true);
-	return (false);
 }
 
 unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
@@ -92,14 +96,13 @@ unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
 				if ((code = worley_noise(points, distances, (t_3dpoint){x, y, z}, &chunk->cave_map[x][y][z])))
 					return (code);
 
+	/*
 	for (unsigned int x = 0; x < size; x++)
 	{
 		for (unsigned int y = 0; y < size; y++)
 		{
 			for (unsigned int z = 0; z < size; z++)
-				if (is_point(points, x, y, z))
-					printf("x ");
-				else if (chunk->cave_map[x][y][z] == 0)
+				if (chunk->cave_map[x][y][z] == 0)
 					printf(". ");
 				else
 					printf("0 ");
@@ -109,7 +112,7 @@ unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
 		printf("\n");
 	}
 
-	fflush(stdout);
+	fflush(stdout);*/
 
 	return (ERR_NONE);
 }

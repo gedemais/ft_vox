@@ -1,11 +1,11 @@
 #include "main.h"
 
-unsigned char	fix_east_border(t_chunk *chunk, t_chunk *neighbour, bool surface)
+unsigned char	fix_east_border(t_chunk *chunk, t_chunk *neighbour)
 {
 	vec3	a, b;
 	int		delta;
-	uint8_t	**chunk_hmap = surface ? chunk->surface_hmap : chunk->sub_hmap;
-	uint8_t	**neighbour_hmap = surface ? neighbour->surface_hmap : neighbour->sub_hmap;
+	uint8_t	**chunk_hmap = chunk->surface_hmap;
+	uint8_t	**neighbour_hmap = neighbour->surface_hmap;
 
 	for (int z = 0; z < CHUNK_SIZE; z++)
 	{
@@ -29,12 +29,12 @@ unsigned char	fix_east_border(t_chunk *chunk, t_chunk *neighbour, bool surface)
 	return (ERR_NONE);
 }
 
-unsigned char	fix_south_border(t_chunk *chunk, t_chunk *neighbour, bool surface)
+unsigned char	fix_south_border(t_chunk *chunk, t_chunk *neighbour)
 {
 	vec3 a, b;
 	int	delta;
-	uint8_t	**chunk_hmap = surface ? chunk->surface_hmap : chunk->sub_hmap;
-	uint8_t	**neighbour_hmap = surface ? neighbour->surface_hmap : neighbour->sub_hmap;
+	uint8_t	**chunk_hmap = chunk->surface_hmap;
+	uint8_t	**neighbour_hmap = neighbour->surface_hmap;
 
 	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
@@ -69,16 +69,14 @@ unsigned char	fix_chunk_borders(t_env *env, int x, int z)
 	if (x + 1 < SQUARE_SIZE)
 	{
 		neighbour = &env->model.chunks[x + 1][z];
-		if ((code = fix_east_border(chunk, neighbour, true))
-			|| (code = fix_east_border(chunk, neighbour, false)))
+		if ((code = fix_east_border(chunk, neighbour)))
 			return (code);
 	}
 
 	if (z + 1 < SQUARE_SIZE)
 	{
 		neighbour = &env->model.chunks[x][z + 1];
-		if ((code = fix_south_border(chunk, neighbour, true))
-			|| (code = fix_south_border(chunk, neighbour, false)))
+		if ((code = fix_south_border(chunk, neighbour)))
 			return (code);
 	}
 

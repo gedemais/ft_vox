@@ -1,5 +1,24 @@
 #include "main.h"
 
+void		free_hmap(uint8_t **hmap)
+{
+	for (unsigned int i = 0; i < CHUNK_SIZE; i++)
+		free(hmap[i]);
+	free(hmap);
+}
+
+void		free_cave_map(uint8_t ***cave_map)
+{
+	for (int i = 0; i < CHUNK_SIZE; i++)
+	{
+		for (int j = 0; j < CHUNK_SIZE; j++)
+			free(cave_map[i][j]);
+
+		free(cave_map[i]);
+	}
+	free(cave_map);
+}
+
 static void	free_shaders(t_env *env)
 {
 	for (int i = 0; i < SHADER_MAX; i++)
@@ -18,18 +37,10 @@ static void	free_textures(t_env *env)
 static void	free_chunk(t_chunk *chunk)
 {
 	if (chunk->surface_hmap)
-	{
-		for (int i = 0; i < CHUNK_SIZE; i++)
-			free(chunk->surface_hmap[i]);
-		free(chunk->surface_hmap);
-	}
+		free_hmap(chunk->surface_hmap);
 
-	if (chunk->sub_hmap)
-	{
-		for (int i = 0; i < CHUNK_SIZE; i++)
-			free(chunk->sub_hmap[i]);
-		free(chunk->sub_hmap);
-	}
+	if (chunk->cave_map)
+		free_cave_map(chunk->cave_map);
 
 	if (chunk->stride.nb_cells > 0)
 		dynarray_free(&chunk->stride);

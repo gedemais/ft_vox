@@ -71,7 +71,6 @@ typedef struct	s_chunk
 {
 	t_dynarray		stride;
 	uint8_t			**surface_hmap;
-	uint8_t			**sub_hmap;
 	uint8_t			***cave_map;
 	int				x_start, z_start;
 }				t_chunk;

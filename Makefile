@@ -31,7 +31,7 @@ endif
 
 OPTI ?= 0
 ifeq ($(OPTI), 1)
-	FLAGS += -Ofast -march=native
+	FLAGS += -Ofast -ffast-math -march=native
 endif
 
 SRC_PATH=src/

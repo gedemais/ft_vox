@@ -41,6 +41,8 @@ static unsigned char	init_map(t_env *env)
 	env->model.square_x = (MAP_SIZE - SQUARE_SIZE) / 2;
 	env->model.square_z = (MAP_SIZE - SQUARE_SIZE) / 2;
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
+	{
+		printf("line %u done\n", x);
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
 		{
 			x_start = (env->model.square_x + x) * CHUNK_SIZE;
@@ -48,6 +50,7 @@ static unsigned char	init_map(t_env *env)
 			if ((code = gen_chunk(env, &env->model.chunks[x][z], x_start, z_start, true)))
 				return (code);
 		}
+	}
 
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
