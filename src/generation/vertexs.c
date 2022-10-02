@@ -56,15 +56,15 @@ unsigned char	push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, un
 	t_stride		vertex;
 	uint8_t			block_type;
 
+	block_type = water ? BT_WATER : switch_block_type(y);
 	// Addition of 6 vertexs plane to the mesh's data stride
 	for (unsigned int i = 0; i < 6; i++)
 	{
 		ft_memset(&vertex, 0, sizeof(t_stride));
 
-		block_type = water ? BT_WATER : switch_block_type(y);
+
 		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
 		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
-
 		// Constuction of the vertex
 		vertex = (t_stride){(short)plane[i].x, 
 							(short)plane[i].y,

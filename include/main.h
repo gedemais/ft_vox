@@ -19,6 +19,7 @@
 # include <limits.h>
 # include <float.h>
 # include <string.h>
+# include <assert.h>
 
 // Homemade libs
 # include "libft.h"
@@ -187,7 +188,7 @@ unsigned char		fix_south_border(t_chunk *chunk, t_chunk *neighbour);
 unsigned char		push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water);
 unsigned char		generate_water(t_chunk *chunk);
 unsigned char		generate_cave_map(t_chunk *chunk, unsigned int size);
-unsigned char		generate_cave_plane(t_chunk *chunk, unsigned char neighbours[N_MAX],
+unsigned char		generate_cave_planes(t_chunk *chunk, unsigned char neighbours[N_MAX],
 																				unsigned int x,
 																				unsigned int y,
 																				unsigned int z,

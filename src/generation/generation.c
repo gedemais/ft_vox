@@ -31,13 +31,15 @@ static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[6
 		if (chunk->cave_map[x][y][z] == BT_STONE)
 			neighbours[index++] = (unsigned char)i;
 	}
+
+	neighbours[index++] = N_MAX;
+
 	return (index);
 }
 
 static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
-	vec3			top_plane[6] = {};
-	unsigned char	neighbours[N_MAX] = {};
+	unsigned char	neighbours[N_MAX];
 	unsigned char	code;
 
 	for (unsigned int x = 0; x < CHUNK_SIZE; x++)
@@ -45,7 +47,7 @@ static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_st
 			for (unsigned int z = 0; z < CHUNK_SIZE; z++)
 			{
 				if (chunk->cave_map[x][y][z] == 0 && check_neighbours(chunk, neighbours, x, y, z) > 0
-					&& (code = generate_cave_plane(chunk, neighbours, x, y, z, x_start, z_start)))
+					&& (code = generate_cave_planes(chunk, neighbours, x, y, z, x_start, z_start)))
 					return (code);
 			}
 

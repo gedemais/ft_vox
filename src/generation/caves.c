@@ -80,7 +80,44 @@ static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], float distan
 	return (ERR_NONE);
 }
 
-unsigned char			generate_cave_plane(t_chunk *chunk, unsigned char neighbours[N_MAX],
+static unsigned char	generate_cave_side_plane(t_chunk *chunk, t_3dpoint pos, unsigned char orientation)
+{
+	vec3	cave_planes[N_MAX][4] = {
+		[N_NORTH] = {	(vec3){pos.x, pos.y, pos.z + 1},
+						(vec3){pos.x + 1, pos.y, pos.z + 1},
+						(vec3){pos.x, pos.y - 1, pos.z + 1},
+						(vec3){pos.x + 1, pos.y - 1, pos.z + 1}},
+
+		[N_SOUTH] = {	(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z}},
+
+		[N_EAST] = {	(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z}},
+
+		[N_WEST] = {	(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z},
+						(vec3){pos.x, pos.y, pos.z}},
+		};
+
+	const vec3 a = cave_planes[orientation][0];
+	const vec3 b = cave_planes[orientation][1];
+	const vec3 c = cave_planes[orientation][2];
+	const vec3 d = cave_planes[orientation][3];
+
+	const vec3	side_plane_ccw[6]	= {c, a, b, c, b, d};
+	// apparement à n'utiliser que quand c'est left side
+	const vec3	side_plane_cw[6]	= {c, b, a, c, d, b};
+
+	return (push_plane(chunk, orientation == N_WEST ? side_plane_cw : side_plane_ccw,
+				orientation, pos.y, 1.0f, false, false));
+}
+
+unsigned char			generate_cave_planes(t_chunk *chunk, unsigned char neighbours[N_MAX],
 																				unsigned int x,
 																				unsigned int y,
 																				unsigned int z,
@@ -88,12 +125,15 @@ unsigned char			generate_cave_plane(t_chunk *chunk, unsigned char neighbours[N_M
 {
 	unsigned char	code = ERR_NONE;
 
-	for (unsigned int i = 0; neighbours[i]; i++)
+	for (unsigned int i = 0; neighbours[i] != N_MAX; i++)
 	{
 		switch (neighbours[i])
 		{
 			case (N_UP):
 				code = generate_top_plane(chunk, x + x_start, y, z + z_start, (vec3[6]){});
+			break;
+			case (N_NORTH):
+				code = generate_cave_side_plane(chunk, (t_3dpoint){x + x_start, y, z + z_start}, N_NORTH);
 			break;
 			default:
 				(void)chunk;
