@@ -94,6 +94,7 @@ static unsigned char	push_skybox(t_env *env)
 unsigned char			model(t_env *env)
 {
 	unsigned char	code;
+	const float		offset = (CHUNK_SIZE * MAP_SIZE + 1) / 2.0f;
 
 	if (dynarray_init(&env->model.meshs, sizeof(t_mesh), SQUARE_SIZE * SQUARE_SIZE) < 0)
 		return (ERR_MALLOC_FAILED);
@@ -103,5 +104,6 @@ unsigned char			model(t_env *env)
 		return (code);
 
 	env->model.scale = MODEL_SCALE;
+	env->model.center = (vec3){ offset, CHUNK_SIZE, offset};
 	return (ERR_NONE);
 }

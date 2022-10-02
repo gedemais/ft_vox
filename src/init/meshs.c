@@ -65,7 +65,8 @@ unsigned char			init_meshs(t_env *env)
 	// load textures and shadows :: fbo for shadows
 	if ((code = mount_textures(env)) != ERR_NONE
 			|| (code = mount_shadows(env)) != ERR_NONE
-			|| (code = load_uniforms(env, false)) != ERR_NONE)
+			|| (code = load_uniforms(env, 0)) != ERR_NONE // depthmap uniforms
+			|| (code = load_uniforms(env, 1)) != ERR_NONE) // model uniforms
 		return (code);
 
 	// ===================================================================
@@ -80,7 +81,7 @@ unsigned char			init_meshs(t_env *env)
 	// SKYBOX
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells - 1);
 	if ((code = gl_buffers(mesh, true)) != ERR_NONE
-			|| (code = load_uniforms(env, true)) != ERR_NONE)
+			|| (code = load_uniforms(env, 2)) != ERR_NONE) // skybox uniforms
 		return (code);
 
 	return (ERR_NONE);

@@ -5,6 +5,22 @@ static void				render_mesh(t_mesh *mesh);
 
 // ====================================================================
 
+static void				shadows_options(t_env *env, int i)
+{
+	env->light.current = i;
+	// we mount a view and proj matrix for each light source
+	mat4_lookat(env->model.depthview[i],
+		env->light.sources[i].pos,
+		vec_add(env->light.sources[i].pos, env->light.sources[i].dir),
+		(vec3){ 0, 1, 0 });
+	mat4_inverse(env->model.depthview[i]);
+	mat4_projection(env->model.depthproj[i],
+		env->light.sources[i].fov,
+		env->light.sources[i].near,
+		env->light.sources[i].far,
+		env->light.sources[i].ratio);
+}
+
 static void				update_options(t_env *env, char type)
 {
 	switch (type) {
@@ -14,8 +30,6 @@ static void				update_options(t_env *env, char type)
 			glCullFace(GL_FRONT);
 			// Passes if the incoming depth value is less than the stored depth value.
 			glDepthFunc(GL_LESS);
-			// update uniforms
-			set_uniforms(env, 0);
 			break;
 		case (1): // model
 			reset_viewport(env->window.w, env->window.h);
@@ -40,16 +54,23 @@ static void				update_options(t_env *env, char type)
 
 static void				pass_depth(t_env *env)
 {
-	int		i;
+	int		i, j;
 	t_mesh	*mesh;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, env->model.fbo);
 
 	update_options(env, 0);
 	i = -1;
-	while (++i < env->model.meshs.nb_cells - 1) {
-		mesh = dyacc(&env->model.meshs, i);
-		render_mesh(mesh);
+	while (++i < SHADOW_SOURCE_MAX) {
+		// calculate new view / proj matrix for each lightsource
+		shadows_options(env, i);
+		// update uniforms
+		set_uniforms(env, 0);
+		j = -1;
+		while (++j < env->model.meshs.nb_cells - 1) {
+			mesh = dyacc(&env->model.meshs, j);
+			render_mesh(mesh);
+		}
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -101,6 +122,10 @@ static void				update_data(t_env *env)
 	mat4_model(&env->model);
 	mat4_view(&env->camera);
 	mat4_projection(env->camera.projection, env->camera.fov, env->camera.near, env->camera.far, env->camera.ratio);
+	// we update the model center
+	const float	e = SQUARE_SIZE / 2.0f * CHUNK_SIZE;
+
+	env->model.center = (vec3){ e + env->model.chunks[0][0].x_start, 0, e + env->model.chunks[0][0].z_start };
 
 	// LIGHT
 	// we update the flaslight position
@@ -108,24 +133,7 @@ static void				update_data(t_env *env)
 	env->light.sources[LIGHT_SOURCE_PLAYER].dir = env->camera.zaxis;
 	// player's height
 	env->light.sources[LIGHT_SOURCE_PLAYER].pos.y -= MODEL_SCALE / 2.0f;
-
-	// SHADOWS
-	vec3	light_pos, light_dir;
-	int		i;
-
-	i = -1;
-	while (++i < LIGHT_SOURCE_MAX) {
-		light_pos = env->light.sources[i].pos;
-		light_dir = env->light.sources[i].dir;
-		light_dir = (vec3){ -light_dir.x, -light_dir.y, -light_dir.z };
-		mat4_lookat(env->model.depthview[i], light_pos, vec_sub(light_pos, light_dir), (vec3){ 0, 1, 0 });
-		mat4_inverse(env->model.depthview[i]);
-		mat4_projection(env->model.depthproj[i],
-			SHADOW_TARGET == 0 ? 90.0f : 180.0f,
-			env->camera.near,
-			SHADOW_TARGET == 0 ? CHUNK_SIZE / 2.0f : env->camera.far * env->camera.far,
-			env->camera.ratio);
-	}
+	// sunlight is updated in uniforms.c
 }
 
 // ====================================================================
@@ -146,7 +154,8 @@ static unsigned char	render_scene(t_env *env)
 	// update data
 	update_data(env);
 	// first  - render depth
-	pass_depth(env);
+	if (env->light.shadow == true)
+		pass_depth(env);
 	// second - render scene
 	pass_scene(env);
 	// third  - render skybox

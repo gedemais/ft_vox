@@ -132,7 +132,7 @@ unsigned char		mount_shadows(t_env *env);
 unsigned char		load_shaders(t_env *env);
 unsigned char		mount_shaders(GLuint *program, t_shaders vertex, t_shaders fragment);
 void				set_uniforms(t_env *env, char type);
-unsigned char		load_uniforms(t_env *env, bool skybox);
+unsigned char		load_uniforms(t_env *env, char type);
 
 // OpenGL
 unsigned char   	init_display(t_env *env);

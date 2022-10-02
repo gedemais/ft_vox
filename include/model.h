@@ -7,8 +7,7 @@
 # include "light.h"
 
 # define MODEL_SCALE	1
-# define SB_ROT_SPEED	100 // sun's rotation speed
-# define SHADOW_TARGET	0 // 0 :: player, 1 :: sun
+# define SB_ROT_SPEED	5 // sun's rotation speed
 # define DEPTHMAP_W		1024
 # define DEPTHMAP_H		1024
 
@@ -75,8 +74,12 @@ typedef struct	s_uniform
 	GLint	time, campos;
 	GLint	textures[TEXTURE_MAX], skybox, depthmap;
 	GLint	light_active, shadow, light_gamma, light[LIGHT_SOURCE_MAX][LIGHT_MAX];
+	// mvp for program
 	GLint	model, view, projection;
-	GLint	depth_view, depth_projection;
+	// mvp for program_skybox
+	GLint	sbmodel, sbview, sbprojection;
+	// mvp for program_depth
+	GLint	dview, dproj;
 }				t_uniform;
 
 typedef struct	s_mesh
@@ -103,6 +106,7 @@ typedef struct	s_model
 	GLuint		depthmap;						// gl's texture for depthmap
 	GLuint		fbo;							// frame buffer object
 	t_texture	textures[TEXTURE_SB_MAX];		// textures' ptr
+	vec3		center;
 }				t_model;
 
 #endif
