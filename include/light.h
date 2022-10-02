@@ -11,6 +11,13 @@ enum			e_light_sources
 	LIGHT_SOURCE_MAX
 };
 
+enum			e_shadows_sources
+{
+	SHADOW_SOURCE_PLAYER,
+	SHADOW_SOURCE_SUN,
+	SHADOW_SOURCE_MAX
+};
+
 enum			e_light_tools
 {
 	LIGHT_POSITION,
@@ -26,8 +33,10 @@ enum			e_light_tools
 typedef struct	s_light_source
 {
 	vec3	pos, dir, color;
+	vec3	base_pos, base_dir;
 	vec3	ambient, diffuse, specular;
 	float	intensity, cutoff;
+	float	fov, far, near, ratio;
 }				t_light_source;
 
 typedef struct	s_light
@@ -35,6 +44,7 @@ typedef struct	s_light
 	bool			is_active;
 	bool			shadow;
 	float			gamma;
+	int				current;
 	t_light_source	sources[LIGHT_SOURCE_MAX];
 }				t_light;
 

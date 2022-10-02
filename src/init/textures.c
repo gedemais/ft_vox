@@ -21,36 +21,37 @@ unsigned char			textures_uniforms(t_env *env)
 	int				i;
 
 	i = -1;
-	while (++i < TEXTURE_MAX + 1) {
+	while (++i < TEXTURE_MAX) {
 		// get uniforms
 		if ((code = get_textures_uniforms(env, i)) != ERR_NONE)
 			return (code);
 		glUniform1i(env->model.uniforms.textures[i], i);
 	}
+	// depthmap
+	env->model.uniforms.depthmap = glGetUniformLocation(env->model.program, "depthmap");
+	glUniform1i(env->model.uniforms.depthmap, TEXTURE_MAX);
 	return (ERR_NONE);
 }
 
 // ====================================================================
 
-static void			load_skybox(t_env *env)
+static void		load_depthmap(t_env *env)
 {
-	t_texture	*texture;
-	int			i;
+	glGenTextures(1, &env->model.depthmap);
+	// depthmap at last position
+	glActiveTexture(GL_TEXTURE0 + TEXTURE_MAX);
+	glBindTexture(GL_TEXTURE_2D, env->model.depthmap);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
-	i = -1;
-	while (++i < 6) {
-		texture = &env->model.textures[TEXTURE_SB_PX + i];
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
-			texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
-	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		DEPTHMAP_W, DEPTHMAP_W, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	float	border_color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
 }
 
 static void			load_model(t_env *env)
@@ -58,6 +59,7 @@ static void			load_model(t_env *env)
 	t_texture	*texture;
 	int			i;
 
+	glGenTextures(TEXTURE_MAX, env->model.gl_textures);
 	i = -1;
 	while (++i < TEXTURE_MAX) {
 		glActiveTexture(GL_TEXTURE0 + i);
@@ -76,38 +78,33 @@ static void			load_model(t_env *env)
 	}
 }
 
-static void			load_depthmap(t_env *env)
+static void			load_skybox(t_env *env)
 {
-	// depthmap at last position
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_MAX);
-	glBindTexture(GL_TEXTURE_2D, env->model.gl_textures[TEXTURE_MAX]);
+	t_texture	*texture;
+	int			i;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-		env->window.w, env->window.h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glGenTextures(1, &env->model.gl_tskybox);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, env->model.gl_tskybox);
+	i = -1;
+	while (++i < 6) {
+		texture = &env->model.textures[TEXTURE_SB_PX + i];
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
+			texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->ptr);
+	}
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);  
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	float	border_color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-unsigned char		mount_textures(t_env *env, char type)
+unsigned char		mount_textures(t_env *env)
 {
-	switch (type) {
-		case (0):		// model + depthmap
-			// +1 for depthmap :: we stock all textures' id in gl_textures
-			glGenTextures(TEXTURE_MAX + 1, env->model.gl_textures);
-			load_model(env);
-			load_depthmap(env);
-			break ;
-		case (1):		// skybox
-			glGenTextures(1, &env->model.gl_tskybox);
-			load_skybox(env);
-			break ;
-	}
+	load_skybox(env);
+	load_model(env);
+	load_depthmap(env);
 	return (ERR_NONE);
 }
 

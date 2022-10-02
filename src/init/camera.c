@@ -4,14 +4,13 @@
 static void	init_camera(t_env *env)
 {
 	t_camera	*camera;
-	const float	cam_offset = (CHUNK_SIZE * MAP_SIZE + 1) / 2.0f;
 
 	camera = &env->camera;
 	camera->ground_fixed = false;
 	// RATIO
 	camera->ratio = (float)env->settings.w_wdt / (float)env->settings.w_hgt;
 	// Camera starting position and orientation
-	camera->pos = (vec3){ cam_offset, CHUNK_SIZE, cam_offset};
+	camera->pos = env->model.center;
 	camera->yaxis = (vec3){ 0, 1, 0};
 	camera->zaxis = (vec3) { 0, 0, 1};
 	// Camera rotations angles
