@@ -162,6 +162,8 @@ static unsigned char	update_square(t_env *env, t_ms_params *params)
 
 	dynarray_free(&params->olds);
 
+	printf("thread work updated\n");
+	fflush(stdout);
 	return (ERR_NONE);
 }
 

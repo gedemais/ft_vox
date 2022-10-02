@@ -84,18 +84,13 @@ unsigned char	push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, un
 
 unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6])
 {
-	float			xx, yy, zz;
 	vec3			a, b, c, d;
 
-	xx = x;
-	yy = y;
-	zz = z;
-
 	// Cube's top plane ABCD points
-	a = (vec3){xx, yy, (z + 1)};
-	b = (vec3){(x + 1), yy, (z + 1)};
-	c = (vec3){xx, yy, zz};
-	d = (vec3){(x + 1), yy, zz};
+	a = (vec3){x, y, (z + 1)};
+	b = (vec3){(x + 1), y, (z + 1)};
+	c = (vec3){x, y, z};
+	d = (vec3){(x + 1), y, z};
 
 	// ccw
 	top_plane[0] = c;

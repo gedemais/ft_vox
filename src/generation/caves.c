@@ -80,6 +80,29 @@ static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], float distan
 	return (ERR_NONE);
 }
 
+unsigned char			generate_cave_plane(t_chunk *chunk, unsigned char neighbours[N_MAX],
+																				unsigned int x,
+																				unsigned int y,
+																				unsigned int z,
+																				int x_start, int z_start)
+{
+	unsigned char	code = ERR_NONE;
+
+	for (unsigned int i = 0; neighbours[i]; i++)
+	{
+		switch (neighbours[i])
+		{
+			case (N_UP):
+				code = generate_top_plane(chunk, x + x_start, y, z + z_start, (vec3[6]){});
+			break;
+			default:
+				(void)chunk;
+			break;
+		}
+	}
+	return (code);
+}
+
 unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
 {
 	t_3dpoint		points[NB_WORLEY_DOTS];

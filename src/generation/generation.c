@@ -1,12 +1,63 @@
 # include "main.h"
 
-//unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_start)
-unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z_start)
+static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[6],
+																					unsigned int x,
+																					unsigned int y,
+																					unsigned int z)
+{
+	// neighbours coordinates
+	const int		n[6][3] =	{
+											[N_NORTH] = {0, 0, 1},
+											[N_SOUTH] = {0, 0, -1},
+											[N_WEST] = {-1, 0, 0},
+											[N_EAST] = {1, 0, 0},
+											[N_UP] = {0, 1, 0},
+											[N_DOWN] = {0, -1, 0}
+								};
+	unsigned int	index = 0;
+
+	ft_memset(neighbours, 0, sizeof(unsigned char) * 6);
+	for (unsigned int i = 0; i < N_MAX; i++)
+	{
+		x += n[i][0];
+		y += n[i][1];
+		z += n[i][2];
+
+		if (x >= CHUNK_SIZE
+			|| y >= CHUNK_SIZE
+			|| z >= CHUNK_SIZE)
+			continue;
+
+		if (chunk->cave_map[x][y][z] == BT_STONE)
+			neighbours[index++] = (unsigned char)i;
+	}
+	return (index);
+}
+
+static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_start)
+{
+	vec3			top_plane[6] = {};
+	unsigned char	neighbours[N_MAX] = {};
+	unsigned char	code;
+
+	for (unsigned int x = 0; x < CHUNK_SIZE; x++)
+		for (unsigned int y = 0; y < CHUNK_SIZE; y++)
+			for (unsigned int z = 0; z < CHUNK_SIZE; z++)
+			{
+				if (chunk->cave_map[x][y][z] == 0 && check_neighbours(chunk, neighbours, x, y, z) > 0
+					&& (code = generate_cave_plane(chunk, neighbours, x, y, z, x_start, z_start)))
+					return (code);
+			}
+
+	return (ERR_NONE);
+}
+
+static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned int	y;
 	vec3			top_plane[6];
-
 	unsigned char	code;
+
 	for (unsigned int x = 0; x < CHUNK_SIZE; x++)
 		for (unsigned int z = 0; z < CHUNK_SIZE; z++)
 		{
@@ -23,7 +74,8 @@ unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned char	code;
 
-	if ((code = generate_surface_vertexs(chunk, x_start, z_start)))
+	if ((code = generate_surface_vertexs(chunk, x_start, z_start))
+		|| (code = generate_cave_vertexs(chunk, x_start, z_start)))
 		return (code);
 	return (ERR_NONE);
 }
