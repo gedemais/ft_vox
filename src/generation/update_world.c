@@ -18,6 +18,15 @@ typedef struct	s_ms_params
 	t_dynarray	olds;
 }				t_ms_params;
 
+typedef struct	s_generation_thread_params
+{
+	pthread_t	tid;
+	t_env		*env;
+	t_chunk		*new;
+	int			i;
+	int			new_z;
+}				t_gthread_params;
+
 void				print_square(t_env *env)
 {
 	for (int x = 0; x < SQUARE_SIZE; x++)
@@ -61,13 +70,48 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 	return (ERR_NONE);
 }
 
+static void	*x_thread(void *param)
+{
+	t_gthread_params	*params;
+	t_env				*env;
+	int					x, z;
+
+	params = ((t_gthread_params*)param);
+	env = params->env;
+
+	x = env->model.square_x + params->new_z;
+	z = env->model.square_z + params->i;
+	if (gen_chunk(env, params->new, x * CHUNK_SIZE, z * CHUNK_SIZE, true) != ERR_NONE)
+		return (NULL);
+
+	return (NULL);
+}
+
+static void	*z_thread(void *param)
+{
+	t_gthread_params	*params;
+	t_env				*env;
+	int					x, z;
+
+	params = ((t_gthread_params*)param);
+	env = params->env;
+
+	x = env->model.square_x + params->i;
+	z = env->model.square_z + params->new_z;
+	if (gen_chunk(env, params->new, x * CHUNK_SIZE, z * CHUNK_SIZE, true) != ERR_NONE)
+		return (NULL);
+
+	return (NULL);
+}
+
 static unsigned char move_square_on_z(t_env *env, t_ms_params *params)
 {
-	int				trigger_id = params->trigger_id;
-	bool			north = (trigger_id == TRIGGER_NORTH);
-	unsigned char	code;
-	t_mesh			mesh;
-	int				new_z;
+	t_gthread_params	threads[SQUARE_SIZE];
+	int					trigger_id = params->trigger_id;
+	bool				north = (trigger_id == TRIGGER_NORTH);
+	unsigned char		code;
+	t_mesh				mesh;
+	int					new_z;
 
 	new_z = north ? SQUARE_SIZE - 1 : 0;
 	for (int i = 0; i < SQUARE_SIZE; i++)
@@ -86,14 +130,25 @@ static unsigned char move_square_on_z(t_env *env, t_ms_params *params)
 	{
 		params->news[i] = &env->model.chunks[i][new_z];
 		memset(params->news[i], 0, sizeof(t_chunk));
-		if (gen_chunk(env, params->news[i], (env->model.square_x + i) * CHUNK_SIZE, (env->model.square_z + new_z) * CHUNK_SIZE, true) != ERR_NONE)
+
+		threads[i].env = env;
+		threads[i].new = params->news[i];
+		threads[i].i = i;
+		threads[i].new_z = new_z;
+
+		if (pthread_create(&threads[i].tid, NULL, &z_thread, &threads[i]))
 			return (ERR_MALLOC_FAILED);
 	}
+
+	for (int i = 0; i < SQUARE_SIZE; i++)
+		pthread_join(threads[i].tid, NULL);
+
 	return (ERR_NONE);
 }
 
 static unsigned char	move_square_on_x(t_env *env, t_ms_params *params)
 {
+	t_gthread_params	threads[SQUARE_SIZE];
 	int				trigger_id = params->trigger_id;
 	bool			west = trigger_id == TRIGGER_WEST;
 	unsigned char	code;
@@ -117,9 +172,19 @@ static unsigned char	move_square_on_x(t_env *env, t_ms_params *params)
 	{
 		params->news[i] = &env->model.chunks[new_x][i];
 		memset(params->news[i], 0, sizeof(t_chunk));
-		if ((code = gen_chunk(env, params->news[i], (env->model.square_x + new_x) * CHUNK_SIZE, (env->model.square_z + i) * CHUNK_SIZE, true)) != ERR_NONE)
-			return (code);
+
+		threads[i].env = env;
+		threads[i].new = params->news[i];
+		threads[i].i = i;
+		threads[i].new_z = new_x;
+
+		if (pthread_create(&threads[i].tid, NULL, &x_thread, &threads[i]))
+			return (ERR_MALLOC_FAILED);
 	}
+
+	for (int i = 0; i < SQUARE_SIZE; i++)
+		pthread_join(threads[i].tid, NULL);
+
 	return (ERR_NONE);
 }
 

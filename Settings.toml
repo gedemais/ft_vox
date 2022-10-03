@@ -3,12 +3,12 @@ window_width = 1280
 
 fov = 90.0
 gamma = 1.5
-far_plane = 160.0
+far_plane = 320.0
 near_plane = 0.1
 player_speed = 12.0
 mouse_sensitivity = 8.0
 player_light_intensity = 20.0
-sunlight_intensity = 0.0
+sunlight_intensity = 150.0
 
 exit = escape
 move_cam_up = r

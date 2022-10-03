@@ -1,0 +1,713 @@
+--------------------------------------------------------------------------------
+Profile data file 'callgrind.out.1921830' (creator: callgrind-3.18.1)
+--------------------------------------------------------------------------------
+I1 cache: 
+D1 cache: 
+LL cache: 
+Timerange: Basic block 0 - 1818165693
+Trigger: Program termination
+Profiled target:  ./ft_vox (PID 1921830, part 1)
+Events recorded:  Ir
+Events shown:     Ir
+Event sort order: Ir
+Thresholds:       99
+Include dirs:     
+User annotated:   
+Auto-annotation:  on
+
+--------------------------------------------------------------------------------
+Ir                      
+--------------------------------------------------------------------------------
+15,920,168,644 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+Ir                      file:function
+--------------------------------------------------------------------------------
+4,010,314,427 (25.19%)  src/generation/caves.c:dist [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+3,223,975,631 (20.25%)  src/generation/caves.c:worley_noise [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+2,972,935,188 (18.67%)  src/generation/caves.c:get_lowest [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  545,268,485 ( 3.43%)  ???:paethPredictor [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  537,667,532 ( 3.38%)  ???:unfilterScanline [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  489,062,735 ( 3.07%)  ./math/./math/w_sqrt_compat.c:sqrt [/usr/lib/x86_64-linux-gnu/libm.so.6]
+  458,347,857 ( 2.88%)  ???:lodepng_memcpy [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  356,449,033 ( 2.24%)  ???:ft_memcpy [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  293,437,641 ( 1.84%)  ./math/../sysdeps/ieee754/dbl-64/e_sqrt.c:__sqrt_finite@GLIBC_2.15 [/usr/lib/x86_64-linux-gnu/libm.so.6]
+  243,420,100 ( 1.53%)  src/generation/caves.c:generate_cave_map [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  213,689,120 ( 1.34%)  src/generation/vertexs.c:push_plane [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  195,625,094 ( 1.23%)  ???:0x000000000011d750 [???]
+  195,575,788 ( 1.23%)  ???:update_adler32 [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  175,599,259 ( 1.10%)  ???:ft_memset [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  152,114,241 ( 0.96%)  ???:lodepng_memset [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  138,669,827 ( 0.87%)  ???:inflateHuffmanBlock [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  137,035,776 ( 0.86%)  src/generation/noise.c:noise2 [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  132,185,442 ( 0.83%)  ???:getPixelColorsRGBA8 [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  125,829,120 ( 0.79%)  ???:readBitFromReversedStream [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+  124,952,006 ( 0.78%)  ???:0x000000000002e320 [/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0]
+   90,038,741 ( 0.57%)  src/generation/vertexs.c:switch_block_type [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   83,632,128 ( 0.53%)  src/generation/noise.c:noise2d [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   72,548,352 ( 0.46%)  src/generation/noise.c:smooth_inter [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   70,976,256 ( 0.45%)  ???:dynarray_push [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   67,108,864 ( 0.42%)  ???:readBitsFromReversedStream [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   56,180,104 ( 0.35%)  ???:0x00000000000315c0 [/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0]
+   37,489,915 ( 0.24%)  ???:ensureBits32 [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   36,274,187 ( 0.23%)  src/singletons.c:map_seed [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   36,274,176 ( 0.23%)  src/generation/noise.c:lin_inter [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   36,106,240 ( 0.23%)  src/generation/noise.c:perlin2d_a [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   32,891,519 ( 0.21%)  ???:check_space [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   29,081,038 ( 0.18%)  ./malloc/./malloc/malloc.c:_int_malloc [/usr/lib/x86_64-linux-gnu/libc.so.6]
+   25,625,665 ( 0.16%)  src/generation/vertexs.c:generate_side_plane [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   25,354,710 ( 0.16%)  src/generation/vertexs.c:generate_fall [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   21,779,664 ( 0.14%)  ???:huffmanDecodeSymbol [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   21,595,304 ( 0.14%)  ???:0x00000000000af820 [/usr/lib/x86_64-linux-gnu/dri/iris_dri.so]
+   20,166,208 ( 0.13%)  ???:0x00000000000b0040 [/usr/lib/x86_64-linux-gnu/dri/iris_dri.so]
+   20,123,349 ( 0.13%)  ./elf/./elf/dl-lookup.c:do_lookup_x [/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2]
+   19,193,260 ( 0.12%)  ./string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:__memcpy_avx_unaligned_erms [/usr/lib/x86_64-linux-gnu/libc.so.6]
+   18,401,909 ( 0.12%)  ./malloc/./malloc/malloc.c:_int_free [/usr/lib/x86_64-linux-gnu/libc.so.6]
+   16,939,986 ( 0.11%)  ???:advanceBits [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   14,762,258 ( 0.09%)  ./string/../sysdeps/x86_64/multiarch/strcmp-avx2.S:__strcmp_avx2 [/usr/lib/x86_64-linux-gnu/libc.so.6]
+   12,099,990 ( 0.08%)  ???:peekBits [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   11,856,438 ( 0.07%)  ???:vec_add [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   11,507,623 ( 0.07%)  ???:HuffmanTree_makeTable [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+   11,059,681 ( 0.07%)  ./malloc/./malloc/malloc.c:malloc [/usr/lib/x86_64-linux-gnu/libc.so.6]
+   10,342,400 ( 0.06%)  src/generation/vertexs.c:generate_top_plane [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    9,693,594 ( 0.06%)  ???:vec_fmult [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    8,849,618 ( 0.06%)  ???:lodepng_crc32 [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    7,326,257 ( 0.05%)  ./malloc/./malloc/malloc.c:malloc_consolidate [/usr/lib/x86_64-linux-gnu/libc.so.6]
+    7,295,127 ( 0.05%)  ./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x [/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2]
+    7,246,047 ( 0.05%)  src/generation/vertexs.c:generate_deep_fall [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    6,985,470 ( 0.04%)  ???:0x0000000000016f60 [/usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7]
+    6,518,720 ( 0.04%)  ???:ensureBits25 [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    6,473,929 ( 0.04%)  ./string/../sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S:__memset_avx2_unaligned_erms [/usr/lib/x86_64-linux-gnu/libc.so.6]
+    5,889,185 ( 0.04%)  ???:0x0000000000013430 [/usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7]
+    5,714,641 ( 0.04%)  ???:0x0000000000eb0890 [/usr/lib/x86_64-linux-gnu/dri/iris_dri.so]
+    5,519,248 ( 0.03%)  ???:0x0000000000deb9b0 [/usr/lib/x86_64-linux-gnu/dri/iris_dri.so]
+    5,239,375 ( 0.03%)  src/generation/height_map.c:generate_height_map [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    4,926,900 ( 0.03%)  src/generation/generation.c:generate_surface_vertexs [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    4,869,907 ( 0.03%)  ???:0x0000000000da2400 [/usr/lib/x86_64-linux-gnu/dri/iris_dri.so]
+    4,645,090 ( 0.03%)  ???:0x0000000000012e30 [/usr/lib/x86_64-linux-gnu/libexpat.so.1.8.7]
+    4,477,730 ( 0.03%)  ./elf/../sysdeps/x86_64/dl-machine.h:_dl_relocate_object
+    4,231,479 ( 0.03%)  ./malloc/./malloc/malloc.c:free [/usr/lib/x86_64-linux-gnu/libc.so.6]
+    4,194,964 ( 0.03%)  ./malloc/./malloc/malloc.c:unlink_chunk.constprop.0 [/usr/lib/x86_64-linux-gnu/libc.so.6]
+    3,833,492 ( 0.02%)  ???:0x0000000000eb3b70 [/usr/lib/x86_64-linux-gnu/dri/iris_dri.so]
+    3,802,394 ( 0.02%)  ???:readBits [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    3,475,631 ( 0.02%)  ???:0x0000000000d1f070 [/usr/lib/x86_64-linux-gnu/dri/iris_dri.so]
+    3,310,950 ( 0.02%)  src/generation/caves.c:allocate_cave_map [/mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/ft_vox]
+    3,178,925 ( 0.02%)  ./nptl/./nptl/pthread_mutex_lock.c:pthread_mutex_lock@@GLIBC_2.2.5 [/usr/lib/x86_64-linux-gnu/libc.so.6]
+    2,930,427 ( 0.02%)  ./string/../sysdeps/x86_64/multiarch/strcmp-avx2.S:__strncmp_avx2 [/usr/lib/x86_64-linux-gnu/libc.so.6]
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: src/singletons.c
+--------------------------------------------------------------------------------
+Ir                  
+
+         .           #include "main.h"
+         .           
+         .           int		*map_seed(void)
+12,091,395 ( 0.08%)  {
+         .           	static int seed = -1;
+         .           
+12,091,395 ( 0.08%)  	if (seed == -1)
+         2 ( 0.00%)  		seed = rand();
+        60 ( 0.00%)  => ???:0x000000000011d720 (1x)
+         .           
+ 4,030,465 ( 0.03%)  	return (&seed);
+ 8,060,930 ( 0.05%)  }
+         .           
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: src/generation/noise.c
+--------------------------------------------------------------------------------
+Ir                  
+
+-- line 11 ----------------------------------------
+         .                                228,108,245,148,140,40,35,195,38,58,65,207,215,253,65,85,208,76,62,3,237,55,89,
+         .                                232,50,217,64,244,157,199,121,252,90,17,212,203,149,152,140,187,234,177,73,174,
+         .                                193,100,192,143,97,53,145,135,19,103,13,90,135,151,199,91,239,247,33,39,145,
+         .                                101,120,99,3,186,86,99,41,237,203,111,79,220,135,158,42,30,154,120,67,87,167,
+         .                                135,176,183,191,253,115,184,21,233,58,129,233,142,39,128,211,118,137,139,255,
+         .                                114,20,218,113,154,27,127,246,250,1,8,198,250,209,92,222,173,21,88,102,219};
+         .           
+         .           static int noise2(int x, int y)
+24,182,784 ( 0.15%)  {
+56,426,496 ( 0.35%)      int tmp = hash[(y + *map_seed()) % 256];
+36,274,238 ( 0.23%)  => /mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/src/singletons.c:map_seed (4,030,464x)
+48,365,568 ( 0.30%)      return hash[(tmp + x) % 256];
+ 8,060,928 ( 0.05%)  }
+         .           
+         .           static float lin_inter(float x, float y, float s)
+18,137,088 ( 0.11%)  {
+12,091,392 ( 0.08%)      return x + s * (y-x);
+ 6,045,696 ( 0.04%)  }
+         .           
+         .           static float smooth_inter(float x, float y, float s)
+21,159,936 ( 0.13%)  {
+45,342,720 ( 0.28%)      return lin_inter(x, y, s * s * (3-2*s));
+36,274,176 ( 0.23%)  => src/generation/noise.c:lin_inter (3,022,848x)
+ 6,045,696 ( 0.04%)  }
+         .           
+         .           static float noise2d(float x, float y)
+ 6,045,696 ( 0.04%)  {
+ 3,022,848 ( 0.02%)      int x_int = x;
+ 3,022,848 ( 0.02%)      int y_int = y;
+ 5,038,080 ( 0.03%)      float x_frac = x - x_int;
+ 5,038,080 ( 0.03%)      float y_frac = y - y_int;
+ 6,045,696 ( 0.04%)      int s = noise2(x_int, y_int);
+43,327,550 ( 0.27%)  => src/generation/noise.c:noise2 (1,007,616x)
+ 7,053,312 ( 0.04%)      int t = noise2(x_int+1, y_int);
+43,327,488 ( 0.27%)  => src/generation/noise.c:noise2 (1,007,616x)
+ 7,053,312 ( 0.04%)      int u = noise2(x_int, y_int+1);
+43,327,488 ( 0.27%)  => src/generation/noise.c:noise2 (1,007,616x)
+ 8,060,928 ( 0.05%)      int v = noise2(x_int+1, y_int+1);
+43,327,488 ( 0.27%)  => src/generation/noise.c:noise2 (1,007,616x)
+12,091,392 ( 0.08%)      float low = smooth_inter(s, t, x_frac);
+36,274,176 ( 0.23%)  => src/generation/noise.c:smooth_inter (1,007,616x)
+12,091,392 ( 0.08%)      float high = smooth_inter(u, v, x_frac);
+36,274,176 ( 0.23%)  => src/generation/noise.c:smooth_inter (1,007,616x)
+ 7,053,312 ( 0.04%)      return smooth_inter(low, high, y_frac);
+36,274,176 ( 0.23%)  => src/generation/noise.c:smooth_inter (1,007,616x)
+ 2,015,232 ( 0.01%)  }
+         .           
+         .           float perlin2d_a(float x, float y, float freq, int depth) // 0.1f, 4.0f
+ 1,343,488 ( 0.01%)  {
+   503,808 ( 0.00%)      float xa = x*freq;
+   503,808 ( 0.00%)      float ya = y*freq;
+   335,872 ( 0.00%)      float amp = 1.0;
+   335,872 ( 0.00%)      float fin = 0;
+   335,872 ( 0.00%)      float div = 0.0;
+         .           
+         .               int i;
+ 4,870,144 ( 0.03%)      for(i=0; i<depth; i++)
+         .               {
+ 6,045,696 ( 0.04%)          div += 256 * amp;
+11,083,776 ( 0.07%)          fin += noise2d(xa, ya) * amp;
+365,764,670 ( 2.30%)  => src/generation/noise.c:noise2d (1,007,616x)
+ 4,030,464 ( 0.03%)          amp /= 2;
+ 3,022,848 ( 0.02%)          xa *= 2;
+ 3,022,848 ( 0.02%)          ya *= 2;
+         .               }
+         .           
+   335,872 ( 0.00%)      return fin/div;
+   335,872 ( 0.00%)  }
+         .           
+         .           ///////////////////////////////////
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: src/generation/vertexs.c
+--------------------------------------------------------------------------------
+Ir                  
+
+-- line 8 ----------------------------------------
+         .             (byte & 0x10 ? '1' : '0'), \
+         .             (byte & 0x08 ? '1' : '0'), \
+         .             (byte & 0x04 ? '1' : '0'), \
+         .             (byte & 0x02 ? '1' : '0'), \
+         .             (byte & 0x01 ? '1' : '0')
+         .           
+         .           
+         .           static int	switch_block_type(unsigned int z)
+ 3,770,936 ( 0.02%)  {
+68,819,582 ( 0.43%)  	const unsigned int	bounds[BTB_MAX][2] ={
+         .           											{BTB_CAVE, BT_STONE},
+         .           											{BTB_BEACH, BT_SAND},
+         .           											{BTB_SOIL, BT_GROUND},
+         .           											{BTB_PLAIN, BT_GRASS},
+         .           											{BTB_MOUTAIN, BT_STONE},
+         .           											{BTB_HIGH_MOUTAINS, BT_SNOW}
+         .           											};
+         .           
+ 6,131,047 ( 0.04%)  	for (unsigned int i = 0; i < BTB_MAX; i++)
+ 7,546,240 ( 0.05%)  		if (z < bounds[i][0])
+ 1,414,101 ( 0.01%)  			return (bounds[i][1]);
+         .           
+         .           	return (BT_WATER);
+ 2,356,835 ( 0.01%)  }
+         .           
+         .           unsigned char	push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water)
+ 5,481,671 ( 0.03%)  {
+         .           	/*
+         .           	const t_vt		vts_ccw[6] = {
+         .           		(t_vt){1, fall_size},	// A
+         .           		(t_vt){1, 0},			// B
+         .           		(t_vt){0, 0},			// C
+         .           
+         .           		(t_vt){1, fall_size},	// D
+         .           		(t_vt){0, 0},			// E
+-- line 42 ----------------------------------------
+-- line 51 ----------------------------------------
+         .           		(t_vt){0, fall_size},	// F
+         .           		(t_vt){0, 0},			// E
+         .           	};
+         .           	*/
+         .           
+         .           	t_stride		vertex;
+         .           	uint8_t			block_type;
+         .           
+ 1,999,769 ( 0.01%)  	block_type = water ? BT_WATER : switch_block_type(y);
+53,852,358 ( 0.34%)  => src/generation/vertexs.c:switch_block_type (281,911x)
+         .           	// Addition of 6 vertexs plane to the mesh's data stride
+ 6,347,198 ( 0.04%)  	for (unsigned int i = 0; i < 6; i++)
+         .           	{
+ 8,655,270 ( 0.05%)  		ft_memset(&vertex, 0, sizeof(t_stride));
+70,973,214 ( 0.45%)  => ???:ft_memset (1,731,054x)
+         .           
+         .           
+ 9,426,845 ( 0.06%)  		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
+ 8,672,967 ( 0.05%)  		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
+         .           		// Constuction of the vertex
+93,476,916 ( 0.59%)  		vertex = (t_stride){(short)plane[i].x, 
+19,041,594 ( 0.12%)  							(short)plane[i].y,
+19,041,594 ( 0.12%)  							(short)plane[i].z,
+ 6,924,216 ( 0.04%)  							(uint8_t)i,
+ 6,924,216 ( 0.04%)  							(uint8_t)((int)fall_size),
+ 6,924,216 ( 0.04%)  							(uint8_t)normal,
+ 5,193,162 ( 0.03%)  							(uint8_t)block_type,
+         .           							(uint8_t)0};
+         .           
+         .           		// Insertion of the vertex in the stride
+13,848,432 ( 0.09%)  		if (dynarray_push(&chunk->stride, &vertex, false))
+509,498,508 ( 3.20%)  => ???:dynarray_push (1,731,054x)
+         .           			return (ERR_MALLOC_FAILED);
+         .           	}
+   288,509 ( 0.00%)  	return (ERR_NONE);
+ 1,442,545 ( 0.01%)  }
+         .           
+         .           unsigned char	generate_top_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6])
+   921,600 ( 0.01%)  {
+         .           	vec3			a, b, c, d;
+         .           
+         .           	// Cube's top plane ABCD points
+ 1,126,400 ( 0.01%)  	a = (vec3){x, y, (z + 1)};
+ 1,331,200 ( 0.01%)  	b = (vec3){(x + 1), y, (z + 1)};
+   921,600 ( 0.01%)  	c = (vec3){x, y, z};
+ 1,126,400 ( 0.01%)  	d = (vec3){(x + 1), y, z};
+         .           
+         .           	// ccw
+   512,000 ( 0.00%)  	top_plane[0] = c;
+   614,400 ( 0.00%)  	top_plane[1] = a;
+   614,400 ( 0.00%)  	top_plane[2] = b;
+   614,400 ( 0.00%)  	top_plane[3] = c;
+   614,400 ( 0.00%)  	top_plane[4] = b;
+   614,400 ( 0.00%)  	top_plane[5] = d;
+         .           
+ 1,126,400 ( 0.01%)  	return (push_plane(chunk, top_plane, N_UP, y, 1.0f, false, false));
+306,852,126 ( 1.93%)  => src/generation/vertexs.c:push_plane (102,400x)
+   204,800 ( 0.00%)  }
+         .           
+         .           unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int y, float depth)
+ 3,410,709 ( 0.02%)  {
+ 5,026,308 ( 0.03%)  	const vec3	c = vec_add(a, vec_fmult((vec3){0, -1.0f, 0}, depth));
+ 5,923,863 ( 0.04%)  => ???:vec_add (179,511x)
+ 4,846,797 ( 0.03%)  => ???:vec_fmult (179,511x)
+ 5,026,308 ( 0.03%)  	const vec3	d = vec_add(b, vec_fmult((vec3){0, -1.0f, 0}, depth));
+ 5,923,863 ( 0.04%)  => ???:vec_add (179,511x)
+ 4,846,797 ( 0.03%)  => ???:vec_fmult (179,511x)
+         .           
+ 4,308,264 ( 0.03%)  	const vec3	side_plane_ccw[6]	= {c, a, b, c, b, d};
+         .           	// apparement à n'utiliser que quand c'est left side
+ 4,308,264 ( 0.03%)  	const vec3	side_plane_cw[6]	= {c, b, a, c, d, b};
+         .           
+ 2,377,302 ( 0.01%)  	return (push_plane(chunk, index == N_WEST ? side_plane_cw : side_plane_ccw,
+527,443,832 ( 3.31%)  => src/generation/vertexs.c:push_plane (179,511x)
+         .           		index, y, depth, true, false));
+   897,555 ( 0.01%)  }
+         .           
+         .           # include "assert.h"
+         .           
+         .           static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y)
+ 1,554,667 ( 0.01%)  {
+         .           	unsigned char	code;
+         .           	uint8_t			prev_bt;
+    91,451 ( 0.00%)  	unsigned int	n = 0;
+   182,902 ( 0.00%)  	float			fall_size = 0.0f;
+         .           
+   642,056 ( 0.00%)  	while (n < offset)
+         .           	{
+   184,168 ( 0.00%)  		fall_size = 0.0f;
+   460,420 ( 0.00%)  		prev_bt = switch_block_type(y - n);
+17,591,376 ( 0.11%)  => src/generation/vertexs.c:switch_block_type (92,084x)
+ 1,340,157 ( 0.01%)  		while (n < offset && prev_bt == switch_block_type(y - n))
+18,595,007 ( 0.12%)  => src/generation/vertexs.c:switch_block_type (97,372x)
+         .           		{
+   386,956 ( 0.00%)  			fall_size += 1.0f;
+    96,739 ( 0.00%)  			n++;
+         .           		}
+         .           
+   276,252 ( 0.00%)  		if (n < offset)
+     6,963 ( 0.00%)  			fall_size += (float)(offset - n);
+         .           
+ 1,657,512 ( 0.01%)  		if ((code = generate_fall(chunk, a, b, index, y, fall_size)))
+279,306,154 ( 1.75%)  => src/generation/vertexs.c:generate_fall (92,084x)
+         .           			return (code);
+         .           	}
+    91,451 ( 0.00%)  	return (ERR_NONE);
+   274,353 ( 0.00%)  }
+         .           
+         .           unsigned char	generate_side_plane(t_chunk *chunk, uint8_t **hmap, int x, int y, int z, unsigned int size, vec3 top_plane[6])
+ 1,536,000 ( 0.01%)  {
+         .           	unsigned char	code;
+   819,200 ( 0.01%)  	const int		neighbours[4][2] =	{{0, 1},
+         .           										 {0, -1},
+         .           										 {1, 0},
+         .           										 {-1, 0}};
+         .           	// Based on cbacbd order
+   409,600 ( 0.00%)  	const uint8_t	fall_planes[4][2] =	{{2, 1},
+         .           										 {0, 5},
+         .           										 {2, 5},
+         .           										 {1, 0}};
+         .           	vec3			a, b;
+         .           	int				n_x, n_z;
+         .           	int				offset;
+         .           
+ 1,638,400 ( 0.01%)  	for (unsigned int i = 0; i < PO_MAX; i++)
+         .           	{
+ 2,048,000 ( 0.01%)  		n_x = x + neighbours[i][0];
+ 2,048,000 ( 0.01%)  		n_z = z + neighbours[i][1];
+         .           	
+ 4,070,400 ( 0.03%)  		if (n_x < 0 || n_x >= (int)size || n_z < 0 || n_z >= (int)size
+ 6,451,200 ( 0.04%)  			|| (offset = y - hmap[n_x][n_z]) <= 0)
+   318,149 ( 0.00%)  			continue ;
+         .           
+ 1,280,314 ( 0.01%)  		a = top_plane[fall_planes[i][0]];
+ 1,280,314 ( 0.01%)  		b = top_plane[fall_planes[i][1]];
+         .           
+ 1,648,472 ( 0.01%)  		if ((offset == 1 && (code = generate_fall(chunk, a, b, i, y, 1.0f)))
+282,771,742 ( 1.78%)  => src/generation/vertexs.c:generate_fall (86,210x)
+ 1,463,216 ( 0.01%)  			|| (code = generate_deep_fall(chunk, a, b, i, offset, y)))
+322,738,584 ( 2.03%)  => src/generation/vertexs.c:generate_deep_fall (91,451x)
+         .           			return (code);
+         .           	}
+   102,400 ( 0.00%)  	return (ERR_NONE);
+   512,000 ( 0.00%)  }
+         .           
+         .           unsigned char	generate_bottom_plane(t_chunk *chunk, int x, int y, int z, vec3 top_plane[6])
+         .           {
+         .           	(void)chunk;
+         .           	(void)x;
+         .           	(void)y;
+         .           	(void)z;
+         .           	(void)top_plane;
+-- line 188 ----------------------------------------
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: src/generation/generation.c
+--------------------------------------------------------------------------------
+Ir                 
+
+-- line 50 ----------------------------------------
+        .           					&& (code = generate_cave_planes(chunk, neighbours, x, y, z, x_start, z_start)))
+        .           					return (code);
+        .           			}
+        .           
+        .           	return (ERR_NONE);
+        .           }*/
+        .           
+        .           static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z_start)
+      250 ( 0.00%)  {
+        .           	unsigned int	y;
+        .           	vec3			top_plane[6];
+        .           	unsigned char	code;
+        .           
+    4,900 ( 0.00%)  	for (unsigned int x = 0; x < CHUNK_SIZE; x++)
+  313,600 ( 0.00%)  		for (unsigned int z = 0; z < CHUNK_SIZE; z++)
+        .           		{
+1,126,400 ( 0.01%)  			y = chunk->surface_hmap[x][z];
+        .           
+1,843,200 ( 0.01%)  			if ((code = generate_top_plane(chunk, x + x_start, y, z + z_start, top_plane)) != ERR_NONE
+317,194,526 ( 1.99%)  => /mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/src/generation/vertexs.c:generate_top_plane (102,400x)
+1,638,400 ( 0.01%)  				|| (code = generate_side_plane(chunk, chunk->surface_hmap, x, y, z, CHUNK_SIZE, top_plane)) != ERR_NONE)
+631,135,991 ( 3.96%)  => /mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/src/generation/vertexs.c:generate_side_plane (102,400x)
+        .           				return (code);
+        .           		}
+       25 ( 0.00%)  	return (ERR_NONE);
+      125 ( 0.00%)  }
+        .           
+        .           unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
+      175 ( 0.00%)  {
+        .           	unsigned char	code;
+        .           
+      225 ( 0.00%)  	if ((code = generate_surface_vertexs(chunk, x_start, z_start)))
+953,257,417 ( 5.99%)  => src/generation/generation.c:generate_surface_vertexs (25x)
+        .           //		|| (code = generate_cave_vertexs(chunk, x_start, z_start)))
+        .           		return (code);
+       25 ( 0.00%)  	return (ERR_NONE);
+       50 ( 0.00%)  }
+        .           
+        .           static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_start, int z_start, bool stride)
+      250 ( 0.00%)  {
+        .           	unsigned char	code;
+      200 ( 0.00%)  	t_biome_params	surface_params = {0.02f, 6.0f, 0.0f, 0.0f};
+      200 ( 0.00%)  	t_biome_params	sub_params = {0.05f, 6.0f, 0.0f, 40.0f};
+        .           
+       75 ( 0.00%)  	chunk->x_start = x_start;
+       75 ( 0.00%)  	chunk->z_start = z_start;
+        .           
+        .           	(void)env;
+      100 ( 0.00%)  	if (!chunk->surface_hmap || !chunk->cave_map)
+        .           	{
+        .           		// Load parameters for the current chunk
+        .           		//printf("frequency : %f | depth : %f\n", params.frequency, params.depth);
+        .           		// Generate height maps for surface and cave
+        .           		// Topography type should be a parameter which would affect perlin noise generation
+      400 ( 0.00%)  		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE, 40))
+250,850,241 ( 1.58%)  => /mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/src/generation/height_map.c:generate_height_map (25x)
+      175 ( 0.00%)  			|| (code = generate_cave_map(chunk, CHUNK_SIZE)))
+11,465,868,718 (72.02%)  => /mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/src/generation/caves.c:generate_cave_map (25x)
+        .           			return (ERR_MALLOC_FAILED);
+        .           	}
+        .           
+       50 ( 0.00%)  	if (stride)
+        .           	{
+      225 ( 0.00%)  		if (stride && dynarray_init(&chunk->stride, sizeof(t_stride), CHUNK_SIZE * CHUNK_SIZE * 6 * 2))
+44,266,130 ( 0.28%)  => ???:dynarray_init (25x)
+        .           			return (ERR_MALLOC_FAILED);
+        .           
+      275 ( 0.00%)  		if (stride && (code = generate_vertexs(chunk, x_start, z_start)) != ERR_NONE)
+953,257,892 ( 5.99%)  => src/generation/generation.c:generate_vertexs (25x)
+        .           			return (code);
+        .           	}
+        .           
+       25 ( 0.00%)  	return (ERR_NONE);
+       50 ( 0.00%)  }
+        .           
+        .           // This function will be used to generate new chunks of terrain with different noise algorithms
+        .           
+        .           size_t	*stride_bytesize(void)
+       78 ( 0.00%)  {
+        .           	static size_t	bytesize = 0;
+        .           
+       26 ( 0.00%)  	return (&bytesize);
+       52 ( 0.00%)  }
+        .           
+        .           unsigned char			gen_chunk(t_env *env, t_chunk *chunk, int x_start, int z_start, bool stride)
+      250 ( 0.00%)  {
+        .           	unsigned char	code;
+        .           
+      275 ( 0.00%)  	if ((code = generate_chunk_content(env, chunk, x_start, z_start, stride)) != ERR_NONE)
+12,714,245,081 (79.86%)  => src/generation/generation.c:generate_chunk_content (25x)
+        .           		return (code);
+        .           
+      200 ( 0.00%)  	*stride_bytesize() += sizeof(t_stride) * chunk->stride.nb_cells;
+      150 ( 0.00%)  => src/generation/generation.c:stride_bytesize (25x)
+       25 ( 0.00%)  	return (ERR_NONE);
+       50 ( 0.00%)  }
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: src/generation/height_map.c
+--------------------------------------------------------------------------------
+Ir                 
+
+        .           #include "main.h"
+        .           
+        .           static	uint8_t	**allocate_height_map(unsigned int size)
+      150 ( 0.00%)  {
+        .           	uint8_t	**new;
+        .           
+      175 ( 0.00%)  	if (!(new = (uint8_t**)malloc(sizeof(uint8_t*) * size)))
+   13,461 ( 0.00%)  => ???:0x000000000011d530 (25x)
+        .           		return (NULL);
+        .           
+    6,525 ( 0.00%)  	for (unsigned int i = 0; i < size; i++)
+        .           	{
+   17,600 ( 0.00%)  		if (!(new[i] = (uint8_t*)malloc(sizeof(uint8_t) * size)))
+  348,855 ( 0.00%)  => ???:0x000000000011d530 (1,600x)
+        .           			return (NULL);
+   14,400 ( 0.00%)  		ft_memset(new[i], 0, sizeof(uint8_t) * size);
+  166,400 ( 0.00%)  => ???:ft_memset (1,600x)
+        .           	}
+        .           
+       25 ( 0.00%)  	return (new);
+       75 ( 0.00%)  }
+        .           
+        .           uint8_t	**generate_height_map(t_biome_params params, int x_start, int z_start, unsigned int size, unsigned char offset)
+      400 ( 0.00%)  {
+        .           	uint8_t	**hmap;
+        .           	uint8_t	height;
+        .           	unsigned int	xbound, zbound;
+        .           
+      150 ( 0.00%)  	if (!(hmap = allocate_height_map(size)))
+  567,666 ( 0.00%)  => src/generation/height_map.c:allocate_height_map (25x)
+        .           		return (NULL);
+        .           
+      100 ( 0.00%)  	xbound = x_start + size;
+      100 ( 0.00%)  	zbound = z_start + size;
+        .           
+    6,550 ( 0.00%)  	for (unsigned int x = x_start; x < xbound; x++)
+  419,200 ( 0.00%)  		for (unsigned int z = z_start; z < zbound; z++)
+        .           		{
+3,072,000 ( 0.02%)  			height = (uint8_t)(perlin2d_a((float)x, (float)z, params.frequency, params.depth) * size);
+245,043,200 ( 1.54%)  => /mnt/nfs/homes/gedemais/Desktop/projects/ft_vox/src/generation/noise.c:perlin2d_a (102,400x)
+1,740,800 ( 0.01%)  			hmap[x - x_start][z - z_start] = height + offset;
+        .           		}
+       25 ( 0.00%)  	return (hmap);
+       50 ( 0.00%)  }
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: src/generation/caves.c
+--------------------------------------------------------------------------------
+Ir                     
+
+            .           #include "main.h"
+            .           #include "immintrin.h"
+            .           
+            .           static	uint8_t	***allocate_cave_map(unsigned int size)
+          150 ( 0.00%)  {
+            .           	uint8_t	***new;
+            .           
+          175 ( 0.00%)  	if (!(new = (uint8_t***)malloc(sizeof(uint8_t**) * size)))
+        5,253 ( 0.00%)  => ???:0x000000000011d530 (25x)
+            .           		return (NULL);
+            .           
+        6,525 ( 0.00%)  	for (unsigned int i = 0; i < size; i++)
+            .           	{
+       19,200 ( 0.00%)  		if (!(new[i] = (uint8_t**)malloc(sizeof(uint8_t*) * size)))
+      346,815 ( 0.00%)  => ???:0x000000000011d530 (1,600x)
+            .           			return (NULL);
+            .           
+      417,600 ( 0.00%)  		for (unsigned int j = 0; j < size; j++)
+            .           		{
+    1,536,000 ( 0.01%)  			if (!(new[i][j] = (uint8_t*)malloc(sizeof(uint8_t) * size)))
+   22,610,067 ( 0.14%)  => ???:0x000000000011d530 (102,400x)
+            .           				return (NULL);
+    1,331,200 ( 0.01%)  			ft_memset(new[i][j], 0, sizeof(uint8_t) * size);
+   10,649,600 ( 0.07%)  => ???:ft_memset (102,400x)
+            .           		}
+            .           
+            .           	}
+           25 ( 0.00%)  	return (new);
+           75 ( 0.00%)  }
+            .           
+            .           static unsigned char	init_worley_points(t_3dpoint points[NB_WORLEY_DOTS], unsigned int size)
+          150 ( 0.00%)  {
+        2,500 ( 0.00%)  	for (unsigned int i = 0; i < NB_WORLEY_DOTS; i++)
+            .           	{
+        9,600 ( 0.00%)  		points[i].x = rand() % size;
+       47,896 ( 0.00%)  => ???:0x000000000011d720 (800x)
+        9,600 ( 0.00%)  		points[i].y = rand() % size;
+       47,900 ( 0.00%)  => ???:0x000000000011d720 (800x)
+        9,600 ( 0.00%)  		points[i].z = rand() % size;
+       47,896 ( 0.00%)  => ???:0x000000000011d720 (800x)
+            .           	}
+           25 ( 0.00%)  	return (ERR_NONE);
+           50 ( 0.00%)  }
+            .           
+            .           static int	dist(t_3dpoint a, t_3dpoint b)
+  586,875,282 ( 3.69%)  {
+  586,875,282 ( 3.69%)  	int	dx = b.x - a.x;
+  586,875,282 ( 3.69%)  	int	dy = b.y - a.y;
+  586,875,282 ( 3.69%)  	int	dz = b.z - a.z;
+            .           
+1,467,188,205 ( 9.22%)  	return (sqrt((dx * dx) + (dy * dy) + (dz * dz)));
+  978,125,470 ( 6.14%)  => ???:0x000000000011d750 (97,812,547x)
+  195,625,094 ( 1.23%)  }
+            .           
+            .           static float	get_lowest(int distances[NB_WORLEY_DOTS], float *offset, int *index)
+   39,321,600 ( 0.25%)  {
+    6,553,600 ( 0.04%)  	int	lowest = INT_MAX;
+            .           
+  655,360,000 ( 4.12%)  	for (int i = 0; i < NB_WORLEY_DOTS; i++)
+1,677,721,600 (10.54%)  		if (lowest > distances[i])
+            .           		{
+  309,689,448 ( 1.95%)  			*offset = lowest - distances[i];
+  180,652,178 ( 1.13%)  			lowest = distances[i];
+   77,422,362 ( 0.49%)  			*index = i;
+            .           		}
+            .           
+   13,107,200 ( 0.08%)  	return (lowest);
+   13,107,200 ( 0.08%)  }
+            .           
+            .           static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], int distances[NB_WORLEY_DOTS], t_3dpoint current, uint8_t *res)
+   58,982,400 ( 0.37%)  {
+            .           	static float	offset = 0;
+            .           	static int		index = 0;
+            .           	float			d;
+            .           
+   19,660,800 ( 0.12%)  	if (offset > WORLEY_THRESHOLD / 2)
+  111,902,653 ( 0.70%)  		distances[index] = dist(current, points[index]);
+  184,097,913 ( 1.16%)  => src/generation/caves.c:dist (3,609,763x)
+            .           	else
+  294,383,700 ( 1.85%)  		for (unsigned int i = 0; i < NB_WORLEY_DOTS; i++)
+2,637,677,952 (16.57%)  			distances[i] = dist(current, points[i]);
+4,804,341,984 (30.18%)  => src/generation/caves.c:dist (94,202,784x)
+            .           
+   52,428,800 ( 0.33%)  	d = get_lowest(distances, &offset, &index);
+2,972,935,188 (18.67%)  => src/generation/caves.c:get_lowest (6,553,600x)
+            .           
+            .           
+   19,660,800 ( 0.12%)  	if (d > WORLEY_THRESHOLD)
+    3,064,126 ( 0.02%)  		*res = BT_STONE;
+            .           
+    6,553,600 ( 0.04%)  	return (ERR_NONE);
+   19,660,800 ( 0.12%)  }
+            .           
+            .           static unsigned char	generate_cave_side_plane(t_chunk *chunk, t_3dpoint pos, unsigned char orientation)
+            .           {
+            .           	vec3	cave_planes[N_MAX][4] = {
+            .           		[N_NORTH] = {	(vec3){pos.x, pos.y, pos.z + 1},
+            .           						(vec3){pos.x + 1, pos.y, pos.z + 1},
+            .           						(vec3){pos.x, pos.y - 1, pos.z + 1},
+            .           						(vec3){pos.x + 1, pos.y - 1, pos.z + 1}},
+-- line 89 ----------------------------------------
+-- line 139 ----------------------------------------
+            .           				(void)chunk;
+            .           			break;
+            .           		}
+            .           	}
+            .           	return (code);
+            .           }
+            .           
+            .           unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
+          225 ( 0.00%)  {
+            .           	t_3dpoint		points[NB_WORLEY_DOTS];
+            .           	int				distances[NB_WORLEY_DOTS];
+            .           	unsigned char	code;
+            .           
+          225 ( 0.00%)  	if (!(chunk->cave_map = allocate_cave_map(size))
+   36,922,685 ( 0.23%)  => src/generation/caves.c:allocate_cave_map (25x)
+          175 ( 0.00%)  		|| init_worley_points(points, size) != ERR_NONE)
+      175,217 ( 0.00%)  => src/generation/caves.c:init_worley_points (25x)
+            .           		return (ERR_MALLOC_FAILED);
+            .           
+        6,525 ( 0.00%)  	for (unsigned int x = 0; x < size; x++)
+      417,600 ( 0.00%)  		for (unsigned int y = 0; y < size; y++)
+   26,726,400 ( 0.17%)  			for (unsigned int z = 0; z < size; z++)
+  216,268,800 ( 1.36%)  				if ((code = worley_noise(points, distances, (t_3dpoint){x, y, z}, &chunk->cave_map[x][y][z])))
+11,185,350,716 (70.26%)  => src/generation/caves.c:worley_noise (6,553,600x)
+            .           					return (code);
+            .           
+            .           	/*
+            .           	for (unsigned int x = 0; x < size; x++)
+            .           	{
+            .           		for (unsigned int y = 0; y < size; y++)
+            .           		{
+            .           			for (unsigned int z = 0; z < size; z++)
+-- line 167 ----------------------------------------
+-- line 172 ----------------------------------------
+            .           			printf("\n");
+            .           		}
+            .           		usleep(100000);
+            .           		printf("\n");
+            .           	}
+            .           
+            .           	fflush(stdout);*/
+            .           
+           25 ( 0.00%)  	return (ERR_NONE);
+          125 ( 0.00%)  }
+
+--------------------------------------------------------------------------------
+The following files chosen for auto-annotation could not be found:
+--------------------------------------------------------------------------------
+  ./elf/../sysdeps/x86_64/dl-machine.h
+  ./elf/./elf/dl-lookup.c
+  ./malloc/./malloc/malloc.c
+  ./math/../sysdeps/ieee754/dbl-64/e_sqrt.c
+  ./math/./math/w_sqrt_compat.c
+  ./nptl/./nptl/pthread_mutex_lock.c
+  ./string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+  ./string/../sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+  ./string/../sysdeps/x86_64/multiarch/strcmp-avx2.S
+
+--------------------------------------------------------------------------------
+Ir                      
+--------------------------------------------------------------------------------
+11,238,364,119 (70.59%)  events annotated
+

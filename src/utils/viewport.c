@@ -3,11 +3,11 @@
 
 void		reset_viewport(unsigned int width, unsigned int height)
 {
-//	unsigned int	e = 1;
+	unsigned int	e = 1;
 
-//#ifdef __APPLE__
-//	e = 1.41f;
-//#endif
+#ifdef __APPLE__
+	e = 2f;
+#endif
 
-	glViewport(0, 0, width * 1.41f, height * 1.41f);
+	glViewport(0, 0, width * e, height * e); // Maybe e should be our aspect ratio
 }

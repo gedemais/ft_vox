@@ -1,5 +1,5 @@
 # include "main.h"
-
+/*
 static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[6],
 																					unsigned int x,
 																					unsigned int y,
@@ -52,7 +52,7 @@ static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_st
 			}
 
 	return (ERR_NONE);
-}
+}*/
 
 static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
@@ -76,8 +76,8 @@ unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned char	code;
 
-	if ((code = generate_surface_vertexs(chunk, x_start, z_start))
-		|| (code = generate_cave_vertexs(chunk, x_start, z_start)))
+	if ((code = generate_surface_vertexs(chunk, x_start, z_start)))
+//		|| (code = generate_cave_vertexs(chunk, x_start, z_start)))
 		return (code);
 	return (ERR_NONE);
 }

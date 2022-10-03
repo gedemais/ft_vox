@@ -35,18 +35,18 @@ static unsigned char	init_worley_points(t_3dpoint points[NB_WORLEY_DOTS], unsign
 	return (ERR_NONE);
 }
 
-static float	dist(t_3dpoint a, t_3dpoint b)
+static int	dist(t_3dpoint a, t_3dpoint b)
 {
-	float	dx = b.x - a.x;
-	float	dy = b.y - a.y;
-	float	dz = b.z - a.z;
+	int	dx = b.x - a.x;
+	int	dy = b.y - a.y;
+	int	dz = b.z - a.z;
 
-	return (sqrtf((dx * dx) + (dy * dy) + (dz * dz)));
+	return (sqrt((dx * dx) + (dy * dy) + (dz * dz)));
 }
 
-static float	get_lowest(float distances[NB_WORLEY_DOTS], float *offset, int *index)
+static float	get_lowest(int distances[NB_WORLEY_DOTS], float *offset, int *index)
 {
-	float	lowest = INFINITY;
+	int	lowest = INT_MAX;
 
 	for (int i = 0; i < NB_WORLEY_DOTS; i++)
 		if (lowest > distances[i])
@@ -59,13 +59,13 @@ static float	get_lowest(float distances[NB_WORLEY_DOTS], float *offset, int *ind
 	return (lowest);
 }
 
-static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], float distances[NB_WORLEY_DOTS], t_3dpoint current, uint8_t *res)
+static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], int distances[NB_WORLEY_DOTS], t_3dpoint current, uint8_t *res)
 {
 	static float	offset = 0;
 	static int		index = 0;
 	float			d;
 
-	if (offset > 8)
+	if (offset > WORLEY_THRESHOLD / 2)
 		distances[index] = dist(current, points[index]);
 	else
 		for (unsigned int i = 0; i < NB_WORLEY_DOTS; i++)
@@ -146,7 +146,7 @@ unsigned char			generate_cave_planes(t_chunk *chunk, unsigned char neighbours[N_
 unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
 {
 	t_3dpoint		points[NB_WORLEY_DOTS];
-	float			distances[NB_WORLEY_DOTS];
+	int				distances[NB_WORLEY_DOTS];
 	unsigned char	code;
 
 	if (!(chunk->cave_map = allocate_cave_map(size))
