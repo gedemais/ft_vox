@@ -27,8 +27,8 @@ static void				gl_options(void)
 	glEnable(GL_DEPTH_TEST);
 
 	// CULLING
-	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CCW);
+	//glEnable(GL_CULL_FACE);
+	//glFrontFace(GL_CCW);
 
 	// GAMA CORRECTION
 	// glEnable(GL_FRAMEBUFFER_SRGB);

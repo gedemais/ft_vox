@@ -116,8 +116,6 @@ unsigned char	generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, 
 		index, y, depth, true, false));
 }
 
-# include "assert.h"
-
 static unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y)
 {
 	unsigned char	code;

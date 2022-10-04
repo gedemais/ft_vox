@@ -47,6 +47,7 @@ SRC_NAME=main.c\
 	generation/height_map.c\
 	generation/noise.c\
 	generation/caves.c\
+	generation/cave_vertexs.c\
 	generation/vertexs.c\
 	generation/borders.c\
 	generation/update_world.c\
