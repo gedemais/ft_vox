@@ -1,10 +1,9 @@
 MANDATORY
-caves
-fix water (remove useless faces)
+caves :
+Fix uvs by marking cave vertexs with the last bit of t_stride
 OPTIONAL
 biomes (interpoler les parametres de generation avec une granularite plus faible, de l'ordre du bloc)
 TO FIX
 player_light_intensity
 ombres
-#include ../../*
-rm const float block_size
+#include ../../ dans les sources
