@@ -1,5 +1,4 @@
 #include "main.h"
-#include "immintrin.h"
 
 static	uint8_t	***allocate_cave_map(unsigned int size)
 {
@@ -90,6 +89,7 @@ unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
 		|| init_worley_points(points, size) != ERR_NONE)
 		return (ERR_MALLOC_FAILED);
 
+	//return (ERR_NONE);
 	for (unsigned int x = 0; x < size; x++)
 		for (unsigned int y = 0; y < size; y++)
 			for (unsigned int z = 0; z < size; z++)

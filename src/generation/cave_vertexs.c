@@ -40,32 +40,79 @@ static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[N
 unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned int z,
 													 unsigned int x_start, unsigned int z_start)
 {
+	unsigned int	north_in, east_in, north_out, east_out = 0;
 	unsigned int	y = 0;
-	uint8_t			current;
-	unsigned char	code;
-	vec3			top_plane[6];
+	unsigned char	current, code;
+	vec3			a, b;
+	vec3	top_plane[6];
 
-	current = chunk->cave_map[x][y][z];
 	while (y < CHUNK_SIZE)
 	{
+		north_in = 0;
+		north_out = 0;
+		east_in = 0;
+		east_out = 0;
+		current = chunk->cave_map[x][y][z];
 		while (y < CHUNK_SIZE && chunk->cave_map[x][y][z] == current)
+		{
+			if (current == BT_STONE)
+			{
+				north_out += (z < CHUNK_SIZE - 1 && chunk->cave_map[x][y][z + 1] != BT_STONE) ? 1 : 0;
+				east_out += (x < CHUNK_SIZE - 1 && chunk->cave_map[x + 1][y][z] != BT_STONE) ? 1 : 0;
+			}
+			else
+			{
+				north_in += (z < CHUNK_SIZE - 1 && chunk->cave_map[x][y][z + 1] == BT_STONE) ? 1 : 0;
+				east_in += (x < CHUNK_SIZE - 1 && chunk->cave_map[x + 1][y][z] == BT_STONE) ? 1 : 0;
+			}
 			y++;
+		}
 
 		if (y == CHUNK_SIZE)
 			break;
+	//	printf("%u | %u | %u | %u\n", north_in, east_in, north_out, east_out);
 
-		if (current == BT_STONE)
+		if (north_out > 0)
 		{
-			if ((code = generate_top_plane(chunk, x + x_start, y, z + z_start, top_plane)))
+			a = (vec3){x + x_start, y, z + z_start + 1};
+			b = (vec3){x + x_start + 1, y, z + z_start + 1};
+			if ((code = generate_deep_fall(chunk, a, b, PO_NORTH, north_out, y)))
 				return (code);
-
-			current = 0;
-			return (ERR_NONE);
+			north_out = 0;
 		}
-		else
-			current = BT_STONE;
+
+		if (east_out > 0)
+		{
+			a = (vec3){x + x_start + 1, y, z + z_start + 1};
+			b = (vec3){x + x_start + 1, y, z + z_start};
+			if ((code = generate_deep_fall(chunk, a, b, PO_EST, east_out, y)))
+				return (code);
+			east_out = 0;
+		}
+
+		if (north_in > 0)
+		{
+			a = (vec3){x + x_start, y, z + z_start + 1};
+			b = (vec3){x + x_start + 1, y, z + z_start + 1};
+			if ((code = generate_deep_fall(chunk, a, b, PO_SOUTH, north_in, y)))
+				return (code);
+			north_in = 0;
+		}
+
+		if (east_in > 0)
+		{
+			a = (vec3){x + x_start + 1, y, z + z_start + 1};
+			b = (vec3){x + x_start + 1, y, z + z_start};
+			if ((code = generate_deep_fall(chunk, a, b, PO_WEST, east_in, y)))
+				return (code);
+			east_in = 0;
+		}
+
+		if ((code = generate_top_plane(chunk, x_start + x, y, z_start + z, top_plane)))
+			return (code);
 
 		y++;
 	}
+
 	return (ERR_NONE);
 }

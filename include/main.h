@@ -190,6 +190,7 @@ unsigned char		generate_water(t_chunk *chunk);
 unsigned char		generate_cave_map(t_chunk *chunk, unsigned int size);
 unsigned char	generate_cave_column(t_chunk *chunk, unsigned int x, unsigned int z,
 													 unsigned int x_start, unsigned int z_start);
+unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {
