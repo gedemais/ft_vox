@@ -7,7 +7,7 @@
 # define SQUARE_SIZE		 3 // Size of visible chunks matrix for the player (max_limit)
 # define SQUARE_TRIGGER_SIZE 1 // Size of visible chunks matrix for the player (max_limit)
 # define NB_WORLEY_DOTS		 16
-# define WORLEY_THRESHOLD	 16
+# define WORLEY_THRESHOLD	 10
 
 enum	e_side_orientation
 {

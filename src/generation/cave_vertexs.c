@@ -111,7 +111,7 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 		if ((code = generate_top_plane(chunk, x_start + x, y, z_start + z, top_plane)))
 			return (code);
 
-		y++;
+		//y++;
 	}
 
 	return (ERR_NONE);
