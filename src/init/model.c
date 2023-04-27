@@ -78,6 +78,8 @@ static unsigned char	push_skybox(t_env *env)
 	float			size_skybox;
 
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells);
+	printf("%d\n", env->model.meshs.byte_size);
+	printf("%d\n", env->model.meshs.nb_cells);
 	if (dynarray_init(&mesh->vertices, sizeof(vec3), 36) < 0)
 		return (ERR_MALLOC_FAILED);
 	size_skybox = env->camera.far / 2.0f;
@@ -96,7 +98,7 @@ unsigned char			model(t_env *env)
 	unsigned char	code;
 	const float		offset = (CHUNK_SIZE * MAP_SIZE + 1) / 2.0f;
 
-	if (dynarray_init(&env->model.meshs, sizeof(t_mesh), SQUARE_SIZE * SQUARE_SIZE) < 0)
+	if (dynarray_init(&env->model.meshs, sizeof(t_mesh), SQUARE_SIZE * SQUARE_SIZE * 2) < 0)
 		return (ERR_MALLOC_FAILED);
 
 	if ((code = push_world(env)) != ERR_NONE

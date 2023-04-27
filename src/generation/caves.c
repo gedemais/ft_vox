@@ -36,44 +36,43 @@ static unsigned char	init_worley_points(t_3dpoint points[NB_WORLEY_DOTS], unsign
 
 static int	dist(t_3dpoint a, t_3dpoint b)
 {
-	int	dx = b.x - a.x;
-	int	dy = b.y - a.y;
-	int	dz = b.z - a.z;
+	float	dx = b.x - a.x;
+	float	dy = b.y - a.y;
+	float	dz = b.z - a.z;
 
-	return (sqrt((dx * dx) + (dy * dy) + (dz * dz)));
+	return (sqrtf(dx * dx + dy * dy + dz * dz));
 }
 
-static float	get_lowest(int distances[NB_WORLEY_DOTS], float *offset, int *index)
+void	sort_distances(float arr[NB_WORLEY_DOTS], int n)
 {
-	int	lowest = INT_MAX;
-
-	for (int i = 0; i < NB_WORLEY_DOTS; i++)
-		if (lowest > distances[i])
-		{
-			*offset = lowest - distances[i];
-			lowest = distances[i];
-			*index = i;
-		}
-
-	return (lowest);
+    int i, key, j;
+    for (i = 1; i < n; i++)
+    {
+        key = arr[i];
+        j = i - 1;
+ 
+        while (j >= 0 && arr[j] > key)
+        {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
 }
 
-static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], int distances[NB_WORLEY_DOTS], t_3dpoint current, uint8_t *res)
+static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], float distances[NB_WORLEY_DOTS], t_3dpoint current, uint8_t *res)
 {
-	static float	offset = 0;
-	static int		index = 0;
-	float			d;
+	float	min_dist = INFINITY;
 
-	if (offset > WORLEY_THRESHOLD / 2)
-		distances[index] = dist(current, points[index]);
-	else
-		for (unsigned int i = 0; i < NB_WORLEY_DOTS; i++)
-			distances[i] = dist(current, points[i]);
+	for (unsigned int i = 0; i < NB_WORLEY_DOTS; i++)
+	{
+		distances[i] = dist(points[i], current);
+		min_dist = fmin(distances[i], min_dist);
+	}
 
-	d = get_lowest(distances, &offset, &index);
+	sort_distances(distances, NB_WORLEY_DOTS);
 
-
-	if (d > WORLEY_THRESHOLD)
+	if (distances[0] / distances[2] > WORLEY_THRESHOLD)
 		*res = BT_STONE;
 
 	return (ERR_NONE);
@@ -82,7 +81,7 @@ static unsigned char	worley_noise(t_3dpoint points[NB_WORLEY_DOTS], int distance
 unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
 {
 	t_3dpoint		points[NB_WORLEY_DOTS];
-	int				distances[NB_WORLEY_DOTS];
+	float			distances[NB_WORLEY_DOTS];
 	unsigned char	code;
 
 	if (!(chunk->cave_map = allocate_cave_map(size))
@@ -96,7 +95,7 @@ unsigned char			generate_cave_map(t_chunk *chunk, unsigned int size)
 				if ((code = worley_noise(points, distances, (t_3dpoint){x, y, z}, &chunk->cave_map[x][y][z])))
 					return (code);
 
-	/*
+/*	
 	for (unsigned int x = 0; x < size; x++)
 	{
 		for (unsigned int y = 0; y < size; y++)

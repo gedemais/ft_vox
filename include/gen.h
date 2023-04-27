@@ -2,12 +2,13 @@
 # define GEN_H
 
 # define CHUNK_SIZE			 64 // Size of chunk blocks in cubes
+# define CAVE_DEPTH			 32
 # define MAP_SIZE			 256 // Size of map chunk matrix in chunks
 # define BIOME_SIZE			 2 // Size of individual biome matrix in chunks
-# define SQUARE_SIZE		 3 // Size of visible chunks matrix for the player (max_limit)
+# define SQUARE_SIZE		 7 // Size of visible chunks matrix for the player (max_limit)
 # define SQUARE_TRIGGER_SIZE 1 // Size of visible chunks matrix for the player (max_limit)
-# define NB_WORLEY_DOTS		 16
-# define WORLEY_THRESHOLD	 10
+# define NB_WORLEY_DOTS		 8
+# define WORLEY_THRESHOLD	 0.85
 
 enum	e_side_orientation
 {

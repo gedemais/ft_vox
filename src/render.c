@@ -60,8 +60,8 @@ static void				pass_depth(t_env *env)
 	glBindFramebuffer(GL_FRAMEBUFFER, env->model.fbo);
 
 	update_options(env, 0);
-	i = -1;
-	while (++i < SHADOW_SOURCE_MAX) {
+	i = SHADOW_SOURCE_SUN;
+	//while (++i < SHADOW_SOURCE_MAX) {
 		// calculate new view / proj matrix for each lightsource
 		shadows_options(env, i);
 		// update uniforms
@@ -71,7 +71,7 @@ static void				pass_depth(t_env *env)
 			mesh = dyacc(&env->model.meshs, j);
 			render_mesh(mesh);
 		}
-	}
+	//}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

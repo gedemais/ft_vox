@@ -55,7 +55,7 @@ unsigned char	update_chunk_mesh(t_env *env, unsigned int x, unsigned int z)
 
 	glBindBuffer(GL_ARRAY_BUFFER, m->vbo);
 	size = (GLsizeiptr)sizeof(t_stride) * m->vertices.nb_cells;
-	glBufferData(GL_ARRAY_BUFFER, size, m->vertices.arr, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, m->vertices.arr, GL_DYNAMIC_DRAW); // STREAM VS DYNAMIC ?
 	set_layouts(false);
 	glBindVertexArray(0);
 	return (ERR_NONE);
