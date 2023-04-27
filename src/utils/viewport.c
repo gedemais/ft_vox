@@ -1,13 +1,17 @@
 #include "main.h"
 
 
-void		reset_viewport(unsigned int width, unsigned int height)
+void		reset_viewport(GLFWwindow * window, unsigned int width, unsigned int height)
 {
-	unsigned int	e = 1;
 
 #ifdef __APPLE__
-	e = 2f;
+	int	w, h;
+	glfwGetWindowSize(window, &w, &h);
+	width = w;
+	height = h;
 #endif
 
-	glViewport(0, 0, width * e, height * e); // Maybe e should be our aspect ratio
+
+
+	glViewport(0, 0, width, height); // Maybe e should be our aspect ratio
 }

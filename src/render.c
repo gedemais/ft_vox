@@ -25,14 +25,14 @@ static void				update_options(t_env *env, char type)
 {
 	switch (type) {
 		case (0): // depth
-			reset_viewport(DEPTHMAP_W, DEPTHMAP_H);
+			reset_viewport(env->window.ptr, DEPTHMAP_W, DEPTHMAP_H);
 			glClear(GL_DEPTH_BUFFER_BIT);
 			glCullFace(GL_FRONT);
 			// Passes if the incoming depth value is less than the stored depth value.
 			glDepthFunc(GL_LESS);
 			break;
 		case (1): // model
-			reset_viewport(env->window.w, env->window.h);
+			reset_viewport(env->window.ptr, env->window.w, env->window.h);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glCullFace(GL_BACK);
 			// Passes if the incoming depth value is less than the stored depth value.

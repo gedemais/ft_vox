@@ -9,7 +9,7 @@ enum					e_toggles
 	TOGGLE_MAX
 };
 
-static t_env			*g_env = NULL;
+static t_env *g_env;
 
 // ====================================================================
 
@@ -63,7 +63,7 @@ static void				cb_framebuffer_size(GLFWwindow *window, int width, int height)
 {
 	(void)window;
 
-	reset_viewport(width, height);
+	reset_viewport(window, width, height);
 
 	g_env->settings.w_wdt = (uint16_t)width;
 	g_env->settings.w_hgt = (uint16_t)height;

@@ -14,6 +14,7 @@ static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_st
 	return (ERR_NONE);
 }
 
+/*
 static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned int	y;
@@ -30,15 +31,16 @@ static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z
 				return (code);
 		}
 	return (ERR_NONE);
-}
+}*/
 
-unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
+static unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned char	code;
 
-	if ((code = generate_surface_vertexs(chunk, x_start, z_start))
-		|| (code = generate_cave_vertexs(chunk, x_start, z_start)))
+	//if ((code = generate_surface_vertexs(chunk, x_start, z_start))
+	if ((code = generate_cave_vertexs(chunk, x_start, z_start)))
 		return (code);
+
 	return (ERR_NONE);
 }
 
@@ -59,7 +61,7 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 		// Generate height maps for surface and cave
 		// Topography type should be a parameter which would affect perlin noise generation
 		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE, 40))
-			|| (code = generate_cave_map(chunk, CHUNK_SIZE)))
+			|| (code = generate_cave_map(env, chunk, CHUNK_SIZE)))
 			return (ERR_MALLOC_FAILED);
 	}
 

@@ -3,7 +3,7 @@ window_width = 1280
 
 fov = 90.0
 gamma = 1.5
-far_plane = 160.0
+far_plane = 320.0
 near_plane = 0.1
 player_speed = 12.0
 mouse_sensitivity = 8.0

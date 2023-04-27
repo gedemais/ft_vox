@@ -95,6 +95,7 @@ typedef struct	s_model
 	t_dynarray	meshs;
 	GLuint		program, program_skybox, program_depth; // shaders' program for model, skybox and depth
 	t_uniform	uniforms; // 
+	t_dynarray	wpoints;
 	float		**biomes;
 	int			square_x, square_z;
 	t_chunk		chunks[SQUARE_SIZE][SQUARE_SIZE];

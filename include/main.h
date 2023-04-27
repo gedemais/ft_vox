@@ -105,17 +105,27 @@ typedef struct		s_mouse
 	float	base_sensitivity, sensitivity;
 }					t_mouse;
 
+typedef struct	s_generation_thread_params
+{
+	pthread_t	tid;
+	void		*env;
+	t_chunk		*new;
+	int			i;
+	int			new_z;
+}				t_gthread_params;
+
 // Main environment structure
 typedef struct		s_env
 {
-	t_window	window;
-	t_settings	settings;
-	t_camera	camera;
-	t_fps		fps;
-	t_mouse		mouse;
-	t_model		model;
-	t_light		light;
-	t_shaders	shaders[SHADER_MAX];
+	t_window			window;
+	t_settings			settings;
+	t_camera			camera;
+	t_fps				fps;
+	t_mouse				mouse;
+	t_model				model;
+	t_light				light;
+	t_shaders			shaders[SHADER_MAX];
+	t_gthread_params	threads[SQUARE_SIZE];
 	// Function pointers array linking actions functions with key binds
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;
@@ -177,7 +187,6 @@ unsigned char		borders(t_env *env);
 unsigned char		generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth);
 unsigned char		init_caches(t_env *env);
 float				perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
-unsigned char		generate_vertexs(t_chunk *chunk, int x_start, int z_start);
 unsigned char		update_world(t_env *env);
 unsigned char		update_chunk_mesh(t_env *env, unsigned int x, unsigned int z);
 void				print_square(t_env *env);
@@ -187,7 +196,7 @@ unsigned char		fix_east_border(t_chunk *chunk, t_chunk *neighbour);
 unsigned char		fix_south_border(t_chunk *chunk, t_chunk *neighbour);
 unsigned char		push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water);
 unsigned char		generate_water(t_chunk *chunk);
-unsigned char		generate_cave_map(t_chunk *chunk, unsigned int size);
+unsigned char		generate_cave_map(t_env *env, t_chunk *chunk, unsigned int size);
 unsigned char	generate_cave_column(t_chunk *chunk, unsigned int x, unsigned int z,
 													 unsigned int x_start, unsigned int z_start);
 unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y);
@@ -217,7 +226,7 @@ static const char	*settings_keys[SET_MAX] = {
 
 // UTILS
 void				fps(t_fps *fps, bool print);
-void				reset_viewport(unsigned int width, unsigned int height);
+void				reset_viewport(GLFWwindow *window, unsigned int width, unsigned int height);
 
 
 #endif
