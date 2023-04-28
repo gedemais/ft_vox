@@ -6,11 +6,12 @@
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 18:04:36 by gedemais          #+#    #+#             */
-/*   Updated: 2022/08/23 19:43:02 by maboye           ###   ########.fr       */
+/*   Updated: 2023/04/28 15:16:43 by gedemais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
+#include <pthread.h>
 
 void			dynarray_pop(t_dynarray *arr, bool front)
 {
@@ -42,6 +43,7 @@ int				dynarray_push(t_dynarray *arr, void *src, bool front)
 	else 
 		ft_memcpy((void *)(arr->arr + len), src, arr->cell_size);
 	++arr->nb_cells;
+
 	return (0);
 }
 

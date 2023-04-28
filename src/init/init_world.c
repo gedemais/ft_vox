@@ -41,11 +41,23 @@ static unsigned char	init_map(t_env *env)
 	env->model.square_x = (MAP_SIZE - SQUARE_SIZE) / 2;
 	env->model.square_z = (MAP_SIZE - SQUARE_SIZE) / 2;
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
+		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
+		{
+			x_start = (env->model.square_x + x) * CHUNK_SIZE;
+			z_start = (env->model.square_z + z) * CHUNK_SIZE;
+			env->model.chunks[x][z].x_start = x_start;
+			env->model.chunks[x][z].z_start = z_start;
+			if ((code = init_worley_points(env, &env->model.chunks[x][z], CHUNK_SIZE)))
+				return (code);
+		}
+
+	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 	{
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
 		{
 			x_start = (env->model.square_x + x) * CHUNK_SIZE;
 			z_start = (env->model.square_z + z) * CHUNK_SIZE;
+
 			if ((code = gen_chunk(env, &env->model.chunks[x][z], x_start, z_start, true)))
 				return (code);
 		}
