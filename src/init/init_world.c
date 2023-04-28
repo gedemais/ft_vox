@@ -47,7 +47,7 @@ static unsigned char	init_map(t_env *env)
 			z_start = (env->model.square_z + z) * CHUNK_SIZE;
 			env->model.chunks[x][z].x_start = x_start;
 			env->model.chunks[x][z].z_start = z_start;
-			if ((code = init_worley_points(env, &env->model.chunks[x][z], CHUNK_SIZE)))
+			if ((code = init_worley_points(env, &env->model.chunks[x][z], CAVE_DEPTH)))
 				return (code);
 		}
 

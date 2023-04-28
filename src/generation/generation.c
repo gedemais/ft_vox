@@ -61,7 +61,7 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 		// Generate height maps for surface and cave
 		// Topography type should be a parameter which would affect perlin noise generation
 		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE, 40))
-			|| (code = generate_cave_map(env, chunk, CHUNK_SIZE)))
+			|| (code = generate_cave_map(env, chunk, CAVE_DEPTH)))
 			return (ERR_MALLOC_FAILED);
 	}
 

@@ -9,14 +9,14 @@ static	uint8_t	***allocate_cave_map(unsigned int size)
 
 	for (unsigned int i = 0; i < size; i++)
 	{
-		if (!(new[i] = (uint8_t**)malloc(sizeof(uint8_t*) * size)))
+		if (!(new[i] = (uint8_t**)malloc(sizeof(uint8_t*) * CHUNK_SIZE)))
 			return (NULL);
 
 		for (unsigned int j = 0; j < size; j++)
 		{
-			if (!(new[i][j] = (uint8_t*)malloc(sizeof(uint8_t) * size)))
+			if (!(new[i][j] = (uint8_t*)malloc(sizeof(uint8_t) * CHUNK_SIZE)))
 				return (NULL);
-			ft_memset(new[i][j], 0, sizeof(uint8_t) * size);
+			ft_memset(new[i][j], 0, sizeof(uint8_t) * CHUNK_SIZE);
 		}
 
 	}
@@ -47,20 +47,21 @@ unsigned char	init_worley_points(t_env *env, t_chunk *chunk, unsigned int size)
 {
 	(void)env;
 
+	printf("%s\n", __FUNCTION__);
 	int	seed = (int)(*map_seed() * randbycoords(chunk->x_start, chunk->z_start));
 
 	srand(seed);
 
-	printf("%d %d : %d\n", chunk->x_start, chunk->z_start, seed);
 	for (unsigned int i = 0; i < NB_WORLEY_POINTS; i++)
 	{
 		chunk->wpoints[i].x = rand() % size;
 		chunk->wpoints[i].y = rand() % size;
 		chunk->wpoints[i].z = rand() % size;
 
+		printf("%d %d %d\n", chunk->wpoints[i].x, chunk->wpoints[i].y, chunk->wpoints[i].z);
+
 		chunk->wpoints[i].x += chunk->x_start;
 		chunk->wpoints[i].z += chunk->z_start;
-		//printf("%d %d %d\n", chunk->wpoints[i].x, chunk->wpoints[i].y, chunk->wpoints[i].z);
 	}
 	return (ERR_NONE);
 }
@@ -115,8 +116,7 @@ static void				get_three_lowests(t_dynarray *distances, vec3 *res)
 		if (res->y < res->x)
 		{
 			tmp = res->x;
-			res->x = res->y;
-			res->y = tmp;
+			res->x = res->y; res->y = tmp;
 		}
 	}
 }
@@ -125,31 +125,21 @@ static unsigned char	get_points(t_env *env, t_chunk *chunk, t_dynarray *points)
 {
 	t_chunk	*tmp;
 	int		current_x, current_z;
-	(void)chunk;
-/*
-	for (int x = 0; x < SQUARE_SIZE; x++)
-		for (int z = 0; z < SQUARE_SIZE; z++)
-		{
-			tmp = &env->model.chunks[x][z];
-			if (tmp->x_start == chunk->x_start && tmp->z_start == chunk->z_start)
-			{
-				current_x = x;
-				current_z = z;
-			}
-		}*/
 
-//	for (int x = current_x - 1; x <= current_x + 1; x++)
-//		for (int z = current_z - 1; z <= current_z + 1; z++)
+	(void)chunk;
+	printf("--------\n");
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int z = 0; z < SQUARE_SIZE; z++)
 		{
 			for (int i = 0; i < NB_WORLEY_POINTS; i++)
 			{
-				printf("%d %d %d\n", env->model.chunks[x][z].wpoints[i].x, env->model.chunks[x][z].wpoints[i].y, env->model.chunks[x][z].wpoints[i].z);
+				printf("%d %d %d | %d cells\n", env->model.chunks[x][z].wpoints[i].x, env->model.chunks[x][z].wpoints[i].y, env->model.chunks[x][z].wpoints[i].z, points->nb_cells);
 				if (dynarray_push(points, &env->model.chunks[x][z].wpoints[i], false))
 					return (ERR_MALLOC_FAILED);
 			}
 		}
+	printf("--------\n");
+	fflush(stdout);
 	return (ERR_NONE);
 }
 
@@ -190,30 +180,31 @@ unsigned char			generate_cave_map(t_env *env, t_chunk *chunk, unsigned int size)
 	t_dynarray		distances;
 	unsigned char	code;
 
-	if (dynarray_init(&distances, sizeof(float), NB_WORLEY_POINTS * SQUARE_SIZE * SQUARE_SIZE))
+	if (dynarray_init(&distances, sizeof(float), NB_WORLEY_POINTS * SQUARE_SIZE * SQUARE_SIZE)
+		|| dynarray_init(&points, sizeof(t_3dpoint), SQUARE_SIZE * SQUARE_SIZE * NB_WORLEY_POINTS))
 		return (ERR_MALLOC_FAILED);
-	if (dynarray_init(&points, sizeof(t_3dpoint), SQUARE_SIZE * SQUARE_SIZE * NB_WORLEY_POINTS))
-		return (ERR_MALLOC_FAILED);
-
-	get_points(env, chunk, &points);
 
 	if (!(chunk->cave_map = allocate_cave_map(size))
-		|| init_worley_points(env, chunk, size) != ERR_NONE)
+		|| get_points(env, chunk, &points))
 		return (ERR_MALLOC_FAILED);
 
-	//return (ERR_NONE);
-	for (unsigned int x = 0; x < size; x++)
+	for (unsigned int x = 0; x < CHUNK_SIZE; x++)
 	{
 		for (unsigned int y = 0; y < size; y++)
 		{
-			for (unsigned int z = 0; z < size; z++)
+			for (unsigned int z = 0; z < CHUNK_SIZE; z++)
+			{
+				
+				printf("%d/%d  %d/%d  %d/%d\n", x, CHUNK_SIZE, y, size, z, CHUNK_SIZE);
+				printf("%p\n", &chunk->cave_map[x][y][z]);
 				if ((code = worley_noise(env, chunk, &points, &distances, (t_3dpoint){x, y, z}, &chunk->cave_map[x][y][z])))
 					return (code);
+			}
 		}
-		
 	}
 
 	dynarray_free(&points);
+	dynarray_free(&distances);
 	/*
 	for (unsigned int x = 0; x < size; x++)
 	{

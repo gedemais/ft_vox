@@ -25,9 +25,9 @@ static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[N
 		ty = y + n[i].y;
 		tz = z + n[i].z;
 
-		if (tx >= CHUNK_SIZE
-			|| ty >= CHUNK_SIZE
-			|| tz >= CHUNK_SIZE)
+		if (tx >= CAVE_DEPTH
+			|| ty >= CAVE_DEPTH
+			|| tz >= CAVE_DEPTH)
 			continue;
 
 		if (chunk->cave_map[tx][ty][tz] == BT_STONE)
@@ -46,7 +46,7 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 
 	vec3			a, b;
 
-	for (unsigned int y = 0; y < CHUNK_SIZE; y++)
+	for (unsigned int y = 0; y < CAVE_DEPTH; y++)
 	{
 		if (chunk->cave_map[x][y][z] != BT_STONE)
 		{
