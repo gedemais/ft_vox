@@ -99,7 +99,6 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 						return (code);
 				}
 
-
 			}
 		}
 	}

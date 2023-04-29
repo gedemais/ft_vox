@@ -13,7 +13,7 @@ void		free_cave_map(uint8_t ***cave_map)
 		return ;
 	for (int i = 0; i < CHUNK_SIZE; i++)
 	{
-		for (int j = 0; j < CHUNK_SIZE; j++)
+		for (int j = 0; j < CAVE_DEPTH; j++)
 			free(cave_map[i][j]);
 
 		free(cave_map[i]);

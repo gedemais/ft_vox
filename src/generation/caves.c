@@ -4,12 +4,12 @@ static	uint8_t	***allocate_cave_map(unsigned int size)
 {
 	uint8_t	***new;
 
-	if (!(new = (uint8_t***)malloc(sizeof(uint8_t**) * size)))
+	if (!(new = (uint8_t***)malloc(sizeof(uint8_t**) * CHUNK_SIZE)))
 		return (NULL);
 
-	for (unsigned int i = 0; i < size; i++)
+	for (unsigned int i = 0; i < CHUNK_SIZE; i++)
 	{
-		if (!(new[i] = (uint8_t**)malloc(sizeof(uint8_t*) * CHUNK_SIZE)))
+		if (!(new[i] = (uint8_t**)malloc(sizeof(uint8_t*) * size)))
 			return (NULL);
 
 		for (unsigned int j = 0; j < size; j++)
@@ -61,6 +61,7 @@ unsigned char	init_worley_points(t_env *env, t_chunk *chunk, unsigned int size)
 		printf("%d %d %d\n", chunk->wpoints[i].x, chunk->wpoints[i].y, chunk->wpoints[i].z);
 
 		chunk->wpoints[i].x += chunk->x_start;
+		chunk->wpoints[i].y += CAVE_DEPTH;
 		chunk->wpoints[i].z += chunk->z_start;
 	}
 	return (ERR_NONE);
@@ -194,9 +195,8 @@ unsigned char			generate_cave_map(t_env *env, t_chunk *chunk, unsigned int size)
 		{
 			for (unsigned int z = 0; z < CHUNK_SIZE; z++)
 			{
-				
-				printf("%d/%d  %d/%d  %d/%d\n", x, CHUNK_SIZE, y, size, z, CHUNK_SIZE);
-				printf("%p\n", &chunk->cave_map[x][y][z]);
+				//printf("%d/%d  %d/%d  %d/%d\n", x, CHUNK_SIZE, y, size, z, CHUNK_SIZE);
+				//printf("%p\n", &chunk->cave_map[x][y][z]);
 				if ((code = worley_noise(env, chunk, &points, &distances, (t_3dpoint){x, y, z}, &chunk->cave_map[x][y][z])))
 					return (code);
 			}

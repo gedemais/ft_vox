@@ -269,7 +269,6 @@ unsigned char			update_world(t_env *env)
 	static pthread_t	thread_id = (pthread_t)0;
 	int					trigger_id = 0;
 
-
 	if (thread_id == (pthread_t)1)
 	{
 		update_square(env, &params);
