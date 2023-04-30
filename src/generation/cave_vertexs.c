@@ -25,9 +25,9 @@ static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[N
 		ty = y + n[i].y;
 		tz = z + n[i].z;
 
-		if (tx >= CAVE_DEPTH
+		if (tx >= CHUNK_SIZE
 			|| ty >= CAVE_DEPTH
-			|| tz >= CAVE_DEPTH)
+			|| tz >= CHUNK_SIZE)
 			continue;
 
 		if (chunk->cave_map[tx][ty][tz] == BT_STONE)
@@ -43,19 +43,22 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 	unsigned		plain_neighbours = 0;
 	unsigned char	neighbours[N_MAX];
 	unsigned char	code;
-
+	const unsigned int		offset = 32;
 	vec3			a, b;
+	vec3			top_plane[6];
 
-	for (unsigned int y = 0; y < CAVE_DEPTH; y++)
+	if ((code = generate_top_plane(chunk, x_start + x, offset, z_start + z, top_plane)))
+		return (code);
+
+	for (unsigned int y = offset; y < CAVE_DEPTH + offset; y++)
 	{
-		if (chunk->cave_map[x][y][z] != BT_STONE)
+		if (chunk->cave_map[x][y - offset][z] != BT_STONE)
 		{
-			plain_neighbours = check_neighbours(chunk, neighbours, x, y, z);
+			plain_neighbours = check_neighbours(chunk, neighbours, x, y - CAVE_DEPTH, z);
 			for (unsigned int i = 0; i < plain_neighbours; i++)
 			{
 				if (neighbours[i] == N_UP)
 				{
-					vec3 top_plane[6];
 					if ((code = generate_top_plane(chunk, x_start + x, y + 1, z_start + z, top_plane)))
 						return (code);
 				}

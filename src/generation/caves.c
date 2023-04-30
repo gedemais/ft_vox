@@ -61,7 +61,7 @@ unsigned char	init_worley_points(t_env *env, t_chunk *chunk, unsigned int size)
 		chunk->wpoints[i].z = rand() % CHUNK_SIZE;
 
 		chunk->wpoints[i].x += chunk->x_start;
-		chunk->wpoints[i].y += CAVE_DEPTH;
+		//chunk->wpoints[i].y += CAVE_DEPTH;
 		chunk->wpoints[i].z += chunk->z_start;
 	}
 	return (ERR_NONE);
@@ -128,23 +128,23 @@ static unsigned char	get_points(t_env *env, t_chunk *chunk, t_dynarray *points)
 	int			current_x, current_z;
 
 	(void)chunk;
-	printf("--------\n");
+//	printf("--------\n");
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int z = 0; z < SQUARE_SIZE; z++)
 		{
 			if (abs(env->model.chunks[x][z].x_start - chunk->x_start) <= CHUNK_SIZE
-				&& abs(env->model.chunks[x][z].z_start - chunk->z_start) <= CHUNK_SIZE)
+				|| abs(env->model.chunks[x][z].z_start - chunk->z_start) <= CHUNK_SIZE)
 			{
 				for (int i = 0; i < NB_WORLEY_POINTS; i++)
 				{
-					printf("%d %d %d | %d cells\n", env->model.chunks[x][z].wpoints[i].x, env->model.chunks[x][z].wpoints[i].y, env->model.chunks[x][z].wpoints[i].z, points->nb_cells);
+//					printf("%d %d %d | %d cells\n", env->model.chunks[x][z].wpoints[i].x, env->model.chunks[x][z].wpoints[i].y, env->model.chunks[x][z].wpoints[i].z, points->nb_cells);
 					if (dynarray_push(points, &env->model.chunks[x][z].wpoints[i], false))
 						return (ERR_MALLOC_FAILED);
 				}
 			}
 		}
-	printf("--------\n");
-	fflush(stdout);
+//	printf("--------\n");
+//	fflush(stdout);
 	return (ERR_NONE);
 }
 

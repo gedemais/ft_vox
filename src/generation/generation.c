@@ -48,9 +48,9 @@ static unsigned char	generate_vertexs(t_env *env, t_chunk *chunk, int x_start, i
 	(void)env;
 	unsigned char	code;
 
-	//if ((code = generate_surface_vertexs(chunk, x_start, z_start))
-	if ((code = generate_cave_vertexs(chunk, x_start, z_start)) != ERR_NONE)
-		return (code);
+//	if ((code = generate_surface_vertexs(chunk, x_start, z_start))
+		if ((code = generate_cave_vertexs(chunk, x_start, z_start)) != ERR_NONE)
+			return (code);
 
 	return (ERR_NONE);
 }

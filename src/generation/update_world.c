@@ -121,9 +121,6 @@ static unsigned char move_square_on_z(t_env *env, t_ms_params *params)
 	t_mesh				mesh;
 	int					new_z;
 
-	printf("%s\n", __FUNCTION__);
-	print_square_wp(env);
-	fflush(stdout);
 	new_z = north ? SQUARE_SIZE - 1 : 0;
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{
