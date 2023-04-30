@@ -126,6 +126,7 @@ typedef struct		s_env
 	t_light				light;
 	t_shaders			shaders[SHADER_MAX];
 	t_gthread_params	threads[SQUARE_SIZE];
+	t_dynarray			worley_points;
 	// Function pointers array linking actions functions with key binds
 	void		(*keybinds_fts[NB_KEYS])(struct s_env *env, int key);
 }					t_env;

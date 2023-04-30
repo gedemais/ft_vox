@@ -48,6 +48,9 @@ unsigned char			init(t_env *env, int argc, char **argv)
 	srand(time(NULL));
 	env->window.fullscreen = true;
 
+	if (dynarray_init(&env->worley_points, sizeof(t_wp), SQUARE_SIZE * SQUARE_SIZE * NB_WORLEY_POINTS))
+		return (ERR_MALLOC_FAILED);
+
 	if ((code = load_settings(env)) != ERR_NONE // Loads settings data from Settings.toml
 		|| (code = load_textures(env)) != ERR_NONE
 		|| (code = load_shaders(env)) != ERR_NONE

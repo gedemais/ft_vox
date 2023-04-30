@@ -28,6 +28,24 @@ void				print_square(t_env *env)
 	}
 }
 
+void				print_square_wp(t_env *env)
+{
+	for (int x = 0; x < SQUARE_SIZE; x++)
+	{
+		for (int z = 0; z < SQUARE_SIZE; z++)
+		{
+			printf("[");
+			for (unsigned int i = 0; i < NB_WORLEY_POINTS; i++)
+			{
+			printf(" %d %d %d |",
+				env->model.chunks[z][x].wpoints[i].x, env->model.chunks[z][x].wpoints[i].y, env->model.chunks[z][x].wpoints[i].z);
+			}
+			printf("]  ");
+		}
+		printf("\n");
+	}
+}
+
 // Shall we return an error if the chunk to remove is not found ?
 static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *olds)
 {
@@ -55,7 +73,6 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 	if (!found)
 	{
 		printf("Not found (%d %d)\n", chunk->x_start, chunk->z_start);
-		print_square(env);
 	}
 
 	return (ERR_NONE);
@@ -104,6 +121,9 @@ static unsigned char move_square_on_z(t_env *env, t_ms_params *params)
 	t_mesh				mesh;
 	int					new_z;
 
+	printf("%s\n", __FUNCTION__);
+	print_square_wp(env);
+	fflush(stdout);
 	new_z = north ? SQUARE_SIZE - 1 : 0;
 	for (int i = 0; i < SQUARE_SIZE; i++)
 	{

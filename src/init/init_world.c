@@ -17,29 +17,13 @@ static unsigned char	read_seed(int argc, char **argv)
 	return (ERR_NONE);
 }
 
-static unsigned char	init_biomes(t_env *env)
-{
-	if (!(env->model.biomes = (float**)malloc(MAP_SIZE * sizeof(float*))))
-		return (ERR_MALLOC_FAILED);
-
-	for (unsigned int x = 0; x < MAP_SIZE; x++)
-	{
-		if (!(env->model.biomes[x] = (float*)malloc(MAP_SIZE * sizeof(float))))
-			return (ERR_MALLOC_FAILED);
-
-		for (unsigned int y = 0; y < MAP_SIZE; y++)
-			env->model.biomes[x][y] = perlin2d_a((float)x, (float)y, 0.1f, 6.0f);
-	}
-	return (ERR_NONE);
-}
-
 static unsigned char	init_map(t_env *env)
 {
 	unsigned char	code;
 	int				x_start, z_start;
 
-	env->model.square_x = (MAP_SIZE - SQUARE_SIZE) / 2;
-	env->model.square_z = (MAP_SIZE - SQUARE_SIZE) / 2;
+	env->model.square_x = 0;
+	env->model.square_z = 0;
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
 		{
@@ -78,7 +62,6 @@ unsigned char			init_world(t_env *env, int argc, char **argv)
 	unsigned char	code;
 
 	if ((argc > 1 && (code = read_seed(argc, argv)) != ERR_NONE)
-		|| (code = init_biomes(env)) != ERR_NONE
 		|| (code = init_map(env)) != ERR_NONE)
 		return (code);
 

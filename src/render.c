@@ -125,7 +125,7 @@ static void				update_data(t_env *env)
 	// we update the model center
 	const float	e = SQUARE_SIZE / 2.0f * CHUNK_SIZE;
 
-	env->model.center = (vec3){ e + env->model.chunks[0][0].x_start, 0, e + env->model.chunks[0][0].z_start };
+	env->model.center = (vec3){ e + env->model.chunks[0][0].x_start, 0, e + env->model.chunks[0][0].z_start};
 
 	// LIGHT
 	// we update the flaslight position
@@ -149,10 +149,10 @@ static unsigned char	render_scene(t_env *env)
 {
 	unsigned char	code;
 
-	if ((code = update_world(env)) != ERR_NONE)
-		return (code);
 	// update data
 	update_data(env);
+	if ((code = update_world(env)) != ERR_NONE)
+		return (code);
 	// first  - render depth
 	if (env->light.shadow == true)
 		pass_depth(env);

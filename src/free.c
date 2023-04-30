@@ -81,9 +81,6 @@ static void	free_chunks(t_env *env)
 	free_textures(env);
 	free_shaders(env);
 
-	for (unsigned int i = 0; i < MAP_SIZE; i++)
-		free(env->model.biomes[i]);
-
 	t_dynarray	*array;
 	t_chunk		*cached;
 	for (int i = 0; i < env->model.chunks_cache.nb_cells; i++)

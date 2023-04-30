@@ -39,6 +39,7 @@ float		ft_rsqrt(float number);
 vec3		vec_normalize(vec3 vec);
 float		vec_dot(vec3 a, vec3 b);
 float		vec3d_dist(vec3 o, vec3 v);
+bool		vec_is_zero(vec3 v);
 
 // matrices
 void		mat4_multiply(mat4 a, mat4 b);

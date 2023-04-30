@@ -46,6 +46,11 @@ float	vec3d_dist(vec3 o, vec3 v)
 		+ (o.z - v.z) * (o.z - v.z)));
 }
 
+bool	vec_is_zero(vec3 v)
+{
+	return (v.x > 0 && v.y > 0 && v.z > 0);
+}
+
 bool	vec_outrange(vec3 dim, vec3 pos)
 {
 	return (pos.x < 0 || pos.x > dim.x - 1

@@ -1,5 +1,15 @@
 # include "main.h"
 
+static bool				is_chunk_on_border(t_env *env, int x_start, int z_start)
+{
+	const int	last = SQUARE_SIZE - 1;
+
+	return  (env->model.chunks[0][0].x_start == x_start
+			|| env->model.chunks[0][0].z_start == z_start
+			|| env->model.chunks[last][last].x_start == x_start
+			|| env->model.chunks[last][last].z_start == z_start);
+}
+
 static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned char	code;
@@ -33,12 +43,12 @@ static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z
 	return (ERR_NONE);
 }*/
 
-static unsigned char	generate_vertexs(t_chunk *chunk, int x_start, int z_start)
+static unsigned char	generate_vertexs(t_env *env, t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned char	code;
 
 	//if ((code = generate_surface_vertexs(chunk, x_start, z_start))
-	if ((code = generate_cave_vertexs(chunk, x_start, z_start)))
+	if (!is_chunk_on_border(env, x_start, z_start) && (code = generate_cave_vertexs(chunk, x_start, z_start)))
 		return (code);
 
 	return (ERR_NONE);
@@ -61,7 +71,7 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 		// Generate height maps for surface and cave
 		// Topography type should be a parameter which would affect perlin noise generation
 		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE, 40))
-			|| (code = generate_cave_map(env, chunk, CAVE_DEPTH)))
+			|| (!is_chunk_on_border(env, x_start, z_start) && (code = generate_cave_map(env, chunk, CAVE_DEPTH))))
 			return (ERR_MALLOC_FAILED);
 	}
 
@@ -70,7 +80,7 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 		if (stride && dynarray_init(&chunk->stride, sizeof(t_stride), CHUNK_SIZE * CHUNK_SIZE * 6 * 2))
 			return (ERR_MALLOC_FAILED);
 
-		if (stride && (code = generate_vertexs(chunk, x_start, z_start)) != ERR_NONE)
+		if (stride && (code = generate_vertexs(env, chunk, x_start, z_start)) != ERR_NONE)
 			return (code);
 	}
 

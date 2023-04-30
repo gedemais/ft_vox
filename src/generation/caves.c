@@ -24,6 +24,8 @@ static	uint8_t	***allocate_cave_map(unsigned int size)
 }
 
 float randbycoords(int x, int y) {
+	x += INT_MAX / 2;
+	y += INT_MAX / 2;
   /* mix around the bits in x: */
   x = x * 3266489917 + 374761393;
   x = (x << 17) | (x >> 15);
@@ -124,19 +126,29 @@ static void				get_three_lowests(t_dynarray *distances, vec3 *res)
 
 static unsigned char	get_points(t_env *env, t_chunk *chunk, t_dynarray *points)
 {
-	t_chunk	*tmp;
-	int		current_x, current_z;
+	t_chunk		*tmp;
+	int			current_x, current_z;
 
 	(void)chunk;
 	printf("--------\n");
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int z = 0; z < SQUARE_SIZE; z++)
 		{
-			for (int i = 0; i < NB_WORLEY_POINTS; i++)
+			if (abs(env->model.chunks[x][z].x_start - chunk->x_start) <= CHUNK_SIZE
+				&& abs(env->model.chunks[x][z].z_start - chunk->z_start) <= CHUNK_SIZE)
 			{
-				printf("%d %d %d | %d cells\n", env->model.chunks[x][z].wpoints[i].x, env->model.chunks[x][z].wpoints[i].y, env->model.chunks[x][z].wpoints[i].z, points->nb_cells);
-				if (dynarray_push(points, &env->model.chunks[x][z].wpoints[i], false))
-					return (ERR_MALLOC_FAILED);
+				for (int i = 0; i < NB_WORLEY_POINTS; i++)
+				{
+					/*while (env->model.chunks[x][z].wpoints[i].x == 0 && env->model.chunks[x][z].wpoints[i].y == 0 && env->model.chunks[x][z].wpoints[i].z == 0)
+					{
+						printf("waiting\n");
+						usleep(1000);
+					}*/
+				//	wp = &env->model.chunks[x][z].wpoints[i];
+					printf("%d %d %d | %d cells\n", env->model.chunks[x][z].wpoints[i].x, env->model.chunks[x][z].wpoints[i].y, env->model.chunks[x][z].wpoints[i].z, points->nb_cells);
+					if (dynarray_push(points, &env->model.chunks[x][z].wpoints[i], false))
+						return (ERR_MALLOC_FAILED);
+				}
 			}
 		}
 	printf("--------\n");
