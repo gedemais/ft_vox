@@ -6,8 +6,8 @@
 # define BIOME_SIZE			 2 // Size of individual biome matrix in chunks
 # define SQUARE_SIZE		 7 // Size of visible chunks matrix for the player (max_limit)
 # define SQUARE_TRIGGER_SIZE 1 // Size of visible chunks matrix for the player (max_limit)
-# define NB_WORLEY_POINTS	2
-# define WORLEY_THRESHOLD	0.6f
+# define NB_WORLEY_POINTS		4
+# define WORLEY_THRESHOLD		0.85f
 
 enum	e_side_orientation
 {

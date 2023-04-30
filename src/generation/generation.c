@@ -1,5 +1,5 @@
 # include "main.h"
-
+/*
 static bool				is_chunk_on_border(t_env *env, int x_start, int z_start)
 {
 	const int	last = SQUARE_SIZE - 1;
@@ -8,7 +8,7 @@ static bool				is_chunk_on_border(t_env *env, int x_start, int z_start)
 			|| env->model.chunks[0][0].z_start == z_start
 			|| env->model.chunks[last][last].x_start == x_start
 			|| env->model.chunks[last][last].z_start == z_start);
-}
+}*/
 
 static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
@@ -45,10 +45,11 @@ static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z
 
 static unsigned char	generate_vertexs(t_env *env, t_chunk *chunk, int x_start, int z_start)
 {
+	(void)env;
 	unsigned char	code;
 
 	//if ((code = generate_surface_vertexs(chunk, x_start, z_start))
-	if (!is_chunk_on_border(env, x_start, z_start) && (code = generate_cave_vertexs(chunk, x_start, z_start)))
+	if ((code = generate_cave_vertexs(chunk, x_start, z_start)) != ERR_NONE)
 		return (code);
 
 	return (ERR_NONE);
@@ -70,8 +71,9 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 		//printf("frequency : %f | depth : %f\n", params.frequency, params.depth);
 		// Generate height maps for surface and cave
 		// Topography type should be a parameter which would affect perlin noise generation
+		//init_worley_points(env, chunk, CAVE_DEPTH);
 		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE, 40))
-			|| (!is_chunk_on_border(env, x_start, z_start) && (code = generate_cave_map(env, chunk, CAVE_DEPTH))))
+			|| (code = generate_cave_map(env, chunk, CAVE_DEPTH)))
 			return (ERR_MALLOC_FAILED);
 	}
 

@@ -17,8 +17,8 @@ static int hash[] = {208,34,231,213,32,248,233,56,161,78,24,140,71,48,140,254,24
 
 static int noise2(int x, int y)
 {
-    int tmp = hash[(y + *map_seed()) % 255];
-    return hash[(tmp + x) % 255];
+    int tmp = hash[(y + *map_seed()) % 256];
+    return hash[(tmp + x) % 256];
 }
 
 static float lin_inter(float x, float y, float s)
