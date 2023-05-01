@@ -47,11 +47,13 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 	vec3			a, b;
 	vec3			top_plane[6];
 
-	if ((code = generate_top_plane(chunk, x_start + x, offset, z_start + z, top_plane)))
-		return (code);
+	//if ((code = generate_top_plane(chunk, x_start + x, offset, z_start + z, top_plane)))
+	//	return (code);
 
 	for (unsigned int y = offset; y < CAVE_DEPTH + offset; y++)
 	{
+		//printf("%d %d %d (%p)\n", x, y - offset, z, chunk->cave_map);
+		//fflush(stdout);
 		if (chunk->cave_map[x][y - offset][z] != BT_STONE)
 		{
 			plain_neighbours = check_neighbours(chunk, neighbours, x, y - CAVE_DEPTH, z);

@@ -75,6 +75,8 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 		printf("Not found (%d %d)\n", chunk->x_start, chunk->z_start);
 	}
 
+	ft_memset(chunk, 0, sizeof(t_chunk));
+
 	return (ERR_NONE);
 }
 
@@ -250,6 +252,8 @@ static void	*move_square(void *params)
 		move_square_on_z(env, params);
 	else
 		move_square_on_x(env, params);
+
+	generate_last_caves(env);
 
 	*((t_ms_params*)params)->thread_id = (pthread_t)1;
 	return (NULL);

@@ -1,5 +1,5 @@
 # include "main.h"
-/*
+
 static bool				is_chunk_on_border(t_env *env, int x_start, int z_start)
 {
 	const int	last = SQUARE_SIZE - 1;
@@ -8,7 +8,7 @@ static bool				is_chunk_on_border(t_env *env, int x_start, int z_start)
 			|| env->model.chunks[0][0].z_start == z_start
 			|| env->model.chunks[last][last].x_start == x_start
 			|| env->model.chunks[last][last].z_start == z_start);
-}*/
+}
 
 static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
@@ -24,7 +24,7 @@ static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_st
 	return (ERR_NONE);
 }
 
-/*
+
 static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned int	y;
@@ -41,17 +41,42 @@ static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z
 				return (code);
 		}
 	return (ERR_NONE);
-}*/
+}
 
 static unsigned char	generate_vertexs(t_env *env, t_chunk *chunk, int x_start, int z_start)
 {
 	(void)env;
 	unsigned char	code;
 
-//	if ((code = generate_surface_vertexs(chunk, x_start, z_start))
-		if ((code = generate_cave_vertexs(chunk, x_start, z_start)) != ERR_NONE)
-			return (code);
+	if ((code = generate_surface_vertexs(chunk, x_start, z_start)))
+		return (code);
 
+	if (!is_chunk_on_border(env, x_start, z_start)
+		&& (code = generate_cave_vertexs(chunk, x_start, z_start)) != ERR_NONE)
+		return (code);
+
+	return (ERR_NONE);
+}
+
+unsigned char	generate_last_caves(t_env *env)
+{
+	t_chunk			*chunk;
+	unsigned char	code;
+
+	printf("%s\n", __FUNCTION__);
+	for (unsigned int x = 1; x < SQUARE_SIZE - 1; x++)
+		for (unsigned int z = 1; z < SQUARE_SIZE - 1; z++)
+		{
+			printf("not on border (%d %d)\n", x, z);
+			chunk = &env->model.chunks[x][z];
+
+			if (chunk->cave_map == NULL)
+				if ((code = generate_cave_map(env, chunk, CAVE_DEPTH)) != ERR_NONE)
+					return (code);
+
+			if ((code = generate_cave_vertexs(chunk, chunk->x_start, chunk->z_start)) != ERR_NONE)
+				return (code);
+		}
 	return (ERR_NONE);
 }
 
@@ -71,18 +96,21 @@ static unsigned char	generate_chunk_content(t_env *env, t_chunk *chunk, int x_st
 		//printf("frequency : %f | depth : %f\n", params.frequency, params.depth);
 		// Generate height maps for surface and cave
 		// Topography type should be a parameter which would affect perlin noise generation
-		//init_worley_points(env, chunk, CAVE_DEPTH);
-		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE, 40))
-			|| (code = generate_cave_map(env, chunk, CAVE_DEPTH)))
+		if (!(chunk->surface_hmap = generate_height_map(surface_params, x_start, z_start, CHUNK_SIZE, 40)))
 			return (ERR_MALLOC_FAILED);
+
+		if (!is_chunk_on_border(env, x_start, z_start) && (code = generate_cave_map(env, chunk, CAVE_DEPTH)))
+			return (code);
+		else if ((code = init_worley_points(env, chunk, CAVE_DEPTH)))
+			return (code);
 	}
 
 	if (stride)
 	{
-		if (stride && dynarray_init(&chunk->stride, sizeof(t_stride), CHUNK_SIZE * CHUNK_SIZE * 6 * 2))
+		if (dynarray_init(&chunk->stride, sizeof(t_stride), CHUNK_SIZE * CHUNK_SIZE * 6 * 2))
 			return (ERR_MALLOC_FAILED);
 
-		if (stride && (code = generate_vertexs(env, chunk, x_start, z_start)) != ERR_NONE)
+		if ((code = generate_vertexs(env, chunk, x_start, z_start)) != ERR_NONE)
 			return (code);
 	}
 

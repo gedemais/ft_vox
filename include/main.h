@@ -198,7 +198,8 @@ unsigned char		fix_south_border(t_chunk *chunk, t_chunk *neighbour);
 unsigned char		push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, unsigned int y, float fall_size, bool side, bool water);
 unsigned char		generate_water(t_chunk *chunk);
 unsigned char		generate_cave_map(t_env *env, t_chunk *chunk, unsigned int size);
-unsigned char	generate_cave_column(t_chunk *chunk, unsigned int x, unsigned int z,
+unsigned char		generate_last_caves(t_env *env);
+unsigned char		generate_cave_column(t_chunk *chunk, unsigned int x, unsigned int z,
 													 unsigned int x_start, unsigned int z_start);
 unsigned char	init_worley_points(t_env *env, t_chunk *chunk, unsigned int size);
 unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y);

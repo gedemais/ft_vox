@@ -49,7 +49,6 @@ unsigned char	init_worley_points(t_env *env, t_chunk *chunk, unsigned int size)
 {
 	(void)env;
 
-	printf("%s\n", __FUNCTION__);
 	int	seed = (int)(*map_seed() * randbycoords(chunk->x_start, chunk->z_start));
 
 	srand(seed);
@@ -185,12 +184,12 @@ unsigned char			generate_cave_map(t_env *env, t_chunk *chunk, unsigned int size)
 	t_dynarray		distances;
 	unsigned char	code;
 
+	printf("%s\n", __FUNCTION__);
 	if (dynarray_init(&distances, sizeof(float), NB_WORLEY_POINTS * SQUARE_SIZE * SQUARE_SIZE)
 		|| dynarray_init(&points, sizeof(t_3dpoint), SQUARE_SIZE * SQUARE_SIZE * NB_WORLEY_POINTS))
 		return (ERR_MALLOC_FAILED);
 
 	if (!(chunk->cave_map = allocate_cave_map(size))
-		|| init_worley_points(env, chunk, size)
 		|| get_points(env, chunk, &points))
 		return (ERR_MALLOC_FAILED);
 

@@ -4,9 +4,9 @@
 # define CHUNK_SIZE			 64 // Size of chunk blocks in cubes
 # define CAVE_DEPTH			 32
 # define BIOME_SIZE			 2 // Size of individual biome matrix in chunks
-# define SQUARE_SIZE		 7 // Size of visible chunks matrix for the player (max_limit)
+# define SQUARE_SIZE		 5 // Size of visible chunks matrix for the player (max_limit)
 # define SQUARE_TRIGGER_SIZE 1 // Size of visible chunks matrix for the player (max_limit)
-# define NB_WORLEY_POINTS		3
+# define NB_WORLEY_POINTS		2
 # define WORLEY_THRESHOLD		0.9f
 
 enum	e_side_orientation
