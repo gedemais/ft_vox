@@ -82,9 +82,9 @@ void	main()
 	float		fall_size;
 
 	//////// Bitfield unpacking ///////////
-	pos.x = float(data1 & 0xFFFF);
-	pos.y = float((data1 & 0xFFFF0000) >> 16u);
-	pos.z = float(data2 & 0xFFFF);
+	pos.x = data1 & 0xFFFF;
+	pos.y = (data1 & 0xFFFF0000) >> 16u;
+	pos.z = data2 & 0xFFFF;
 	pos.w = 1.0f;
 
 	uv_id		= ((uint(data2) & 0x70000u) >> 16u);

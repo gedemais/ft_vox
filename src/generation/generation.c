@@ -24,7 +24,6 @@ static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_st
 	return (ERR_NONE);
 }
 
-
 static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z_start)
 {
 	unsigned int	y;
@@ -45,7 +44,6 @@ static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z
 
 static unsigned char	generate_vertexs(t_env *env, t_chunk *chunk, int x_start, int z_start)
 {
-	(void)env;
 	unsigned char	code;
 
 	if ((code = generate_surface_vertexs(chunk, x_start, z_start)))
@@ -63,11 +61,9 @@ unsigned char	generate_last_caves(t_env *env)
 	t_chunk			*chunk;
 	unsigned char	code;
 
-	printf("%s\n", __FUNCTION__);
 	for (unsigned int x = 1; x < SQUARE_SIZE - 1; x++)
 		for (unsigned int z = 1; z < SQUARE_SIZE - 1; z++)
 		{
-			printf("not on border (%d %d)\n", x, z);
 			chunk = &env->model.chunks[x][z];
 
 			if (chunk->cave_map == NULL)

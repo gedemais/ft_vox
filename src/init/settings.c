@@ -130,7 +130,7 @@ static unsigned char	loader(t_env *env, char **lines)
 	unsigned char	code;
 	bool			found; // Used to check if the current settings key exists.
 
-	ft_memset(founds, 0, sizeof(bool) * SET_MAX); // No settings found yet, flat to 0.
+	memset(founds, 0, sizeof(bool) * SET_MAX); // No settings found yet, flat to 0.
 	for (unsigned int i = 0; lines[i]; i++) // Iterate through lines.
 	{
 		// Split in words

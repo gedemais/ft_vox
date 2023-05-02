@@ -59,7 +59,7 @@ static unsigned char	push_world(t_env *env)
 
 			chunk = &env->model.chunks[x][y];
 
-			ft_memset(&mesh, 0, sizeof(t_mesh));
+			memset(&mesh, 0, sizeof(t_mesh));
 			mesh.vertices = chunk->stride;
 			mesh.x_start = chunk->x_start;
 			mesh.z_start = chunk->z_start;
@@ -96,7 +96,7 @@ static unsigned char	push_skybox(t_env *env)
 unsigned char			model(t_env *env)
 {
 	unsigned char	code;
-	const float		offset = (CHUNK_SIZE * SQUARE_SIZE + 1) / 2.0f;
+	const float		offset = CHUNK_SIZE * (512.0f + (SQUARE_SIZE / 2.0f));
 
 	if (dynarray_init(&env->model.meshs, sizeof(t_mesh), SQUARE_SIZE * SQUARE_SIZE * 2) < 0)
 		return (ERR_MALLOC_FAILED);

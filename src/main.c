@@ -18,7 +18,7 @@ int						main(int argc, char **argv)
 	t_env			env;
 	unsigned char	code;
 
-	ft_memset(&env, 0, sizeof(t_env));
+	memset(&env, 0, sizeof(t_env));
 	if ((code = ft_vox(&env, argc, argv)) != ERR_NONE)
 	{
 		error_handler(&env, code);

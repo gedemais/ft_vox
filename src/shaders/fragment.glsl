@@ -108,7 +108,7 @@ vec4	compute_light_sources(int i, LightSources source, vec3 color, vec3 view_dir
 
 	// light attenuation
 	e				= distance(source.pos, vPosition);
-	attenuation		= (1 / e) * source.intensity;
+	attenuation		= min((1 / e) * source.intensity, 1.0f);
 	color			*= attenuation;
 
 	return (vec4(color, 1));

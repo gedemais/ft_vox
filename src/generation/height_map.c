@@ -11,7 +11,7 @@ static	uint8_t	**allocate_height_map(unsigned int size)
 	{
 		if (!(new[i] = (uint8_t*)malloc(sizeof(uint8_t) * size)))
 			return (NULL);
-		ft_memset(new[i], 0, sizeof(uint8_t) * size);
+		memset(new[i], 0, sizeof(uint8_t) * size);
 	}
 
 	return (new);

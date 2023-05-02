@@ -14,7 +14,7 @@
 
 static int	switch_block_type(unsigned int z)
 {
-	const unsigned int	bounds[BTB_MAX][2] ={
+	static const unsigned int	bounds[BTB_MAX][2] ={
 											{BTB_CAVE, BT_STONE},
 											{BTB_BEACH, BT_SAND},
 											{BTB_SOIL, BT_GROUND},
@@ -60,7 +60,7 @@ unsigned char	push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, un
 	// Addition of 6 vertexs plane to the mesh's data stride
 	for (unsigned int i = 0; i < 6; i++)
 	{
-		ft_memset(&vertex, 0, sizeof(t_stride));
+		memset(&vertex, 0, sizeof(t_stride));
 
 
 		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;

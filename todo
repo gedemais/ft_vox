@@ -1,9 +1,6 @@
 MANDATORY
-caves :
-Fix uvs by marking cave vertexs with the last bit of t_stride
-OPTIONAL
-biomes (interpoler les parametres de generation avec une granularite plus faible, de l'ordre du bloc)
+fix les liaisons de caves
+fix les incoherences de generation
+Generer un sol
+Trouver un moyen de connecter les caves a la surface
 TO FIX
-player_light_intensity
-ombres
-#include ../../ dans les sources

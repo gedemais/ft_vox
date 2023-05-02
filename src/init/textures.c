@@ -7,9 +7,9 @@ static unsigned char	get_textures_uniforms(t_env *env, int i)
 
 	if ((ai = ft_itoa(i)) == NULL)
 		return (ERR_MALLOC_FAILED);
-	ft_memset(target, 0, sizeof(char) * 256);
-	ft_strcat(target, "vTexture_");
-	ft_strcat(target, ai);
+	memset(target, 0, sizeof(char) * 256);
+	strcat(target, "vTexture_");
+	strcat(target, ai);
 	env->model.uniforms.textures[i] = glGetUniformLocation(env->model.program, target);
 	ft_strdel(&ai);
 	return (ERR_NONE);

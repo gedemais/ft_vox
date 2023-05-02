@@ -6,7 +6,7 @@
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 18:04:09 by gedemais          #+#    #+#             */
-/*   Updated: 2022/08/23 18:48:17 by maboye           ###   ########.fr       */
+/*   Updated: 2023/05/01 19:58:45 by gedemais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int		realloc_content(t_dynarray *arr)
 	if (!(tmp = ft_memalloc(arr->byte_size))
 		|| !(arr->tmp = ft_memalloc(arr->byte_size)))
 		return (-1);
-	ft_memcpy(tmp, arr->arr, prev_size);
+	memcpy(tmp, arr->arr, prev_size);
 	free(arr->arr);
 	arr->arr = tmp;
 	return (0);

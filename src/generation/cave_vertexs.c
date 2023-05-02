@@ -18,7 +18,7 @@ static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[N
 	unsigned int	index = 0;
 	unsigned int	tx, ty, tz;
 
-	ft_memset(neighbours, 0, sizeof(unsigned char) * 6);
+	memset(neighbours, 0, sizeof(unsigned char) * 6);
 	for (unsigned int i = 0; i < N_MAX; i++)
 	{
 		tx = x + n[i].x;
@@ -40,12 +40,27 @@ static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[N
 unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned int z,
 												unsigned int x_start, unsigned int z_start)
 {
-	unsigned		plain_neighbours = 0;
-	unsigned char	neighbours[N_MAX];
-	unsigned char	code;
-	const unsigned int		offset = 32;
-	vec3			a, b;
-	vec3			top_plane[6];
+	unsigned			plain_neighbours = 0;
+	unsigned char		neighbours[N_MAX];
+	unsigned char		code;
+	const unsigned int	offset = 32;
+	vec3				a, b;
+	vec3				top_plane[6];
+	const unsigned int	heights[N_MAX] = {0, 0, 0, 0}; // greedy meshing
+
+	vec3				a_points[N_MAX] = {
+						[N_WEST] = (vec3){0, 1, 0},
+						[N_EAST] = (vec3){1, 1, 0},
+						[N_NORTH] = (vec3){0, 1, 1},
+						[N_SOUTH] = (vec3){0, 1, 0}
+	};
+
+	const vec3			b_points[N_MAX] = {
+						[N_WEST] = (vec3){0, 0, 1},
+						[N_EAST] = (vec3){0, 0, 1},
+						[N_NORTH] = (vec3){1, 0, 0},
+						[N_SOUTH] = (vec3){1, 0, 0}
+	};
 
 	//if ((code = generate_top_plane(chunk, x_start + x, offset, z_start + z, top_plane)))
 	//	return (code);
@@ -67,13 +82,21 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 
 				else if (neighbours[i] == N_DOWN)
 				{
-					vec3 top_plane[6];
 					if ((code = generate_top_plane(chunk, x_start + x, y, z_start + z, top_plane)))
 						return (code);
 				}
 
+				else
+				{
+					a = vec_add((vec3){x_start + x, y, z_start + z}, a_points[neighbours[i]]);
+					b = vec_add(a, b_points[neighbours[i]]);
+					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
+						return (code);
+				}
+/*
 				else if (neighbours[i] == N_WEST)
 				{
+					heights[N_WEST]++;
 					a = (vec3){x_start + x, y + 1, z_start + z};
 					b = vec_add(a, (vec3){0, 0, 1});
 					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
@@ -82,6 +105,7 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 
 				else if (neighbours[i] == N_EAST)
 				{
+					heights[N_EAST]++;
 					a = (vec3){x_start + x + 1, y + 1, z_start + z};
 					b = vec_add(a, (vec3){0, 0, 1});
 					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
@@ -90,6 +114,7 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 
 				else if (neighbours[i] == N_NORTH)
 				{
+					heights[N_NORTH]++;
 					a = (vec3){x_start + x, y + 1, z_start + z + 1};
 					b = vec_add(a, (vec3){1, 0, 0});
 					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
@@ -98,11 +123,12 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 
 				else if (neighbours[i] == N_SOUTH)
 				{
+					heights[N_SOUTH]++;
 					a = (vec3){x_start + x, y + 1, z_start + z};
 					b = vec_add(a, (vec3){1, 0, 0});
 					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
 						return (code);
-				}
+				}*/
 
 			}
 		}

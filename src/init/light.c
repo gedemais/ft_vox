@@ -2,10 +2,10 @@
 
 static void				build_target(char target[256], char *str, char *ai)
 {
-	ft_memset(target, 0, sizeof(char) * 256);
-	ft_strcat(target, "light_sources[");
-	ft_strcat(target, ai);
-	ft_strcat(target, str);
+	memset(target, 0, sizeof(char) * 256);
+	strcat(target, "light_sources[");
+	strcat(target, ai);
+	strcat(target, str);
 }
 
 static unsigned char	get_light_uniforms(t_env *env, int i)

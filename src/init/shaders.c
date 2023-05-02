@@ -18,7 +18,7 @@ static unsigned char	compile_shader(unsigned int shader_id, const GLchar *source
 	// If shader's compilation failed
 	if (success == GL_FALSE)
 	{ // Then display error log message before to exit
-		ft_memset(info_log, 0, sizeof(info_log));
+		memset(info_log, 0, sizeof(info_log));
 		glGetShaderInfoLog(shader_id, sizeof(info_log), NULL, info_log);
 		ft_putstr_fd(info_log, 2);
 		return (ERR_FAILED_TO_COMPILE_SHADER);

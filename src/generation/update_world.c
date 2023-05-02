@@ -75,7 +75,7 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 		printf("Not found (%d %d)\n", chunk->x_start, chunk->z_start);
 	}
 
-	ft_memset(chunk, 0, sizeof(t_chunk));
+	memset(chunk, 0, sizeof(t_chunk));
 
 	return (ERR_NONE);
 }
@@ -211,9 +211,13 @@ static unsigned char	update_square(t_env *env, t_ms_params *params)
 
 		// Borders fix
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
+		{
 			if ((code = fix_chunk_borders(env, x, z)) != ERR_NONE
 				|| (code = update_chunk_mesh(env, x, z)))
 				return (code);
+			env->model.chunks[x][z].chunk_x = x;
+			env->model.chunks[x][z].chunk_z = z;
+		}
 	}
 
 	for (unsigned int i = 0; i < SQUARE_SIZE; i++)
@@ -221,7 +225,7 @@ static unsigned char	update_square(t_env *env, t_ms_params *params)
 		// Water generation
 
 		// Initialization of the newly created mesh
-		ft_memset(&mesh, 0, sizeof(t_mesh));
+		memset(&mesh, 0, sizeof(t_mesh));
 		mesh.vertices = params->news[i]->stride;
 		mesh.x_start = params->news[i]->x_start;
 		mesh.z_start = params->news[i]->z_start;

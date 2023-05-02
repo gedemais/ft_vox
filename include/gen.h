@@ -4,10 +4,10 @@
 # define CHUNK_SIZE			 64 // Size of chunk blocks in cubes
 # define CAVE_DEPTH			 32
 # define BIOME_SIZE			 2 // Size of individual biome matrix in chunks
-# define SQUARE_SIZE		 5 // Size of visible chunks matrix for the player (max_limit)
+# define SQUARE_SIZE		 7 // Size of visible chunks matrix for the player (max_limit)
 # define SQUARE_TRIGGER_SIZE 1 // Size of visible chunks matrix for the player (max_limit)
-# define NB_WORLEY_POINTS		2
-# define WORLEY_THRESHOLD		0.9f
+# define NB_WORLEY_POINTS		3
+# define WORLEY_THRESHOLD		0.8f
 
 enum	e_side_orientation
 {
@@ -79,6 +79,7 @@ typedef struct	s_chunk
 	uint8_t			**surface_hmap;
 	uint8_t			***cave_map;
 	int				x_start, z_start;
+	unsigned int	chunk_x, chunk_z;
 	t_3dpoint		wpoints[NB_WORLEY_POINTS];
 }				t_chunk;
 

@@ -22,8 +22,8 @@ static unsigned char	init_map(t_env *env)
 	unsigned char	code;
 	int				x_start, z_start;
 
-	env->model.square_x = 0;
-	env->model.square_z = 0;
+	env->model.square_x = 512;
+	env->model.square_z = 512;
 	for (unsigned int x = 0; x < SQUARE_SIZE; x++)
 		for (unsigned int z = 0; z < SQUARE_SIZE; z++)
 		{
@@ -44,6 +44,9 @@ static unsigned char	init_map(t_env *env)
 
 			if ((code = gen_chunk(env, &env->model.chunks[x][z], x_start, z_start, true)))
 				return (code);
+
+			env->model.chunks[x][z].chunk_x = x;
+			env->model.chunks[x][z].chunk_z = z;
 		}
 	}
 

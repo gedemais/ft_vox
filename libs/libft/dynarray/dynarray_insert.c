@@ -6,7 +6,7 @@
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 18:03:33 by gedemais          #+#    #+#             */
-/*   Updated: 2022/08/23 19:12:23 by maboye           ###   ########.fr       */
+/*   Updated: 2023/05/01 19:58:34 by gedemais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ int				dynarray_insert(t_dynarray *arr, void *src, int index)
 		return (ret == -1 ? -1 : 0);
 	mid = arr->arr + (index * arr->cell_size);
 	rest = (arr->nb_cells - index + 1) * arr->cell_size;
-	ft_memcpy(arr->tmp, mid, rest);
-	ft_memcpy(mid, src, arr->cell_size);
+	memcpy(arr->tmp, mid, rest);
+	memcpy(mid, src, arr->cell_size);
 	mid += arr->cell_size;
-	ft_memcpy(mid, arr->tmp, rest);
+	memcpy(mid, arr->tmp, rest);
 	++arr->nb_cells;
 	return (0);
 }
@@ -57,8 +57,8 @@ int				dynarray_extract(t_dynarray *arr, int index)
 		return (ret == -1 ? -1 : 0);
 	mid = arr->arr + (index * arr->cell_size);
 	rest = (arr->nb_cells - index - 1) * arr->cell_size;
-	ft_memcpy(arr->tmp, mid + arr->cell_size, rest);
-	ft_memcpy(mid, arr->tmp, rest);
+	memcpy(arr->tmp, mid + arr->cell_size, rest);
+	memcpy(mid, arr->tmp, rest);
 	--arr->nb_cells;
 	return (0);
 }

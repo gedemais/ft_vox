@@ -6,7 +6,7 @@
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 18:02:41 by gedemais          #+#    #+#             */
-/*   Updated: 2022/09/09 18:01:44 by gedemais         ###   ########.fr       */
+/*   Updated: 2023/05/01 19:58:05 by gedemais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void			dynarray_free(t_dynarray *arr)
 	if (arr) {
 		free(arr->arr);
 		free(arr->tmp);
-		ft_memset(arr, 0, sizeof(t_dynarray));
+		memset(arr, 0, sizeof(t_dynarray));
 	}
 }
 
@@ -49,6 +49,6 @@ int				dynarray_init(t_dynarray *arr, int cell_size, int nb_cells)
 		&& (!(arr->arr = ft_memalloc(arr->byte_size))
 		|| !(arr->tmp = ft_memalloc(arr->byte_size))))
 		return (-1);
-	ft_memset(arr->arr, 0, arr->byte_size);
+	memset(arr->arr, 0, arr->byte_size);
 	return (0);
 }
