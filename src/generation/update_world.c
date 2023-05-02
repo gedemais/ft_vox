@@ -46,10 +46,8 @@ void				print_square_wp(t_env *env)
 	}
 }
 
-// Shall we return an error if the chunk to remove is not found ?
 static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *olds)
 {
-	bool	found = false;
 	t_mesh	*m;
 
 	dynarray_free(&chunk->stride);
@@ -65,14 +63,8 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 				|| dynarray_push(olds, &m->vbo, false))
 				return (ERR_MALLOC_FAILED);
 			dynarray_extract(&env->model.meshs, i);
-			found = true;
 			break ;
 		}
-	}
-
-	if (!found)
-	{
-		printf("Not found (%d %d)\n", chunk->x_start, chunk->z_start);
 	}
 
 	memset(chunk, 0, sizeof(t_chunk));
@@ -308,7 +300,10 @@ unsigned char			update_world(t_env *env)
 				if (thread_id == (pthread_t)0)
 				{
 					params = (t_ms_params){env, trigger_id, &thread_id, {}, {}};
-					pthread_create(&thread_id, NULL, &move_square, &params);
+
+					if (pthread_create(&thread_id, NULL, &move_square, &params))
+						return (ERR_PTHREAD_CREATE_FAILED);
+
 					pthread_detach(thread_id);
 					return (ERR_NONE);
 				}

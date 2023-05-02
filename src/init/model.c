@@ -78,8 +78,6 @@ static unsigned char	push_skybox(t_env *env)
 	float			size_skybox;
 
 	mesh = dyacc(&env->model.meshs, env->model.meshs.nb_cells);
-	printf("%d\n", env->model.meshs.byte_size);
-	printf("%d\n", env->model.meshs.nb_cells);
 	if (dynarray_init(&mesh->vertices, sizeof(vec3), 36) < 0)
 		return (ERR_MALLOC_FAILED);
 	size_skybox = env->camera.far / 2.0f;

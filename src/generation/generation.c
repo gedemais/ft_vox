@@ -20,8 +20,7 @@ static unsigned char	generate_cave_vertexs(t_chunk *chunk, int x_start, int z_st
 			if ((code = generate_cave_column(chunk, x, z, x_start, z_start)))
 				return (code);
 		}
-	generate_cave_floor(chunk);
-	return (ERR_NONE);
+	return (generate_cave_floor(chunk));
 }
 
 static unsigned char	generate_surface_vertexs(t_chunk *chunk, int x_start, int z_start)

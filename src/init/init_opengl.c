@@ -56,9 +56,12 @@ unsigned char			init_display(t_env *env)
 	if ((code = glfw_create_window(&env->window.ptr, "ft_vox",
 			env->window.w, env->window.h, env->window.fullscreen) != ERR_NONE))
 		return (code);
+
 	glfwMakeContextCurrent(env->window.ptr);
+
 	if (!gladLoadGL())
 		return (ERR_FAILED_GLAD);
+
 	glfwSwapInterval(1);
 	glfw_init_callbacks(env);
 	env->fps.time = glfwGetTime();

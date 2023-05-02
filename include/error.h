@@ -33,6 +33,7 @@ enum	e_error_id
 	ERR_TEXTURE_LOADING_FAILED,
 	ERR_CHUNK_NOT_FOUND,
 	ERR_FRAMEBUFFER_ERROR,
+	ERR_PTHREAD_CREATE_FAILED,
 	ERR_MAX
 };
 
@@ -67,7 +68,8 @@ static const t_error	errors[ERR_MAX] = {
 	[ERR_INVALID_GAMMA_VALUE] = {"Invalid gamma value", false},
 	[ERR_TEXTURE_LOADING_FAILED] = {"lodepng : Failed to load texture file", false},
 	[ERR_CHUNK_NOT_FOUND] = {"Could not delete unused chunk", false},
-	[ERR_FRAMEBUFFER_ERROR] = {"GL :: couldn't create framebuffer", false}
+	[ERR_FRAMEBUFFER_ERROR] = {"GL :: couldn't create framebuffer", false},
+	[ERR_PTHREAD_CREATE_FAILED] = {"pthread_create() failed", false}
 	//[] = {"", false}
 	//[] = {"", false}
 	//[] = {"", false}

@@ -99,6 +99,5 @@ void 					glfw_init_callbacks(t_env *env)
 	g_env = env;
 	glfwSetCursorPosCallback(env->window.ptr, cb_cursor_position);
 	glfwSetFramebufferSizeCallback(env->window.ptr, cb_framebuffer_size);
-	// glfwSetWindowFocusCallback(env->window.ptr, cb_window_focus);
 	glfwSetScrollCallback(env->window.ptr, cb_scroll);
 }

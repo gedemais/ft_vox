@@ -15,10 +15,10 @@ unsigned char			generate_cave_floor(t_chunk *chunk)
 	vec3		a, b, c, d;
 	vec3		plane[6];
 
-	a = (vec3){chunk->x_start, 0, chunk->z_start + CHUNK_SIZE};
-	b = (vec3){chunk->x_start + CHUNK_SIZE, 0, chunk->z_start + CHUNK_SIZE};
-	c = (vec3){chunk->x_start, 0, chunk->z_start};
-	d = (vec3){chunk->x_start + CHUNK_SIZE, 0, chunk->z_start};
+	a = (vec3){chunk->x_start, CAVE_DEPTH, chunk->z_start + CHUNK_SIZE};
+	b = (vec3){chunk->x_start + CHUNK_SIZE, CAVE_DEPTH, chunk->z_start + CHUNK_SIZE};
+	c = (vec3){chunk->x_start, CAVE_DEPTH, chunk->z_start};
+	d = (vec3){chunk->x_start + CHUNK_SIZE, CAVE_DEPTH, chunk->z_start};
 
 	plane[0] = c;
 	plane[1] = a;

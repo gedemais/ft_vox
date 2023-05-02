@@ -187,6 +187,7 @@ unsigned char			load_settings(t_env *env)
 	// Reads file and splits it into lines
 	if ((code = readlines("Settings.toml", &lines)) != ERR_NONE)
 		return (code);
+
 	if ((code = loader(env, lines)) != ERR_NONE)
 	{
 		ft_arrfree(lines);
