@@ -60,7 +60,7 @@ typedef struct __attribute__((__packed__)) s_stride
 	int		fs : 6; // fall_size
 	int		n : 3;
 	int		bt : 3;
-	int		pad : 1;
+	int		floor : 1;
 }				__attribute__((__packed__)) t_stride;
 
 typedef struct	s_texture

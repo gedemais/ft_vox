@@ -200,8 +200,9 @@ unsigned char		generate_cave_map(t_env *env, t_chunk *chunk, unsigned int size);
 unsigned char		generate_last_caves(t_env *env);
 unsigned char		generate_cave_column(t_chunk *chunk, unsigned int x, unsigned int z,
 													 unsigned int x_start, unsigned int z_start);
-unsigned char	init_worley_points(t_env *env, t_chunk *chunk, unsigned int size);
-unsigned char	generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y);
+unsigned char		init_worley_points(t_env *env, t_chunk *chunk, unsigned int size);
+unsigned char		generate_deep_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int offset, unsigned int y);
+unsigned char		generate_cave_floor(t_chunk *chunk);
 
 // Settings.toml keys
 static const char	*settings_keys[SET_MAX] = {

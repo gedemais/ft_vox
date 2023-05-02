@@ -9,6 +9,45 @@ static const vec3	n[6] =	{
 								[N_DOWN] = (vec3){0, -1, 0}
 								};
 
+unsigned char			generate_cave_floor(t_chunk *chunk)
+{
+	t_stride	vertex;
+	vec3		a, b, c, d;
+	vec3		plane[6];
+
+	a = (vec3){chunk->x_start, 0, chunk->z_start + CHUNK_SIZE};
+	b = (vec3){chunk->x_start + CHUNK_SIZE, 0, chunk->z_start + CHUNK_SIZE};
+	c = (vec3){chunk->x_start, 0, chunk->z_start};
+	d = (vec3){chunk->x_start + CHUNK_SIZE, 0, chunk->z_start};
+
+	plane[0] = c;
+	plane[1] = a;
+	plane[2] = b;
+	plane[3] = c;
+	plane[4] = b;
+	plane[5] = d;
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		memset(&vertex, 0, sizeof(t_stride));
+
+		// Constuction of the vertex
+		vertex = (t_stride){(short)plane[i].x, 
+							(short)plane[i].y,
+							(short)plane[i].z,
+							(uint8_t)i,
+							(uint8_t)((int)CHUNK_SIZE - 1),
+							(uint8_t)N_UP,
+							(uint8_t)BT_STONE,
+							(uint8_t)1};
+
+		// Insertion of the vertex in the stride
+		if (dynarray_push(&chunk->stride, &vertex, false))
+			return (ERR_MALLOC_FAILED);
+	}
+	return (ERR_NONE);
+}
+
 static unsigned int		check_neighbours(t_chunk *chunk, unsigned char neighbours[N_MAX],
 																					unsigned int x,
 																					unsigned int y,

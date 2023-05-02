@@ -46,24 +46,28 @@ vec3	get_normal(int n)
 	return (normal);
 }
 
-vec2	get_uv(int n, bool cw, float fall_size)
+vec2	get_uv(int n, bool cw, float fall_size, bool floor)
 {
 	vec2	uv;
+	int		base = 1;
+
+	if (floor)
+		base = 64;
 
 	switch (n)
 	{
 		case (0):
-			uv = vec2(1, fall_size);
+			uv = vec2(base, fall_size);
 			break ;
 		case (1):
-			uv = vec2(cw ? 0 : 1, 0);
+			uv = vec2(cw ? 0 : base, 0);
 			break ;
 		case (2):
-			uv = vec2(cw ? 1 : 0, 0);
+			uv = vec2(cw ? base : 0, 0);
 			break ;
 
 		case (3):
-			uv = vec2(1, fall_size);
+			uv = vec2(base, fall_size);
 			break ;
 		case (4):
 			uv = vec2(0, cw ? fall_size : 0);
@@ -72,6 +76,8 @@ vec2	get_uv(int n, bool cw, float fall_size)
 			uv = vec2(0, cw ? 0 : fall_size);
 			break ;
 	}
+
+		
 	return (uv);
 }
 
@@ -80,6 +86,7 @@ void	main()
 	vec4		pos;
 	uint		normal_id, uv_id, block_type;
 	float		fall_size;
+	bool		floor;
 
 	//////// Bitfield unpacking ///////////
 	pos.x = data1 & 0xFFFF;
@@ -89,8 +96,9 @@ void	main()
 
 	uv_id		= ((uint(data2) & 0x70000u) >> 16u);
 	fall_size	= float((uint(data2) & 0x1F80000u) >> 19u);
-	normal_id	= ((uint(data2) & 0xE000000u) >> 25u);
-	block_type	= ((uint(data2) & 0x70000000u) >> 28u);
+	normal_id	= (uint(data2) & 0xE000000u) >> 25u;
+	block_type	= (uint(data2) & 0x70000000u) >> 28u;
+	floor		= bool((uint(data2) & 0x80000000u) >> 31u);
 	//////////////////////////////////////
 
 	// Water ripples
@@ -106,7 +114,7 @@ void	main()
 	// Output assignations
 	vNormal		= get_normal(int(normal_id));
 	vPosition	= vec3(pos);
-	vTextCoord	= get_uv(int(uv_id), int(normal_id) == 2, fall_size);
+	vTextCoord	= get_uv(int(uv_id), int(normal_id) == 2, fall_size, floor);
 
 	vShadCoordP	= pos * dvp * dpp;
 	vShadCoordS	= pos * dvs * dps;

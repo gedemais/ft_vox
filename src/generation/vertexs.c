@@ -62,7 +62,6 @@ unsigned char	push_plane(t_chunk *chunk, const vec3 plane[6], uint8_t normal, un
 	{
 		memset(&vertex, 0, sizeof(t_stride));
 
-
 		block_type = (block_type == BT_GRASS && side) ? BT_GRASS_SIDE : block_type;
 		block_type = (block_type == BT_SNOW && side) ? BT_SNOW_SIDE : block_type;
 		// Constuction of the vertex
