@@ -85,9 +85,10 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 	const unsigned int	offset = 32;
 	vec3				a, b;
 	vec3				top_plane[6];
-	const unsigned int	heights[N_MAX] = {0, 0, 0, 0}; // greedy meshing
+	unsigned int		heights[N_MAX] = {0, 0, 0, 0}; // greedy meshing
+	unsigned int		y_pos[N_MAX] = {0, 0, 0, 0}; // greedy meshing
 
-	vec3				a_points[N_MAX] = {
+	const vec3			a_points[N_MAX] = {
 						[N_WEST] = (vec3){0, 1, 0},
 						[N_EAST] = (vec3){1, 1, 0},
 						[N_NORTH] = (vec3){0, 1, 1},
@@ -101,13 +102,8 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 						[N_SOUTH] = (vec3){1, 0, 0}
 	};
 
-	//if ((code = generate_top_plane(chunk, x_start + x, offset, z_start + z, top_plane)))
-	//	return (code);
-
 	for (unsigned int y = offset; y < CAVE_DEPTH + offset; y++)
 	{
-		//printf("%d %d %d (%p)\n", x, y - offset, z, chunk->cave_map);
-		//fflush(stdout);
 		if (chunk->cave_map[x][y - offset][z] != BT_STONE)
 		{
 			plain_neighbours = check_neighbours(chunk, neighbours, x, y - CAVE_DEPTH, z);
@@ -132,43 +128,6 @@ unsigned char			generate_cave_column(t_chunk *chunk, unsigned int x, unsigned in
 					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
 						return (code);
 				}
-/*
-				else if (neighbours[i] == N_WEST)
-				{
-					heights[N_WEST]++;
-					a = (vec3){x_start + x, y + 1, z_start + z};
-					b = vec_add(a, (vec3){0, 0, 1});
-					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
-						return (code);
-				}
-
-				else if (neighbours[i] == N_EAST)
-				{
-					heights[N_EAST]++;
-					a = (vec3){x_start + x + 1, y + 1, z_start + z};
-					b = vec_add(a, (vec3){0, 0, 1});
-					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
-						return (code);
-				}
-
-				else if (neighbours[i] == N_NORTH)
-				{
-					heights[N_NORTH]++;
-					a = (vec3){x_start + x, y + 1, z_start + z + 1};
-					b = vec_add(a, (vec3){1, 0, 0});
-					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
-						return (code);
-				}
-
-				else if (neighbours[i] == N_SOUTH)
-				{
-					heights[N_SOUTH]++;
-					a = (vec3){x_start + x, y + 1, z_start + z};
-					b = vec_add(a, (vec3){1, 0, 0});
-					if ((code = generate_fall(chunk, a, b, neighbours[i], y + 1, 1.0f)))
-						return (code);
-				}*/
-
 			}
 		}
 	}

@@ -50,7 +50,7 @@ unsigned char	update_chunk_mesh(t_env *env, unsigned int x, unsigned int z)
 		}
 	}
 
-	if (!m)
+	if (!m || chunk->removed)
 		return (ERR_NONE);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m->vbo);
@@ -66,7 +66,6 @@ unsigned char	init_mesh(t_env *env, t_mesh *mesh)
 	unsigned char	code;
 
 	(void)env;
-
 	if ((code = gl_buffers(mesh, false)) != ERR_NONE)
 		return (code);
 

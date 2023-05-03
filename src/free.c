@@ -30,10 +30,14 @@ static void	free_shaders(t_env *env)
 static void	free_textures(t_env *env)
 {
 	for (unsigned int i = 0; i < TEXTURE_SB_MAX; i++)
-		free(env->model.textures[i].ptr);
+		if (env->model.textures[i].ptr)
+			free(env->model.textures[i].ptr);
 
-	glDeleteTextures(TEXTURE_MAX + 1, env->model.gl_textures);
-	glDeleteTextures(1, &env->model.gl_tskybox);
+	if (env->model.gl_textures[0] != 0)
+	{
+		glDeleteTextures(TEXTURE_MAX + 1, env->model.gl_textures);
+		glDeleteTextures(1, &env->model.gl_tskybox);
+	}
 }
 
 static void	free_chunk(t_chunk *chunk)
@@ -71,15 +75,20 @@ static void	free_chunks(t_env *env)
 		glDeleteBuffers(1, &m->vao);
 		glDeleteBuffers(1, &m->vbo);
 	}
-	glDeleteBuffers(1, &env->model.fbo);
-	dynarray_free(&env->model.meshs);
+
+	if (env->model.fbo != 0)
+		glDeleteBuffers(1, &env->model.fbo);
+
+	if (env->model.meshs.byte_size > 0)
+		dynarray_free(&env->model.meshs);
 }
 
-/*__attribute__((noreturn))*/ void		free_env(t_env *env) 
+void		free_env(t_env *env) 
 {
 	free_chunks(env);
 	free_textures(env);
 	free_shaders(env);
+
 
 	t_dynarray	*array;
 	t_chunk		*cached;

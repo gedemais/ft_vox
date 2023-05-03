@@ -59,6 +59,7 @@ static unsigned char	remove_chunk_mesh(t_env *env, t_chunk *chunk, t_dynarray *o
 		m = dyacc(&env->model.meshs, i);
 		if (m->x_start == chunk->x_start && m->z_start == chunk->z_start)
 		{
+			chunk->removed = true;
 			if ((olds->arr == NULL && dynarray_init(olds, sizeof(GLuint), SQUARE_SIZE))
 				|| dynarray_push(olds, &m->vbo, false))
 				return (ERR_MALLOC_FAILED);

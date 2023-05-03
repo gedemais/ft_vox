@@ -78,6 +78,7 @@ typedef struct	s_chunk
 	t_dynarray		stride;
 	uint8_t			**surface_hmap;
 	uint8_t			***cave_map;
+	bool			removed;
 	int				x_start, z_start;
 	unsigned int	chunk_x, chunk_z;
 	t_3dpoint		wpoints[NB_WORLEY_POINTS];

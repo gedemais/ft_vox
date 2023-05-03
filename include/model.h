@@ -88,6 +88,7 @@ typedef struct	s_mesh
 	// vertex array object, vertex buffer object
 	GLuint		vao, vbo;
 	int			x_start, z_start;
+	bool		removed;
 }				t_mesh;
 
 typedef struct	s_model
