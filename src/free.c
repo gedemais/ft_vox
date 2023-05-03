@@ -56,14 +56,9 @@ static void	free_chunks(t_env *env)
 {
 	t_mesh	*m;
 
-
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int z = 0; z < SQUARE_SIZE; z++)
 			free_chunk(&env->model.chunks[x][z]);
-	
-	for (int i = 0; i < env->model.chunks_cache.nb_cells; i++)
-		dynarray_free(dyacc(&env->model.chunks_cache, i));
-	dynarray_free(&env->model.chunks_cache);
 
 	for (int i = 0; i < env->model.meshs.nb_cells; i++)
 	{
@@ -89,20 +84,6 @@ void		free_env(t_env *env)
 	free_textures(env);
 	free_shaders(env);
 
-
-	t_dynarray	*array;
-	t_chunk		*cached;
-	for (int i = 0; i < env->model.chunks_cache.nb_cells; i++)
-	{
-		array = dyacc(&env->model.chunks_cache, i);
-		for (int j = 0; j < array->nb_cells; j++)
-		{
-			cached = dyacc(array, j);
-			free_chunk(cached);
-		}
-		dynarray_free(array);
-	}
-	dynarray_free(&env->model.chunks_cache);
-	//free_shaders(env);
-	//while(1);
+	glfwDestroyWindow(env->window.ptr);
+	glfwTerminate();
 }

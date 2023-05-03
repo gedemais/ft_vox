@@ -9,6 +9,7 @@ endif
 
 CC=gcc
 FLAGS = -Wall -Werror -Wextra
+FLAGS += -Wuninitialized
 FLAGS += -Wno-documentation
 FLAGS += -Wno-documentation-unknown-command
 FLAGS += -Wno-reserved-id-macro

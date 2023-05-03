@@ -6,7 +6,7 @@
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 11:28:45 by maboye            #+#    #+#             */
-/*   Updated: 2022/09/08 13:18:43 by gedemais         ###   ########.fr       */
+/*   Updated: 2023/05/03 08:48:00 by gedemais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdbool.h>
 # include <stdint.h>
 # include <stdlib.h>
+# include <string.h>
 # include "dynarray/dynarray.h"
 
 # define BUFF_SIZE	4096

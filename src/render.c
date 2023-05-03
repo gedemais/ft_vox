@@ -181,6 +181,5 @@ unsigned char			display_loop(t_env *env)
 		glfwSwapBuffers(env->window.ptr);
 		glfwPollEvents();
 	}
-	glfwTerminate();
 	return (ERR_NONE);
 }

@@ -185,7 +185,6 @@ unsigned char		generate_bottom_plane(t_chunk *chunk, int x, int y, int z, vec3 t
 size_t				*stride_bytesize(void);
 unsigned char		borders(t_env *env);
 unsigned char		generate_fall(t_chunk *chunk, vec3 a, vec3 b, unsigned int index, unsigned int z, float depth);
-unsigned char		init_caches(t_env *env);
 float				perlin2d_a(float x, float y, float freq, int depth); // 0.1f, 4.0f
 unsigned char		update_world(t_env *env);
 unsigned char		update_chunk_mesh(t_env *env, unsigned int x, unsigned int z);

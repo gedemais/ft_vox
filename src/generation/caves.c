@@ -92,33 +92,40 @@ void	sort_distances(float arr[NB_WORLEY_POINTS], int n)
     }
 }*/
 
-
-static void				get_three_lowests(float distances[NB_WORLEY_POINTS * 9], vec3 *res)
+static void get_three_lowests(float distances[NB_WORLEY_POINTS * 9], float *first, float *third)
 {
 	float	tmp;
-	float	d;
+	float	a, b, c, d;
 
-	*res = (vec3){INFINITY, INFINITY, INFINITY};
+	a = 1000000.0f;
+	b = 1000000.0f;
+	c = 1000000.0f;
+
 	for (int i = 0; i < NB_WORLEY_POINTS * 9; i++)
 	{
 		d = distances[i];
 
-		if (d < res->z)
-			res->z = d;
+		//printf("res.x : %p | res.y : %p |res.z : %p |d : %p |distances : %p\n", &res.x, &res.y, &res.z, &d, &distances);
+		if (d < c)
+			c = d;
 
-		if (res->z < res->y)
+		if (c < b)
 		{
-			tmp = res->y;
-			res->y = res->z;
-			res->z = tmp;
+			tmp = b;
+			b = c;
+			c = tmp;
 		}
 
-		if (res->y < res->x)
+		if (b < a)
 		{
-			tmp = res->x;
-			res->x = res->y; res->y = tmp;
+			tmp = a;
+			a = b;
+			b = tmp;
 		}
 	}
+
+	*first = a;
+	*third = c;
 }
 
 static unsigned char	get_points(t_env *env, t_chunk *chunk, t_3dpoint points[NB_WORLEY_POINTS * 9])
@@ -128,6 +135,10 @@ static unsigned char	get_points(t_env *env, t_chunk *chunk, t_3dpoint points[NB_
 	int			index = 0;
 
 	(void)chunk;
+
+	for (unsigned int i = 0; i < NB_WORLEY_POINTS * 9; i++)
+		points[i] = (t_3dpoint){UCHAR_MAX, UCHAR_MAX, UCHAR_MAX};
+
 //	printf("--------\n");
 	for (int x = 0; x < SQUARE_SIZE; x++)
 		for (int z = 0; z < SQUARE_SIZE; z++)
@@ -154,7 +165,7 @@ static unsigned char	worley_noise(t_env *env, t_chunk *chunk, t_3dpoint points[N
 	t_3dpoint	*wpoint;
 	float		min_dist = INFINITY;
 	float		distance;
-	vec3		lowests;
+	float		a, c;
 
 	(void)env;
 	current.x += chunk->x_start;
@@ -165,9 +176,9 @@ static unsigned char	worley_noise(t_env *env, t_chunk *chunk, t_3dpoint points[N
 		min_dist = fmin(distances[i], min_dist);
 	}
 
-	get_three_lowests(distances, &lowests);
+	get_three_lowests(distances, &a, &c);
 
-	if (lowests.x / lowests.z > WORLEY_THRESHOLD)
+	if (a / c > WORLEY_THRESHOLD)
 		*res = BT_STONE;
 
 	memset(distances, 0, sizeof(float) * NB_WORLEY_POINTS * 9);
